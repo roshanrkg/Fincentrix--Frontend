@@ -27,6 +27,9 @@
 
         <form id="signupForm">
 
+            <!-- Alert Notification Banner -->
+            <div id="formAlertBanner" class="form-alert-banner" style="display: none;" role="alert"></div>
+
             <!-- IDENTITY DOCUMENTS -->
             <section class="form-section identity-section">
 
@@ -252,103 +255,122 @@
     <h3>Bank Account Details</h3>
 
     <p class="section-description">
-        Please provide your bank account information.
+        Please provide your bank account information. You can add multiple accounts if needed.
     </p>
 
-    <div class="form-grid">
+    <!-- Dynamic list of bank accounts -->
+    <div id="bankAccountsList">
+        <div class="bank-account-card" data-bank-index="0">
+            <div class="bank-card-header">
+                <span class="bank-card-title">Bank Account #1</span>
+                <button type="button" class="remove-bank-btn" style="display: none;">✕ Remove</button>
+            </div>
 
-        <!-- Bank Name -->
-        <div class="form-group">
-            <label for="bank_name">Bank Name *</label>
-            <input
-                type="text"
-                id="bank_name"
-                name="bank_name"
-                placeholder="Enter bank name"
-                pattern="[\p{L}\p{M} ]+"
-                data-input-filter="letters"
-                title="Use letters and spaces only"
-                required
-            >
+            <div class="form-grid">
+                <!-- Bank Name -->
+                <div class="form-group">
+                    <label>Bank Name *</label>
+                    <input
+                        type="text"
+                        name="bank_name"
+                        placeholder="Enter bank name"
+                        pattern="[\p{L}\p{M} ]+"
+                        data-input-filter="letters"
+                        title="Use letters and spaces only"
+                        required
+                    >
+                </div>
+
+                <!-- Account Holder Name -->
+                <div class="form-group">
+                    <label>Account Holder Name *</label>
+                    <input
+                        type="text"
+                        name="account_holder_name"
+                        placeholder="Enter account holder name"
+                        pattern="[\p{L}\p{M} ]+"
+                        data-input-filter="letters"
+                        title="Use letters and spaces only"
+                        required
+                    >
+                </div>
+
+                <!-- Account Number -->
+                <div class="form-group">
+                    <label>Account Number *</label>
+                    <input
+                        type="password"
+                        name="account_number"
+                        placeholder="Enter account number"
+                        inputmode="numeric"
+                        pattern="[0-9]+"
+                        data-input-filter="digits"
+                        title="Use digits only"
+                        required
+                    >
+                </div>
+
+                <!-- Branch Name -->
+                <div class="form-group">
+                    <label>Branch Name *</label>
+                    <input
+                        type="text"
+                        name="branch_name"
+                        placeholder="Enter branch name"
+                        pattern="[\p{L}\p{M} ]+"
+                        data-input-filter="letters"
+                        title="Use letters and spaces only"
+                        required
+                    >
+                </div>
+
+                <!-- IFSC Code -->
+                <div class="form-group">
+                    <label>IFSC Code *</label>
+                    <input
+                        type="text"
+                        name="ifsc_code"
+                        maxlength="11"
+                        placeholder="Enter IFSC code"
+                        pattern="[A-Z]{4}0[A-Z0-9]{6}"
+                        data-input-filter="ifsc"
+                        title="Enter a valid 11-character IFSC code"
+                        required
+                    >
+                </div>
+
+                <!-- Primary Account -->
+                <div class="form-group">
+                    <label>Primary Account</label>
+                    <select name="is_primary">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <!-- Passbook / Statement Upload -->
+                <div class="form-group full-width">
+                    <label>Upload Passbook / Bank Statement (Optional)</label>
+                    <input
+                        type="file"
+                        name="passbook_file"
+                        accept="image/jpeg,image/png,application/pdf"
+                    >
+                    <small>JPG, PNG or PDF</small>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Account Holder Name -->
-        <div class="form-group">
-            <label for="account_holder_name">Account Holder Name *</label>
-            <input
-                type="text"
-                id="account_holder_name"
-                name="account_holder_name"
-                placeholder="Enter account holder name"
-                pattern="[\p{L}\p{M} ]+"
-                data-input-filter="letters"
-                title="Use letters and spaces only"
-                required
-            >
-        </div>
-
-        <!-- Account Number -->
-        <div class="form-group">
-            <label for="account_number">Account Number *</label>
-            <input
-                type="password"
-                id="account_number"
-                name="account_number"
-                placeholder="Enter account number"
-                inputmode="numeric"
-                pattern="[0-9]+"
-                data-input-filter="digits"
-                title="Use digits only"
-                required
-            >
-        </div>
-
-        <!-- Branch Name -->
-        <div class="form-group">
-            <label for="branch_name">Branch Name *</label>
-            <input
-                type="text"
-                id="branch_name"
-                name="branch_name"
-                placeholder="Enter branch name"
-                pattern="[\p{L}\p{M} ]+"
-                data-input-filter="letters"
-                title="Use letters and spaces only"
-                required
-            >
-        </div>
-
-        <!-- IFSC Code -->
-        <div class="form-group">
-            <label for="ifsc_code">IFSC Code *</label>
-            <input
-                type="text"
-                id="ifsc_code"
-                name="ifsc_code"
-                maxlength="11"
-                placeholder="Enter IFSC code"
-                pattern="[A-Z]{4}0[A-Z0-9]{6}"
-                data-input-filter="ifsc"
-                title="Enter a valid 11-character IFSC code"
-                required
-            >
-        </div>
-
-        <!-- Primary Account -->
-        <div class="form-group">
-            <label for="is_primary">Primary Account</label>
-
-            <select id="is_primary" name="is_primary">
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </select>
-        </div>
-
+    <!-- Add Another Bank Account Button -->
+    <div class="add-bank-wrapper">
+        <button type="button" id="addBankButton" class="add-account-btn">
+            + Add Another Bank Account
+        </button>
     </div>
 
     <!-- Navigation Buttons -->
-   <!-- Navigation Buttons -->
-<div class="bank-button-container">
+    <div class="bank-button-container">
 
         <button type="button" id="previousButton">
             ← Previous
@@ -370,152 +392,158 @@
     <h3>Existing Loan Details</h3>
 
     <p class="section-description">
-        Please provide details of your existing loan.
+        Please provide details of your existing loan(s). You can add multiple loans if needed, or remove them if you have none.
     </p>
 
-    <div class="form-grid">
+    <!-- Dynamic list of loans -->
+    <div id="loansList">
+        <div class="loan-account-card" data-loan-index="0">
+            <div class="loan-card-header">
+                <span class="loan-card-title">Loan #1</span>
+                <button type="button" class="remove-loan-btn" style="display: none;">✕ Remove</button>
+            </div>
 
-        <!-- Lender Name -->
-        <div class="form-group">
-            <label for="lender_name">Lender Name *</label>
-            <input
-                type="text"
-                id="lender_name"
-                name="lender_name"
-                placeholder="Enter bank or lender name"
-                pattern="[\p{L}\p{M} ]+"
-                data-input-filter="letters"
-                title="Use letters and spaces only"
-                required
-            >
+            <div class="form-grid">
+                <!-- Lender Name -->
+                <div class="form-group">
+                    <label>Lender Name *</label>
+                    <input
+                        type="text"
+                        name="lender_name"
+                        placeholder="Enter bank or lender name"
+                        pattern="[\p{L}\p{M} ]+"
+                        data-input-filter="letters"
+                        title="Use letters and spaces only"
+                        required
+                    >
+                </div>
+
+                <!-- Loan Type -->
+                <div class="form-group">
+                    <label>Loan Type *</label>
+                    <select name="loan_type" required>
+                        <option value="">Select loan type</option>
+                        <option value="Personal Loan">Personal Loan</option>
+                        <option value="Home Loan">Home Loan</option>
+                        <option value="Education Loan">Education Loan</option>
+                        <option value="Vehicle Loan">Vehicle Loan</option>
+                        <option value="Business Loan">Business Loan</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Loan Amount -->
+                <div class="form-group">
+                    <label>Original Loan Amount (₹) *</label>
+                    <input
+                        type="number"
+                        name="loan_amount"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        data-input-filter="decimal"
+                        placeholder="Enter original loan amount"
+                        required
+                    >
+                </div>
+
+                <!-- Outstanding Amount -->
+                <div class="form-group">
+                    <label>Outstanding Amount (₹) *</label>
+                    <input
+                        type="number"
+                        name="outstanding_amount"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        data-input-filter="decimal"
+                        placeholder="Enter outstanding amount"
+                        required
+                    >
+                </div>
+
+                <!-- Loan Duration -->
+                <div class="form-group">
+                    <label>Loan Duration (Months) *</label>
+                    <input
+                        type="number"
+                        name="loan_duration_months"
+                        min="1"
+                        step="1"
+                        inputmode="numeric"
+                        data-input-filter="digits"
+                        placeholder="Example: 60"
+                        required
+                    >
+                </div>
+
+                <!-- Remaining Months -->
+                <div class="form-group">
+                    <label>Remaining Months *</label>
+                    <input
+                        type="number"
+                        name="remaining_months"
+                        min="0"
+                        step="1"
+                        inputmode="numeric"
+                        data-input-filter="digits"
+                        placeholder="Enter remaining months"
+                        required
+                    >
+                </div>
+
+                <!-- Monthly EMI -->
+                <div class="form-group">
+                    <label>Monthly EMI (₹) *</label>
+                    <input
+                        type="number"
+                        name="monthly_emi"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        data-input-filter="decimal"
+                        placeholder="Enter monthly EMI"
+                        required
+                    >
+                </div>
+
+                <!-- Loan Start Date -->
+                <div class="form-group">
+                    <label>Loan Start Date *</label>
+                    <input
+                        type="date"
+                        name="loan_start_date"
+                        required
+                    >
+                </div>
+
+                <!-- Loan End Date -->
+                <div class="form-group">
+                    <label>Loan End Date</label>
+                    <input
+                        type="date"
+                        name="loan_end_date"
+                    >
+                </div>
+
+                <!-- Loan Status -->
+                <div class="form-group">
+                    <label>Loan Status *</label>
+                    <select name="loan_status" required>
+                        <option value="">Select loan status</option>
+                        <option value="Active">Active</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Loan Type -->
-        <div class="form-group">
-            <label for="loan_type">Loan Type *</label>
-            <select id="loan_type" name="loan_type" required>
-                <option value="">Select loan type</option>
-                <option value="Personal Loan">Personal Loan</option>
-                <option value="Home Loan">Home Loan</option>
-                <option value="Education Loan">Education Loan</option>
-                <option value="Vehicle Loan">Vehicle Loan</option>
-                <option value="Business Loan">Business Loan</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-
-        <!-- Loan Amount -->
-        <div class="form-group">
-            <label for="loan_amount">Original Loan Amount (₹) *</label>
-            <input
-                type="number"
-                id="loan_amount"
-                name="loan_amount"
-                min="0"
-                step="0.01"
-                inputmode="decimal"
-                data-input-filter="decimal"
-                placeholder="Enter original loan amount"
-                required
-            >
-        </div>
-
-        <!-- Outstanding Amount -->
-        <div class="form-group">
-            <label for="outstanding_amount">Outstanding Amount (₹) *</label>
-            <input
-                type="number"
-                id="outstanding_amount"
-                name="outstanding_amount"
-                min="0"
-                step="0.01"
-                inputmode="decimal"
-                data-input-filter="decimal"
-                placeholder="Enter outstanding amount"
-                required
-            >
-        </div>
-
-        <!-- Loan Duration -->
-        <div class="form-group">
-            <label for="loan_duration_months">Loan Duration (Months) *</label>
-            <input
-                type="number"
-                id="loan_duration_months"
-                name="loan_duration_months"
-                min="1"
-                step="1"
-                inputmode="numeric"
-                data-input-filter="digits"
-                placeholder="Example: 60"
-                required
-            >
-        </div>
-
-        <!-- Remaining Months -->
-        <div class="form-group">
-            <label for="remaining_months">Remaining Months *</label>
-            <input
-                type="number"
-                id="remaining_months"
-                name="remaining_months"
-                min="0"
-                step="1"
-                inputmode="numeric"
-                data-input-filter="digits"
-                placeholder="Enter remaining months"
-                required
-            >
-        </div>
-
-        <!-- Monthly EMI -->
-        <div class="form-group">
-            <label for="monthly_emi">Monthly EMI (₹) *</label>
-            <input
-                type="number"
-                id="monthly_emi"
-                name="monthly_emi"
-                min="0"
-                step="0.01"
-                inputmode="decimal"
-                data-input-filter="decimal"
-                placeholder="Enter monthly EMI"
-                required
-            >
-        </div>
-
-        <!-- Loan Start Date -->
-        <div class="form-group">
-            <label for="loan_start_date">Loan Start Date *</label>
-            <input
-                type="date"
-                id="loan_start_date"
-                name="loan_start_date"
-                required
-            >
-        </div>
-
-        <!-- Loan End Date -->
-        <div class="form-group">
-            <label for="loan_end_date">Loan End Date</label>
-            <input
-                type="date"
-                id="loan_end_date"
-                name="loan_end_date"
-            >
-        </div>
-
-        <!-- Loan Status -->
-        <div class="form-group">
-            <label for="loan_status">Loan Status *</label>
-            <select id="loan_status" name="loan_status" required>
-                <option value="">Select loan status</option>
-                <option value="Active">Active</option>
-                <option value="Closed">Closed</option>
-                <option value="Defaulted">Defaulted</option>
-            </select>
-        </div>
-
+    <!-- Add Another Loan Button -->
+    <div class="add-loan-wrapper">
+        <button type="button" id="addLoanButton" class="add-account-btn">
+            + Add Another Loan
+        </button>
     </div>
 
     <!-- Navigation Buttons -->

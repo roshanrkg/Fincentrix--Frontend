@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fincentrix - Get Started</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Our custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen bg-white text-slate-950">
+  <main class="min-h-screen grid grid-cols-1 md:grid-cols-[66.2%_33.8%]">
+
+    <!-- LEFT SIDE -->
+    <section class="hero-bg min-h-[560px] md:min-h-screen px-7 py-8 sm:px-10 md:px-[4.7%] md:pt-[4.5%] md:pb-[7%] flex flex-col justify-between">
+      <a href="#" class="brand-name" aria-label="Fincentrix home">
+        <span class="brand-symbol">◢</span><span>Fincentrix</span>
+      </a>
+
+      <div class="hero-content mt-16 md:mt-0">
+        <p class="hero-eyebrow">FINANCING FOR YOUR NEXT CHAPTER</p>
+        <h1 class="hero-title">
+        Give your business room to grow.
+        </h1>
+        <p class="hero-description">
+        Explore financing for your next step and review the details before you decide.
+        </p>
+
+        <div class="journey-card">
+        <div class="journey-copy">
+          <p class="journey-kicker">A CLEARER WAY FORWARD</p>
+          <h2>Make your next move with confidence.</h2>
+          <ol class="journey-steps">
+            <li><span>01</span>Tell us about your business</li>
+            <li><span>02</span>Explore financing options</li>
+            <li><span>03</span>Review the details before deciding</li>
+          </ol>
+        </div>
+        <div class="journey-art" aria-hidden="true">
+          <svg viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="112" cy="110" r="95" fill="#DDF5F2"/>
+            <circle cx="112" cy="110" r="75" fill="#EFFAF8"/>
+            <path d="M47 98.5 111 53l64 45.5v65a8 8 0 0 1-8 8H55a8 8 0 0 1-8-8v-65Z" fill="#fff" stroke="#173D60" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M40 100h142l-13-31H53l-13 31Z" fill="#62C6B4" stroke="#173D60" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M66 70v30m31-30v30m31-30v30m31-30v30" stroke="#173D60" stroke-width="3"/>
+            <path d="M92 172v-40a19 19 0 0 1 38 0v40" fill="#DDF5F2" stroke="#173D60" stroke-width="4"/>
+            <path d="M60 119h19m-19 12h19" stroke="#91BDB8" stroke-width="4" stroke-linecap="round"/>
+            <rect x="139" y="115" width="49" height="37" rx="8" fill="#fff" stroke="#173D60" stroke-width="3"/>
+            <path d="M149 127h29m-29 9h19" stroke="#62C6B4" stroke-width="4" stroke-linecap="round"/>
+            <path d="m161 146 5 5 10-11" stroke="#173D60" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="54" cy="51" r="5" fill="#F2B861"/>
+            <circle cx="176" cy="56" r="7" fill="#F2B861"/>
+          </svg>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDE -->
+    <section class="relative min-h-screen flex items-center justify-center px-6 sm:px-10 md:px-[11%] py-12 md:py-10 overflow-hidden">
+      <div class="w-full max-w-[436px]">
+        <div class="brand-mark mb-5">◢</div>
+
+        <p class="text-[16px] text-[#687783] mb-5">
+          Welcome to <strong class="font-semibold text-[#5c6872]">Fincentrix</strong>
+        </p>
+
+        <h2 class="text-[29px] sm:text-[32px] leading-[1.38] tracking-[-1.2px] font-semibold mb-6">
+          Get started with your email
+          <br class="hidden lg:block"> or phone number
+        </h2>
+
+        <form id="signupForm" novalidate>
+          <label for="contact" class="sr-only">Email or phone number</label>
+          <input
+            id="contact"
+            name="contact"
+            type="text"
+            placeholder="Enter your email or phone number"
+            autocomplete="email"
+            class="w-full h-[45px] rounded-[11px] border border-[#d8dde2] px-[14px] text-[15px] outline-none transition focus:border-[#315cff] focus:ring-2 focus:ring-blue-100 placeholder:text-[#c2c6ca]"
+          >
+
+          <label for="password" class="sr-only">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="new-password"
+            class="mt-4 w-full h-[45px] rounded-[11px] border border-[#d8dde2] px-[14px] text-[15px] outline-none transition focus:border-[#315cff] focus:ring-2 focus:ring-blue-100 placeholder:text-[#c2c6ca]"
+          >
+
+          <div class="mt-2 text-right">
+            <a href="forgot.html" class="link text-[13px]">Forgot password?</a>
+          </div>
+
+          <p id="error" class="field-error" aria-live="polite"></p>
+
+          <button
+            type="submit"
+            class="w-full h-[43px] rounded-[10px] bg-[#315cff] hover:bg-[#244de8] active:scale-[.99] transition text-white font-semibold text-[16px] shadow-sm"
+          >
+            Continue
+          </button>
+        </form>
+
+        <div class="flex items-center gap-3 my-6 text-[#74808a] text-[14px]">
+          <span class="h-px bg-[#e1e4e8] flex-1"></span>
+          <span>or</span>
+          <span class="h-px bg-[#e1e4e8] flex-1"></span>
+        </div>
+
+        <button
+          id="googleButton"
+          type="button"
+          class="w-full h-[47px] rounded-[5px] border border-[#d8dde2] hover:bg-slate-50 transition flex items-center justify-center gap-3 text-[16px] font-medium text-[#161b22]"
+        >
+          <span class="google-g">G</span>
+          Continue with Google
+        </button>
+        <!-- Signup Button -->
+<button
+  type="button"
+  id="signupButton"
+  type="button"
+id="signupButton"
+onclick="window.location.href='signup.html'"
+  class="w-full h-[43px] rounded-[10px] bg-[#315cff] hover:bg-[#244de8] active:scale-[.99] transition text-white font-semibold text-[16px] shadow-sm mt-4"
+>
+  Signup
+</button>
+
+        <div class="mt-[105px] text-[13px] leading-6 text-[#6d7881]">
+          <p>
+            By continuing you agree to our
+            <a href="#" class="link">privacy policy</a>
+            &amp;
+            <a href="#" class="link">terms of use</a>.
+          </p>
+          <p>
+            *Limited period offer,
+            <a href="#" class="link">terms and conditions</a> apply.
+          </p>
+        </div>
+
+        <div class="mt-4 rounded-[15px] bg-[#f6f6f6] px-[14px] py-[13px] text-[15px] leading-7 text-[#343a40]">
+          <p>Helping Clients with Fincentrix Solutions?</p>
+          <a href="#" class="link font-medium">
+            Become Fincentrix Partner <span>→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- JavaScript file -->
+  <script src="script.js"></script>
+</body>
+</html>

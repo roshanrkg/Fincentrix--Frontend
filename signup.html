@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fincentrix - Create Account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="signup.css">
+</head>
+
+<body>
+
+    <main class="signup-container">
+
+        <!-- Header -->
+        <header class="signup-header">
+            <h1>Fincentrix</h1>
+            <h2>Create Your Account</h2>
+            <p>Enter your details to get started.</p>
+        </header>
+
+        <form id="signupForm">
+
+            <!-- IDENTITY DOCUMENTS -->
+            <section class="form-section identity-section">
+
+                <h3>Aadhaar &amp; PAN Documents</h3>
+                <p class="section-description">
+                    Add your document details and select the related files. Automatic data extraction and file upload are not enabled in this demo.
+                </p>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="aadhaar_number">Aadhaar Number</label>
+                        <input type="password" id="aadhaar_number"
+                            name="aadhaar_number"
+                            placeholder="Enter Aadhaar number"
+                            inputmode="numeric"
+                            maxlength="12"
+                            pattern="[0-9]{12}"
+                            data-input-filter="digits"
+                            title="Enter a 12-digit Aadhaar number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aadhaar_card_file">Upload Aadhaar Card</label>
+                        <input type="file"
+                            id="aadhaar_card_file"
+                            name="aadhaar_card_file"
+                            accept="image/jpeg,image/png,application/pdf">
+                        <small>JPG, PNG or PDF</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pan_number">PAN Number</label>
+                        <input type="text" id="pan_number"
+                            name="pan_number"
+                            maxlength="10"
+                            placeholder="Enter PAN number"
+                            pattern="[A-Z]{5}[0-9]{4}[A-Z]"
+                            data-input-filter="pan"
+                            title="Enter PAN in the format ABCDE1234F">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pan_card_file">Upload PAN Card</label>
+                        <input type="file"
+                            id="pan_card_file"
+                            name="pan_card_file"
+                            accept="image/jpeg,image/png,application/pdf">
+                        <small>JPG, PNG or PDF</small>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- PERSONAL INFORMATION -->
+            <section class="form-section personal-section">
+
+                <h3>Personal Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="fname">First Name *</label>
+                        <input type="text" id="fname" name="fname"
+                            placeholder="Enter first name" required
+                            pattern="[\p{L}\p{M} ]+"
+                            data-input-filter="letters"
+                            title="Use letters and spaces only">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lname">Last Name *</label>
+                        <input type="text" id="lname" name="lname"
+                            placeholder="Enter last name" required
+                            pattern="[\p{L}\p{M} ]+"
+                            data-input-filter="letters"
+                            title="Use letters and spaces only">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email"
+                            placeholder="Enter email address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone"
+                            maxlength="15" placeholder="Enter phone number" required
+                            inputmode="numeric"
+                            pattern="[0-9]{10,15}"
+                            data-input-filter="digits"
+                            title="Enter 10 to 15 digits">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password"
+                            placeholder="Create password" required minlength="8">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ADDRESS DETAILS -->
+            <section class="form-section address-section">
+
+                <h3>Address Details</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group full-width">
+                        <label for="address_line1">Address Line 1</label>
+                        <input type="text" id="address_line1"
+                            name="address_line1" placeholder="House / Flat Number">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address_line2">Address Line 2</label>
+                        <input type="text" id="address_line2"
+                            name="address_line2" placeholder="Street / Area">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address_line3">Address Line 3</label>
+                        <input type="text" id="address_line3"
+                            name="address_line3" placeholder="Landmark">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city"
+                            placeholder="Enter city"
+                            pattern="[\p{L}\p{M} ]+"
+                            data-input-filter="letters"
+                            title="Use letters and spaces only">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state"
+                            placeholder="Enter state"
+                            pattern="[\p{L}\p{M} ]+"
+                            data-input-filter="letters"
+                            title="Use letters and spaces only">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" id="pincode" name="pincode"
+                            maxlength="10" placeholder="Enter pincode"
+                            inputmode="numeric"
+                            pattern="[0-9]+"
+                            data-input-filter="digits"
+                            title="Use digits only">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FINANCIAL INFORMATION -->
+            <section class="form-section financial-section">
+
+                <h3>Financial Information</h3>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cibil_score">CIBIL Score</label>
+                        <input type="number" id="cibil_score"
+                            name="cibil_score" min="300" max="900"
+                            step="1" inputmode="numeric"
+                            data-input-filter="digits"
+                            placeholder="300 - 900">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monthly_income">Monthly Income (₹)</label>
+                        <input type="number" id="monthly_income"
+                            name="monthly_income" min="0" step="0.01"
+                            inputmode="decimal"
+                            data-input-filter="decimal"
+                            placeholder="Enter monthly income">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employment_type">Employment Type</label>
+
+                        <select id="employment_type" name="employment_type">
+                            <option value="">Select employment type</option>
+                            <option value="Salaried">Salaried</option>
+                            <option value="Self Employed">Self Employed</option>
+                            <option value="Business">Business</option>
+                            <option value="Student">Student</option>
+                            <option value="Unemployed">Unemployed</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- NEXT BUTTON -->
+            <div class="button-container">
+                <button type="button" id="nextButton">
+                    Next: Bank Details →
+                </button>
+            </div>
+<!-- ================================= -->
+<!-- SECTION 2: BANK ACCOUNT DETAILS -->
+<!-- ================================= -->
+
+<section class="form-section" id="bankSection" hidden>
+
+    <h3>Bank Account Details</h3>
+
+    <p class="section-description">
+        Please provide your bank account information.
+    </p>
+
+    <div class="form-grid">
+
+        <!-- Bank Name -->
+        <div class="form-group">
+            <label for="bank_name">Bank Name *</label>
+            <input
+                type="text"
+                id="bank_name"
+                name="bank_name"
+                placeholder="Enter bank name"
+                pattern="[\p{L}\p{M} ]+"
+                data-input-filter="letters"
+                title="Use letters and spaces only"
+                required
+            >
+        </div>
+
+        <!-- Account Holder Name -->
+        <div class="form-group">
+            <label for="account_holder_name">Account Holder Name *</label>
+            <input
+                type="text"
+                id="account_holder_name"
+                name="account_holder_name"
+                placeholder="Enter account holder name"
+                pattern="[\p{L}\p{M} ]+"
+                data-input-filter="letters"
+                title="Use letters and spaces only"
+                required
+            >
+        </div>
+
+        <!-- Account Number -->
+        <div class="form-group">
+            <label for="account_number">Account Number *</label>
+            <input
+                type="password"
+                id="account_number"
+                name="account_number"
+                placeholder="Enter account number"
+                inputmode="numeric"
+                pattern="[0-9]+"
+                data-input-filter="digits"
+                title="Use digits only"
+                required
+            >
+        </div>
+
+        <!-- Branch Name -->
+        <div class="form-group">
+            <label for="branch_name">Branch Name *</label>
+            <input
+                type="text"
+                id="branch_name"
+                name="branch_name"
+                placeholder="Enter branch name"
+                pattern="[\p{L}\p{M} ]+"
+                data-input-filter="letters"
+                title="Use letters and spaces only"
+                required
+            >
+        </div>
+
+        <!-- IFSC Code -->
+        <div class="form-group">
+            <label for="ifsc_code">IFSC Code *</label>
+            <input
+                type="text"
+                id="ifsc_code"
+                name="ifsc_code"
+                maxlength="11"
+                placeholder="Enter IFSC code"
+                pattern="[A-Z]{4}0[A-Z0-9]{6}"
+                data-input-filter="ifsc"
+                title="Enter a valid 11-character IFSC code"
+                required
+            >
+        </div>
+
+        <!-- Primary Account -->
+        <div class="form-group">
+            <label for="is_primary">Primary Account</label>
+
+            <select id="is_primary" name="is_primary">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Navigation Buttons -->
+   <!-- Navigation Buttons -->
+<div class="bank-button-container">
+
+        <button type="button" id="previousButton">
+            ← Previous
+        </button>
+
+        <button type="button" id="nextLoanButton">
+            Next: Loan Details →
+        </button>
+
+    </div>
+
+</section>
+<!-- ================================= -->
+<!-- SECTION 3: EXISTING LOAN DETAILS -->
+<!-- ================================= -->
+
+<section class="form-section" id="loanSection" hidden>
+
+    <h3>Existing Loan Details</h3>
+
+    <p class="section-description">
+        Please provide details of your existing loan.
+    </p>
+
+    <div class="form-grid">
+
+        <!-- Lender Name -->
+        <div class="form-group">
+            <label for="lender_name">Lender Name *</label>
+            <input
+                type="text"
+                id="lender_name"
+                name="lender_name"
+                placeholder="Enter bank or lender name"
+                pattern="[\p{L}\p{M} ]+"
+                data-input-filter="letters"
+                title="Use letters and spaces only"
+                required
+            >
+        </div>
+
+        <!-- Loan Type -->
+        <div class="form-group">
+            <label for="loan_type">Loan Type *</label>
+            <select id="loan_type" name="loan_type" required>
+                <option value="">Select loan type</option>
+                <option value="Personal Loan">Personal Loan</option>
+                <option value="Home Loan">Home Loan</option>
+                <option value="Education Loan">Education Loan</option>
+                <option value="Vehicle Loan">Vehicle Loan</option>
+                <option value="Business Loan">Business Loan</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <!-- Loan Amount -->
+        <div class="form-group">
+            <label for="loan_amount">Original Loan Amount (₹) *</label>
+            <input
+                type="number"
+                id="loan_amount"
+                name="loan_amount"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                data-input-filter="decimal"
+                placeholder="Enter original loan amount"
+                required
+            >
+        </div>
+
+        <!-- Outstanding Amount -->
+        <div class="form-group">
+            <label for="outstanding_amount">Outstanding Amount (₹) *</label>
+            <input
+                type="number"
+                id="outstanding_amount"
+                name="outstanding_amount"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                data-input-filter="decimal"
+                placeholder="Enter outstanding amount"
+                required
+            >
+        </div>
+
+        <!-- Loan Duration -->
+        <div class="form-group">
+            <label for="loan_duration_months">Loan Duration (Months) *</label>
+            <input
+                type="number"
+                id="loan_duration_months"
+                name="loan_duration_months"
+                min="1"
+                step="1"
+                inputmode="numeric"
+                data-input-filter="digits"
+                placeholder="Example: 60"
+                required
+            >
+        </div>
+
+        <!-- Remaining Months -->
+        <div class="form-group">
+            <label for="remaining_months">Remaining Months *</label>
+            <input
+                type="number"
+                id="remaining_months"
+                name="remaining_months"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                data-input-filter="digits"
+                placeholder="Enter remaining months"
+                required
+            >
+        </div>
+
+        <!-- Monthly EMI -->
+        <div class="form-group">
+            <label for="monthly_emi">Monthly EMI (₹) *</label>
+            <input
+                type="number"
+                id="monthly_emi"
+                name="monthly_emi"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                data-input-filter="decimal"
+                placeholder="Enter monthly EMI"
+                required
+            >
+        </div>
+
+        <!-- Loan Start Date -->
+        <div class="form-group">
+            <label for="loan_start_date">Loan Start Date *</label>
+            <input
+                type="date"
+                id="loan_start_date"
+                name="loan_start_date"
+                required
+            >
+        </div>
+
+        <!-- Loan End Date -->
+        <div class="form-group">
+            <label for="loan_end_date">Loan End Date</label>
+            <input
+                type="date"
+                id="loan_end_date"
+                name="loan_end_date"
+            >
+        </div>
+
+        <!-- Loan Status -->
+        <div class="form-group">
+            <label for="loan_status">Loan Status *</label>
+            <select id="loan_status" name="loan_status" required>
+                <option value="">Select loan status</option>
+                <option value="Active">Active</option>
+                <option value="Closed">Closed</option>
+                <option value="Defaulted">Defaulted</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="loan-button-container">
+
+        <button type="button" id="previousLoanButton">
+            ← Previous
+        </button>
+
+        <button type="button" id="finishSignupButton">
+            Finish Registration ✓
+        </button>
+
+    </div>
+
+</section>
+        </form>
+
+        <footer class="signup-footer">
+            Already have an account?
+            <a href="index.html">Login</a>
+        </footer>
+
+    </main>
+<script src="signup.js"></script>
+</body>
+</html>

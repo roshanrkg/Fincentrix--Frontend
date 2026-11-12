@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password - Fincentrix</title>
+  <link rel="stylesheet" href="forgot.css">
+</head>
+<body>
+  <main class="recovery-card">
+    <a class="brand-name" href="index.html" aria-label="Fincentrix home">
+      <span class="brand-symbol">◢</span><span>Fincentrix</span>
+    </a>
+
+    <div class="recovery-icon" aria-hidden="true">?</div>
+    <p class="eyebrow">ACCOUNT RECOVERY</p>
+    <h1>Forgot your password?</h1>
+    <p class="intro">Enter the email address linked to your account. We’ll show a six-digit code entry for this demo.</p>
+
+    <form id="recoveryForm" novalidate>
+      <label for="email">Email address</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        placeholder="Enter your email address"
+        autocomplete="email"
+        required
+      >
+
+      <button class="primary-button" type="submit">Generate OTP</button>
+      <p class="form-message" id="formMessage" aria-live="polite"></p>
+
+      <section id="otpSection" class="otp-section" hidden aria-labelledby="otpHeading">
+        <h2 id="otpHeading">Enter your 6-digit OTP</h2>
+        <p>Enter the code to continue resetting your password.</p>
+        <div class="otp-inputs" role="group" aria-label="Six-digit OTP">
+          <input aria-label="OTP digit 1" inputmode="numeric" autocomplete="one-time-code" maxlength="1" pattern="[0-9]" required>
+          <input aria-label="OTP digit 2" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
+          <input aria-label="OTP digit 3" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
+          <input aria-label="OTP digit 4" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
+          <input aria-label="OTP digit 5" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
+          <input aria-label="OTP digit 6" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
+        </div>
+        <!-- <p class="demo-note">Demo only — no OTP is generated or sent.</p> -->
+      </section>
+    </form>
+
+    <a class="back-link" href="index.html">← Back to login</a>
+  </main>
+  <script src="forgot.js"></script>
+</body>
+</html>

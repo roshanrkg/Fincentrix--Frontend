@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Fincentrix</title>
+
+  <!-- Route Guard Layer 1: Instant Client Gatekeeper (Executes before page renders) -->
+  <script>
+    (function () {
+      const token = localStorage.getItem("fincentrix_token");
+      if (!token) {
+        // Kick unauthenticated visitors immediately
+        window.location.replace("index.html");
+      }
+    })();
+  </script>
+
+  <style>
+    /* Keep hidden until Layer 2 server-side cryptographic verification confirms validity */
+    body {
+      display: none;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dashboard-card {
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 38px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .brand-accent {
+      color: #315cff;
+    }
+
+    p {
+      font-size: 16px;
+      color: #64748b;
+      margin-bottom: 28px;
+    }
+
+    .logout-btn {
+      background-color: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="dashboard-card">
+    <h1>Welcome, <span id="userName" class="brand-accent">...</span></h1>
+    <p>You have successfully logged in to Fincentrix.</p>
+    <button id="logoutButton" class="logout-btn" type="button">Log Out</button>
+  </main>
+
+  <!-- Route Guard Layer 2: Server-Side Cryptographic Verification -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      const token = localStorage.getItem("fincentrix_token");
+
+      if (!token) {
+        window.location.replace("index.html");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/api/auth/me", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success || !data.user) {
+          // Token is invalid, expired, or forged
+          localStorage.removeItem("fincentrix_token");
+          localStorage.removeItem("fincentrix_user");
+          window.location.replace("index.html");
+          return;
+        }
+
+        // Token is cryptographically valid! Render user's fname
+        document.getElementById("userName").textContent = data.user.fname;
+        document.body.style.display = "flex";
+
+      } catch (error) {
+        console.error("Auth verification failed:", error);
+        // On connection error or invalid session, boot to login
+        window.location.replace("index.html");
+      }
+
+      // Logout handler
+      document.getElementById("logoutButton").addEventListener("click", async function () {
+        try {
+          await fetch("http://localhost:3000/api/auth/logout", { method: "POST" });
+        } catch (e) {
+          // Ignore network errors on logout
+        }
+        localStorage.removeItem("fincentrix_token");
+        localStorage.removeItem("fincentrix_user");
+        window.location.replace("index.html");
+      });
+    });
+  </script>
+
+</body>
+</html>

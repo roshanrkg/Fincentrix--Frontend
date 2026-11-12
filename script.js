@@ -1,57 +1,104 @@
+const API_BASE_URL = "http://localhost:3000/api";
+
 // Select the HTML elements
 const form = document.getElementById("signupForm");
 const contactInput = document.getElementById("contact");
+const passwordInput = document.getElementById("password");
 const errorMessage = document.getElementById("error");
+const submitButton = form.querySelector('button[type="submit"]');
 const googleButton = document.getElementById("googleButton");
 
 // Check whether the value is a valid email or phone number
 function isValidContact(value) {
   const trimmedValue = value.trim();
-
-  const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/;
-  const phonePattern = /^\\+?[0-9\\s()-]{8,16}$/;
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const phonePattern = /^\+?[0-9\s()-]{8,16}$/;
 
   return emailPattern.test(trimmedValue) ||
-         phonePattern.test(trimmedValue.replace(/\\s/g, ""));
+         phonePattern.test(trimmedValue.replace(/\s/g, ""));
 }
 
 // Form submit event
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  const value = contactInput.value.trim();
+  const contactValue = contactInput.value.trim();
+  const passwordValue = passwordInput ? passwordInput.value : "";
 
-  // Empty input validation
-  if (value === "") {
-    errorMessage.textContent =
-      "Please enter your email or phone number.";
+  // 1. Empty input validation
+  if (contactValue === "") {
+    errorMessage.textContent = "Please enter your email or phone number.";
     contactInput.focus();
     return;
   }
 
-  // Email and phone validation
-  if (!isValidContact(value)) {
-    errorMessage.textContent =
-      "Please enter a valid email address or phone number.";
+  // 2. Email or phone pattern validation
+  if (!isValidContact(contactValue)) {
+    errorMessage.textContent = "Please enter a valid email address or phone number.";
     contactInput.focus();
     return;
   }
 
-  // If input is valid
+  // 3. Password validation
+  if (!passwordValue) {
+    errorMessage.textContent = "Please enter your password.";
+    if (passwordInput) passwordInput.focus();
+    return;
+  }
+
   errorMessage.textContent = "";
+  const originalButtonText = submitButton.textContent;
+  submitButton.disabled = true;
+  submitButton.textContent = "Signing In...";
 
-  alert(
-    "Demo page: your contact detail is valid. " +
-    "Connect a backend to continue signup."
-  );
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contact: contactValue,
+        password: passwordValue
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      errorMessage.textContent = data.message || "Invalid credentials. Please try again.";
+      return;
+    }
+
+    // Save token and user details for dashboard access
+    localStorage.setItem("fincentrix_token", data.data.token);
+    localStorage.setItem("fincentrix_user", JSON.stringify(data.data));
+
+    // Redirect to protected dashboard
+    window.location.href = "dashboard.html";
+
+  } catch (error) {
+    console.error("Login request failed:", error);
+    errorMessage.textContent = "Unable to connect to the backend server. Please verify it is running on port 3000.";
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalButtonText;
+  }
 });
 
 // Remove error message while user types
 contactInput.addEventListener("input", function () {
   errorMessage.textContent = "";
 });
+if (passwordInput) {
+  passwordInput.addEventListener("input", function () {
+    errorMessage.textContent = "";
+  });
+}
 
 // Google button demo interaction
-googleButton.addEventListener("click", function () {
-  alert("Google sign-in needs OAuth configuration in your project.");
-});
+if (googleButton) {
+  googleButton.addEventListener("click", function () {
+    alert("Google sign-in needs OAuth configuration in your project.");
+  });
+}

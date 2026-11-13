@@ -134,6 +134,239 @@ document.addEventListener("DOMContentLoaded", function () {
 
     bindInputFilters(signupForm);
 
+    // Helper to flash an auto-filled input with visual confirmation
+    function flashAutofilledInput(el, value) {
+        if (!el || value === undefined || value === null || value === "") return;
+        el.value = value;
+        el.style.transition = "background-color 0.4s ease, border-color 0.4s ease";
+        el.style.backgroundColor = "#f0fdf4";
+        el.style.borderColor = "#22c55e";
+        setTimeout(function () {
+            el.style.backgroundColor = "";
+            el.style.borderColor = "";
+        }, 2200);
+    }
+
+    // ==========================================
+    // Email OTP Verification for Signup
+    // ==========================================
+    let isEmailVerified = false;
+    const emailInput = document.getElementById("email");
+    const sendSignupOtpBtn = document.getElementById("sendSignupOtpBtn");
+    const emailOtpRow = document.getElementById("emailOtpRow");
+    const signupOtpInput = document.getElementById("signupOtpInput");
+    const confirmSignupOtpBtn = document.getElementById("confirmSignupOtpBtn");
+    const otpStatusMsg = document.getElementById("otpStatusMsg");
+    const emailVerifiedBadge = document.getElementById("emailVerifiedBadge");
+
+    function setOtpStatus(msg, isSuccess = false) {
+        if (!otpStatusMsg) return;
+        otpStatusMsg.textContent = msg;
+        otpStatusMsg.style.display = "block";
+        otpStatusMsg.style.color = isSuccess ? "#059669" : "#dc2626";
+    }
+
+    if (sendSignupOtpBtn && emailInput) {
+        sendSignupOtpBtn.addEventListener("click", async function () {
+            const emailVal = emailInput.value.trim().toLowerCase();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+            if (!emailVal || !emailRegex.test(emailVal)) {
+                showAlertBanner("Please enter a valid email address first.", "warning");
+                emailInput.focus();
+                return;
+            }
+
+            sendSignupOtpBtn.disabled = true;
+            sendSignupOtpBtn.textContent = "Sending...";
+            setOtpStatus("Sending verification code to your email...", true);
+            if (emailOtpRow) emailOtpRow.style.display = "block";
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: emailVal, purpose: "signup" })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    setOtpStatus(data.message || "Failed to send code.", false);
+                    sendSignupOtpBtn.disabled = false;
+                    sendSignupOtpBtn.textContent = "Verify Email";
+                    return;
+                }
+
+                setOtpStatus(`✅ Code sent to ${emailVal}! Please enter it below.`, true);
+                if (signupOtpInput) signupOtpInput.focus();
+
+                // 60-second cooldown
+                let cd = 60;
+                sendSignupOtpBtn.textContent = `Resend (${cd}s)`;
+                const timer = setInterval(() => {
+                    cd--;
+                    if (cd <= 0) {
+                        clearInterval(timer);
+                        sendSignupOtpBtn.disabled = false;
+                        sendSignupOtpBtn.textContent = "Resend Code";
+                    } else {
+                        sendSignupOtpBtn.textContent = `Resend (${cd}s)`;
+                    }
+                }, 1000);
+
+            } catch (err) {
+                console.error("Signup send OTP error:", err);
+                setOtpStatus("Failed to connect to backend server.", false);
+                sendSignupOtpBtn.disabled = false;
+                sendSignupOtpBtn.textContent = "Verify Email";
+            }
+        });
+    }
+
+    if (confirmSignupOtpBtn && signupOtpInput) {
+        confirmSignupOtpBtn.addEventListener("click", async function () {
+            const emailVal = emailInput.value.trim().toLowerCase();
+            const otpVal = signupOtpInput.value.trim();
+
+            if (!otpVal || otpVal.length !== 6) {
+                setOtpStatus("Please enter the full 6-digit code.", false);
+                signupOtpInput.focus();
+                return;
+            }
+
+            confirmSignupOtpBtn.disabled = true;
+            confirmSignupOtpBtn.textContent = "Verifying...";
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: emailVal, otp: otpVal, purpose: "signup" })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    setOtpStatus(data.message || "Invalid code. Please try again.", false);
+                    confirmSignupOtpBtn.disabled = false;
+                    confirmSignupOtpBtn.textContent = "Confirm OTP";
+                    return;
+                }
+
+                // Verified!
+                isEmailVerified = true;
+                if (emailOtpRow) emailOtpRow.style.display = "none";
+                if (sendSignupOtpBtn) sendSignupOtpBtn.style.display = "none";
+                if (emailVerifiedBadge) emailVerifiedBadge.style.display = "inline";
+                emailInput.readOnly = true;
+                emailInput.style.borderColor = "#10b981";
+                showAlertBanner("✅ Email verified successfully! You can now proceed.", "success");
+
+            } catch (err) {
+                setOtpStatus("Verification failed. Check server connection.", false);
+                confirmSignupOtpBtn.disabled = false;
+                confirmSignupOtpBtn.textContent = "Confirm OTP";
+            }
+        });
+    }
+
+    // Auto-fill from Aadhaar card file selection using Mistral AI
+    const aadhaarCardInput = document.getElementById("aadhaar_card_file");
+    if (aadhaarCardInput) {
+        aadhaarCardInput.addEventListener("change", async function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            showAlertBanner("✨ Mistral AI is analyzing your Aadhaar card to auto-fill your details...", "info");
+
+            try {
+                const fileObj = await fileToBase64(file);
+                const response = await fetch(`${API_BASE_URL}/kyc/extract`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        document_type: "aadhaar",
+                        file: fileObj
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success || !result.data) {
+                    showAlertBanner(result.message || "Could not automatically read Aadhaar details. You can enter them manually.", "warning");
+                    return;
+                }
+
+                const d = result.data;
+                flashAutofilledInput(document.getElementById("aadhaar_number"), d.aadhaar_number);
+                flashAutofilledInput(document.getElementById("fname"), d.fname);
+                flashAutofilledInput(document.getElementById("lname"), d.lname);
+                flashAutofilledInput(document.getElementById("dob"), d.dob);
+                flashAutofilledInput(document.getElementById("address_line1"), d.address_line1);
+                flashAutofilledInput(document.getElementById("address_line2"), d.address_line2);
+                flashAutofilledInput(document.getElementById("address_line3"), d.address_line3);
+                flashAutofilledInput(document.getElementById("city"), d.city);
+                flashAutofilledInput(document.getElementById("state"), d.state);
+                flashAutofilledInput(document.getElementById("pincode"), d.pincode);
+
+                showAlertBanner("✅ Aadhaar details auto-filled successfully! Please review before continuing.", "success");
+
+            } catch (err) {
+                console.error("Aadhaar auto-fill error:", err);
+                showAlertBanner("Could not auto-fill details. Please check the backend connection.", "warning");
+            }
+        });
+    }
+
+    // Auto-fill from PAN card file selection using Mistral AI
+    const panCardInput = document.getElementById("pan_card_file");
+    if (panCardInput) {
+        panCardInput.addEventListener("change", async function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            showAlertBanner("✨ Mistral AI is analyzing your PAN card to auto-fill details...", "info");
+
+            try {
+                const fileObj = await fileToBase64(file);
+                const response = await fetch(`${API_BASE_URL}/kyc/extract`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        document_type: "pan",
+                        file: fileObj
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success || !result.data) {
+                    showAlertBanner(result.message || "Could not automatically read PAN details.", "warning");
+                    return;
+                }
+
+                const d = result.data;
+                flashAutofilledInput(document.getElementById("pan_number"), d.pan_number);
+                if (!document.getElementById("fname").value && d.fname) {
+                    flashAutofilledInput(document.getElementById("fname"), d.fname);
+                }
+                if (!document.getElementById("lname").value && d.lname) {
+                    flashAutofilledInput(document.getElementById("lname"), d.lname);
+                }
+                if (!document.getElementById("dob").value && d.dob) {
+                    flashAutofilledInput(document.getElementById("dob"), d.dob);
+                }
+
+                showAlertBanner("✅ PAN details auto-filled successfully!", "success");
+
+            } catch (err) {
+                console.error("PAN auto-fill error:", err);
+                showAlertBanner("Could not auto-fill PAN. Please check the backend connection.", "warning");
+            }
+        });
+    }
+
     function transitionTo(updateSection) {
         if (isTransitioning) {
             return;
@@ -272,6 +505,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+        }
+
+        if (!isEmailVerified) {
+            showAlertBanner("Please verify your email address with the verification code before continuing.", "warning");
+            const emailEl = document.getElementById("email");
+            if (emailEl) emailEl.focus();
+            const verifyBtn = document.getElementById("sendSignupOtpBtn");
+            if (verifyBtn) verifyBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
         }
 
         // Process file uploads (convert to base64)
@@ -450,7 +692,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         bindInputFilters(card);
+        attachPassbookAutoFill(card);
         return card;
+    }
+
+    // Attach auto-fill to initial bank account card(s)
+    function attachPassbookAutoFill(card) {
+        const passbookInput = card.querySelector('input[name="passbook_file"]');
+        if (!passbookInput) return;
+
+        passbookInput.addEventListener("change", async function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            showAlertBanner("✨ Mistral AI is analyzing your bank passbook to auto-fill details...", "info");
+
+            try {
+                const fileObj = await fileToBase64(file);
+                const response = await fetch(`${API_BASE_URL}/kyc/extract`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        document_type: "passbook",
+                        file: fileObj
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success || !result.data) {
+                    showAlertBanner(result.message || "Could not automatically read passbook details.", "warning");
+                    return;
+                }
+
+                const d = result.data;
+                flashAutofilledInput(card.querySelector('input[name="bank_name"]'), d.bank_name);
+                flashAutofilledInput(card.querySelector('input[name="account_holder_name"]'), d.account_holder_name);
+                flashAutofilledInput(card.querySelector('input[name="account_number"]'), d.account_number);
+                flashAutofilledInput(card.querySelector('input[name="branch_name"]'), d.branch_name);
+                flashAutofilledInput(card.querySelector('input[name="ifsc_code"]'), d.ifsc_code);
+
+                showAlertBanner("✅ Bank account details auto-filled from passbook! Please verify before continuing.", "success");
+
+            } catch (err) {
+                console.error("Passbook auto-fill error:", err);
+                showAlertBanner("Could not auto-fill passbook details. Please check the backend connection.", "warning");
+            }
+        });
+    }
+
+    if (bankAccountsList) {
+        bankAccountsList.querySelectorAll(".bank-account-card").forEach(function (card) {
+            attachPassbookAutoFill(card);
+        });
     }
 
     if (addBankButton) {
@@ -559,15 +853,36 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateLoanCardsUI() {
         if (!loansList) return;
         const cards = loansList.querySelectorAll(".loan-account-card");
+        const placeholder = document.getElementById("noLoansPlaceholder");
+
+        if (cards.length === 0) {
+            if (placeholder) placeholder.style.display = "block";
+        } else {
+            if (placeholder) placeholder.style.display = "none";
+        }
+
         cards.forEach(function (card, index) {
             card.setAttribute("data-loan-index", index);
             const title = card.querySelector(".loan-card-title");
             if (title) title.textContent = `Loan #${index + 1}`;
             const removeBtn = card.querySelector(".remove-loan-btn");
             if (removeBtn) {
-                removeBtn.style.display = cards.length > 1 ? "inline-block" : "none";
+                removeBtn.style.display = "inline-block";
             }
+            bindLoanCardEvents(card);
         });
+    }
+
+    function bindLoanCardEvents(card) {
+        const removeBtn = card.querySelector(".remove-loan-btn");
+        if (removeBtn && !removeBtn._hasRemoveBound) {
+            removeBtn._hasRemoveBound = true;
+            removeBtn.addEventListener("click", function () {
+                card.remove();
+                updateLoanCardsUI();
+            });
+        }
+        bindInputFilters(card);
     }
 
     function createLoanCard(index) {
@@ -581,14 +896,14 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Lender Name *</label>
+                    <label>Lender Name</label>
                     <input type="text" name="lender_name" placeholder="Enter bank or lender name"
                         pattern="[\\p{L}\\p{M} ]+" data-input-filter="letters"
-                        title="Use letters and spaces only" required>
+                        title="Use letters and spaces only">
                 </div>
                 <div class="form-group">
-                    <label>Loan Type *</label>
-                    <select name="loan_type" required>
+                    <label>Loan Type</label>
+                    <select name="loan_type">
                         <option value="">Select loan type</option>
                         <option value="Personal Loan">Personal Loan</option>
                         <option value="Home Loan">Home Loan</option>
@@ -599,46 +914,46 @@ document.addEventListener("DOMContentLoaded", function () {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Original Loan Amount (₹) *</label>
+                    <label>Original Loan Amount (₹)</label>
                     <input type="number" name="loan_amount" min="0" step="0.01"
                         inputmode="decimal" data-input-filter="decimal"
-                        placeholder="Enter original loan amount" required>
+                        placeholder="Enter original loan amount">
                 </div>
                 <div class="form-group">
-                    <label>Outstanding Amount (₹) *</label>
+                    <label>Outstanding Amount (₹)</label>
                     <input type="number" name="outstanding_amount" min="0" step="0.01"
                         inputmode="decimal" data-input-filter="decimal"
-                        placeholder="Enter outstanding amount" required>
+                        placeholder="Enter outstanding amount">
                 </div>
                 <div class="form-group">
-                    <label>Loan Duration (Months) *</label>
+                    <label>Loan Duration (Months)</label>
                     <input type="number" name="loan_duration_months" min="1" step="1"
                         inputmode="numeric" data-input-filter="digits"
-                        placeholder="Example: 60" required>
+                        placeholder="Example: 60">
                 </div>
                 <div class="form-group">
-                    <label>Remaining Months *</label>
+                    <label>Remaining Months</label>
                     <input type="number" name="remaining_months" min="0" step="1"
                         inputmode="numeric" data-input-filter="digits"
-                        placeholder="Enter remaining months" required>
+                        placeholder="Enter remaining months">
                 </div>
                 <div class="form-group">
-                    <label>Monthly EMI (₹) *</label>
+                    <label>Monthly EMI (₹)</label>
                     <input type="number" name="monthly_emi" min="0" step="0.01"
                         inputmode="decimal" data-input-filter="decimal"
-                        placeholder="Enter monthly EMI" required>
+                        placeholder="Enter monthly EMI">
                 </div>
                 <div class="form-group">
-                    <label>Loan Start Date *</label>
-                    <input type="date" name="loan_start_date" required>
+                    <label>Loan Start Date</label>
+                    <input type="date" name="loan_start_date">
                 </div>
                 <div class="form-group">
                     <label>Loan End Date</label>
                     <input type="date" name="loan_end_date">
                 </div>
                 <div class="form-group">
-                    <label>Loan Status *</label>
-                    <select name="loan_status" required>
+                    <label>Loan Status</label>
+                    <select name="loan_status">
                         <option value="">Select loan status</option>
                         <option value="Active">Active</option>
                         <option value="Closed">Closed</option>
@@ -647,17 +962,44 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         `;
 
-        card.querySelector(".remove-loan-btn").addEventListener("click", function () {
-            card.remove();
-            updateLoanCardsUI();
-        });
-
-        bindInputFilters(card);
+        bindLoanCardEvents(card);
         return card;
+    }
+
+    // Toggle for "I do not have any existing loans"
+    const noLoansCheckbox = document.getElementById("noExistingLoansCheckbox");
+    if (noLoansCheckbox) {
+        noLoansCheckbox.addEventListener("change", function () {
+            const addWrapper = document.querySelector(".add-loan-wrapper");
+            const placeholder = document.getElementById("noLoansPlaceholder");
+            if (this.checked) {
+                if (loansList) loansList.style.display = "none";
+                if (addWrapper) addWrapper.style.display = "none";
+                if (placeholder) placeholder.style.display = "none";
+                hideAlertBanner();
+            } else {
+                if (loansList) loansList.style.display = "block";
+                if (addWrapper) addWrapper.style.display = "block";
+                updateLoanCardsUI();
+            }
+        });
+    }
+
+    if (loansList) {
+        loansList.querySelectorAll(".loan-account-card").forEach(function (card) {
+            bindLoanCardEvents(card);
+        });
+        updateLoanCardsUI();
     }
 
     if (addLoanButton) {
         addLoanButton.addEventListener("click", function () {
+            if (noLoansCheckbox && noLoansCheckbox.checked) {
+                noLoansCheckbox.checked = false;
+                if (loansList) loansList.style.display = "block";
+                const addWrapper = document.querySelector(".add-loan-wrapper");
+                if (addWrapper) addWrapper.style.display = "block";
+            }
             const currentCount = loansList.querySelectorAll(".loan-account-card").length;
             const newCard = createLoanCard(currentCount);
             loansList.appendChild(newCard);
@@ -668,17 +1010,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // STEP 4: Existing Loan -> Bank Details
     previousLoanButton.addEventListener("click", function () {
-
         showBankSection();
-
     });
 
     // STEP 5: Finish Registration
     finishSignupButton.addEventListener("click", async function () {
-
-        if (!validateSection(loanSection)) {
-            return;
-        }
+        hideAlertBanner();
 
         const userId = sessionStorage.getItem("fincentrix_user_id");
         const token = sessionStorage.getItem("fincentrix_token");
@@ -689,22 +1026,54 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        const noLoansChecked = document.getElementById("noExistingLoansCheckbox")?.checked;
         const cards = loansList ? loansList.querySelectorAll(".loan-account-card") : [];
         const loansPayload = [];
+        let hasIncompleteLoan = false;
 
-        for (const card of cards) {
-            loansPayload.push({
-                lender_name: card.querySelector('input[name="lender_name"]')?.value.trim() || "",
-                loan_type: card.querySelector('select[name="loan_type"]')?.value || "",
-                loan_amount: card.querySelector('input[name="loan_amount"]')?.value || "0",
-                outstanding_amount: card.querySelector('input[name="outstanding_amount"]')?.value || null,
-                loan_duration_months: card.querySelector('input[name="loan_duration_months"]')?.value || "0",
-                remaining_months: card.querySelector('input[name="remaining_months"]')?.value || null,
-                monthly_emi: card.querySelector('input[name="monthly_emi"]')?.value || "0",
-                loan_start_date: card.querySelector('input[name="loan_start_date"]')?.value || null,
-                loan_end_date: card.querySelector('input[name="loan_end_date"]')?.value || null,
-                loan_status: card.querySelector('select[name="loan_status"]')?.value?.toLowerCase() || "active"
-            });
+        // Only validate if user did not check "no loans" and there are loan cards present
+        if (!noLoansChecked && cards.length > 0) {
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const lender = card.querySelector('input[name="lender_name"]')?.value.trim() || "";
+                const type = card.querySelector('select[name="loan_type"]')?.value || "";
+                const amount = card.querySelector('input[name="loan_amount"]')?.value.trim() || "";
+                const duration = card.querySelector('input[name="loan_duration_months"]')?.value.trim() || "";
+                const emi = card.querySelector('input[name="monthly_emi"]')?.value.trim() || "";
+                const outstanding = card.querySelector('input[name="outstanding_amount"]')?.value.trim() || null;
+                const remaining = card.querySelector('input[name="remaining_months"]')?.value.trim() || null;
+                const startDate = card.querySelector('input[name="loan_start_date"]')?.value || null;
+                const endDate = card.querySelector('input[name="loan_end_date"]')?.value || null;
+                const status = card.querySelector('select[name="loan_status"]')?.value?.toLowerCase() || "active";
+
+                // Check if any field in this card has user input
+                const isPartiallyFilled = Boolean(lender || type || amount || duration || emi || outstanding || remaining || startDate);
+
+                if (isPartiallyFilled) {
+                    if (!lender || !amount || !duration || !emi) {
+                        showAlertBanner(`Loan #${i + 1}: Please fill in Lender Name, Loan Amount, Duration, and Monthly EMI.`, "warning");
+                        hasIncompleteLoan = true;
+                        break;
+                    }
+
+                    loansPayload.push({
+                        lender_name: lender,
+                        loan_type: type || null,
+                        loan_amount: amount,
+                        outstanding_amount: outstanding,
+                        loan_duration_months: duration,
+                        remaining_months: remaining,
+                        monthly_emi: emi,
+                        loan_start_date: startDate,
+                        loan_end_date: endDate,
+                        loan_status: status
+                    });
+                }
+            }
+
+            if (hasIncompleteLoan) {
+                return;
+            }
         }
 
         const originalText = finishSignupButton.textContent;

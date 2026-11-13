@@ -5,6 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Forgot Password - Fincentrix</title>
   <link rel="stylesheet" href="forgot.css">
+  <style>
+    .form-message {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: none;
+    }
+    .form-message.info {
+      display: block;
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .form-message.success {
+      display: block;
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    .form-message.error {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+    .resend-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      font-size: 13px;
+      color: #64748b;
+    }
+    .resend-btn {
+      background: none;
+      border: none;
+      color: #315cff;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+    .resend-btn:disabled {
+      color: #94a3b8;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+    .password-section {
+      margin-top: 20px;
+    }
+    .password-section label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: #34445a;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .password-section input {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .password-section input:focus {
+      border-color: #315cff;
+    }
+  </style>
 </head>
 <body>
   
@@ -15,26 +89,32 @@
 
     <div class="recovery-icon" aria-hidden="true">?</div>
     <p class="eyebrow">ACCOUNT RECOVERY</p>
-    <h1>Forgot your password?</h1>
-    <p class="intro">Enter the email address linked to your account. </p>
+    <h1 id="recoveryTitle">Forgot your password?</h1>
+    <p class="intro" id="recoverySubtitle">Enter your registered email address to receive a verification code.</p>
+
+    <div class="form-message" id="formMessage" aria-live="polite"></div>
 
     <form id="recoveryForm" novalidate>
-      <label for="email">Email address</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        placeholder="Enter your email address"
-        autocomplete="email"
-        required
-      >
+      <!-- Step 1: Email Input -->
+      <div id="emailSection">
+        <label for="email">Email address</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Enter your email address"
+          autocomplete="email"
+          required
+        >
+        <button id="sendOtpButton" class="primary-button" type="button" style="margin-top: 16px;">
+          Send Verification Code
+        </button>
+      </div>
 
-      <button class="primary-button" type="submit">Generate OTP</button>
-      <p class="form-message" id="formMessage" aria-live="polite"></p>
-
+      <!-- Step 2: 6-Digit OTP Section -->
       <section id="otpSection" class="otp-section" hidden aria-labelledby="otpHeading">
         <h2 id="otpHeading">Enter your 6-digit OTP</h2>
-        <p>Enter the code to continue resetting your password.</p>
+        <p>Check your email inbox for the verification code sent by Fincentrix.</p>
         <div class="otp-inputs" role="group" aria-label="Six-digit OTP">
           <input aria-label="OTP digit 1" inputmode="numeric" autocomplete="one-time-code" maxlength="1" pattern="[0-9]" required>
           <input aria-label="OTP digit 2" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
@@ -43,12 +123,34 @@
           <input aria-label="OTP digit 5" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
           <input aria-label="OTP digit 6" inputmode="numeric" maxlength="1" pattern="[0-9]" required>
         </div>
-        <!-- <p class="demo-note">Demo only — no OTP is generated or sent.</p> -->
+
+        <button id="verifyOtpButton" class="primary-button" type="button" style="margin-top: 18px;">
+          Verify Code
+        </button>
+
+        <div class="resend-row">
+          <span id="countdownText">Code expires in 10:00</span>
+          <button id="resendOtpBtn" class="resend-btn" type="button" disabled>Resend Code</button>
+        </div>
+      </section>
+
+      <!-- Step 3: New Password Section -->
+      <section id="passwordSection" class="password-section" hidden>
+        <label for="newPassword">New Password (at least 8 characters)</label>
+        <input id="newPassword" type="password" placeholder="Enter new password" minlength="8" required>
+
+        <label for="confirmPassword">Confirm New Password</label>
+        <input id="confirmPassword" type="password" placeholder="Confirm new password" minlength="8" required>
+
+        <button id="resetPasswordButton" class="primary-button" type="button" style="margin-top: 20px;">
+          Set New Password & Login
+        </button>
       </section>
     </form>
 
-    <a class="back-link" href="index.html">← Back to login</a>
+    <a class="back-link" href="index.html" style="margin-top: 24px; display: inline-block;">← Back to login</a>
   </main>
+  
   <script src="forgot.js"></script>
 </body>
 </html>

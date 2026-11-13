@@ -395,7 +395,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, transitionDuration);
     }
 
-    // Alert Banner Helper
+    // Toast notification helper
     function showAlertBanner(message, type = "error") {
         const banner = document.getElementById("formAlertBanner");
         if (!banner) {
@@ -405,17 +405,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
         banner.className = `form-alert-banner ${type}`;
         const icon = type === "error" ? "⚠️" : type === "warning" ? "🔔" : type === "success" ? "✓" : "ℹ️";
-        banner.innerHTML = `
-            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
-                <div style="display: flex; align-items: flex-start; gap: 8px;">
-                    <span style="font-size: 18px; line-height: 1.2;">${icon}</span>
-                    <span>${message}</span>
-                </div>
-                <button type="button" style="background: none; border: none; font-size: 16px; cursor: pointer; color: inherit; padding: 0 4px; line-height: 1;" onclick="document.getElementById('formAlertBanner').style.display='none'">✕</button>
-            </div>
-        `;
+        const content = document.createElement("div");
+        content.className = "form-alert-content";
+
+        const iconElement = document.createElement("span");
+        iconElement.className = "form-alert-icon";
+        iconElement.setAttribute("aria-hidden", "true");
+        iconElement.textContent = icon;
+
+        const messageElement = document.createElement("span");
+        messageElement.className = "form-alert-message";
+        messageElement.textContent = message;
+
+        const dismissButton = document.createElement("button");
+        dismissButton.type = "button";
+        dismissButton.className = "form-alert-dismiss";
+        dismissButton.setAttribute("aria-label", "Dismiss notification");
+        dismissButton.textContent = "×";
+        dismissButton.addEventListener("click", hideAlertBanner);
+
+        content.append(iconElement, messageElement, dismissButton);
+        banner.replaceChildren(content);
         banner.style.display = "block";
-        banner.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     function hideAlertBanner() {
@@ -442,8 +453,8 @@ document.addEventListener("DOMContentLoaded", function () {
         for (const field of fields) {
 
             if (!field.checkValidity()) {
-                field.reportValidity();
                 const labelText = field.labels?.[0]?.textContent?.replace("*", "").trim() || field.placeholder || field.name || "a required field";
+                field.focus();
                 showAlertBanner(`Please provide a valid value for "${labelText}".`, "warning");
                 return false;
             }

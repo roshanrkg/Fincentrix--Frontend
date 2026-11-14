@@ -1,1009 +1,286 @@
 /* =========================================================
    FINCENTRIX - DASHBOARD CSS
-   Complete Updated Stylesheet
+   Optimized Tailwind Companion Stylesheet
 ========================================================= */
-
 
 /* =========================================================
-   01. GLOBAL CONFIGURATION
+   01. WORKSPACE BACKGROUND & GLOBAL BASE
 ========================================================= */
-
 :root {
     --primary: #315cff;
     --primary-light: #4778ff;
     --navy: #102958;
-
-    --text: #26364d;
-    --muted: #8492a9;
-
-    --background: #f5f8ff;
-    --white: #ffffff;
-    --border: #e8edf6;
-
     --sidebar-width: 265px;
-}
-
-* {
-    box-sizing: border-box;
 }
 
 html {
     scroll-behavior: smooth;
 }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
+body.sidebar-open {
+    overflow: hidden;
 }
 
-button,
-a {
-    font-family: inherit;
+/* Custom radial gradient for dashboard workspace */
+.workspace {
+    background:
+        radial-gradient(circle at 90% 10%, rgba(91, 132, 255, 0.07), transparent 28%),
+        radial-gradient(circle at 5% 80%, rgba(49, 92, 255, 0.045), transparent 30%),
+        #f5f8ff;
 }
-
-button {
-    cursor: pointer;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button:focus-visible,
-a:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 3px;
-}
-
-.app-container {
-    min-height: 100vh;
-}
-
 
 /* =========================================================
-   02. SIDEBAR
+   02. SIDEBAR NAV ACTIVE STATE
 ========================================================= */
-
-.sidebar {
-    width: var(--sidebar-width);
-    height: 100vh;
-
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    z-index: 100;
-
-    display: flex;
-    flex-direction: column;
-
-    transition: transform .35s ease;
-}
-
-.sidebar-close {
-    display: none;
-
-    border: none;
-    background: transparent;
-
-    color: white;
-    font-size: 27px;
-}
-
-.sidebar-overlay {
-    display: none;
-}
-
-
-/* =========================================================
-   03. BRAND SECTION
-========================================================= */
-
-.brand-logo {
-    font-style: italic;
-    box-shadow: 0 5px 18px rgba(49, 92, 255, .35);
-}
-
-.brand-name {
-    letter-spacing: -1px;
-}
-
-
-/* =========================================================
-   04. SIDEBAR NAVIGATION
-========================================================= */
-
-.nav-heading {
-    user-select: none;
-}
-
-.nav-link {
-    position: relative;
-
-    border: 1px solid transparent;
-
-    transition:
-        background .3s ease,
-        color .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-}
-
-.nav-link svg {
-    width: 21px;
-    height: 21px;
-
-    flex-shrink: 0;
-
-    fill: none;
-    stroke: currentColor;
-
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-
-    transition: transform .3s ease;
-}
-
-.nav-link:hover:not(.active) {
-    color: white;
-
-    background: rgba(49, 92, 255, .07);
-
-    border-color: rgba(49, 92, 255, .25);
-}
-
-.nav-link:hover svg {
-    transform: scale(1.08);
-}
-
 .nav-link.active {
-    color: white;
-
-    background: linear-gradient(
-        110deg,
-        rgba(49, 92, 255, .20),
-        rgba(49, 92, 255, .05)
-    );
-
-    border-color: rgba(49, 120, 255, .8);
-
-    box-shadow: 0 0 12px rgba(49, 92, 255, .12);
+    color: #ffffff;
+    background: linear-gradient(110deg, rgba(49, 92, 255, 0.22), rgba(49, 92, 255, 0.05));
+    border-color: rgba(49, 120, 255, 0.8);
+    box-shadow: 0 0 14px rgba(49, 92, 255, 0.15);
 }
 
 .nav-link.active::before {
     content: "";
-
     position: absolute;
-
     left: 0;
     top: 50%;
-
-    width: 3px;
+    width: 3.5px;
     height: 25px;
-
     background: #8eb1ff;
-
-    border-radius: 5px;
-
+    border-radius: 4px;
     transform: translateY(-50%);
 }
 
-.nav-count {
-    margin-left: auto;
-}
-
-.notification-dot {
-    width: 7px;
-    height: 7px;
-
-    margin-left: auto;
-
-    background: #ff6c79;
-
-    border-radius: 50%;
-
-    box-shadow: 0 0 0 4px rgba(255, 108, 121, .12);
-}
-
-
 /* =========================================================
-   05. SIDEBAR PROFILE & UPGRADE
+   03. BANNER SHINE & ROTATING RING DECORATIONS
 ========================================================= */
-
-.upgrade-card {
-    position: relative;
-    overflow: hidden;
-
-    transition:
-        transform .3s ease,
-        box-shadow .3s ease;
-}
-
-.upgrade-card:hover {
-    transform: translateY(-4px);
-
-    box-shadow: 0 12px 30px rgba(0, 100, 180, .2);
-}
-
-.user-profile {
-    border-top: 1px solid rgba(255, 255, 255, .1);
-}
-
-.user-avatar {
-    flex-shrink: 0;
-}
-
-.profile-button {
-    transition: color .3s ease;
-}
-
-.profile-button:hover {
-    color: white;
-}
-
-
-/* =========================================================
-   06. MAIN CONTENT & WORKSPACE
-========================================================= */
-
-.main-content {
-    min-height: 100vh;
-    margin-left: var(--sidebar-width);
-}
-
-.workspace {
-    position: relative;
-    isolation: isolate;
-
-    min-height: 100vh;
-
-    overflow: visible;
-
-    background:
-        radial-gradient(
-            circle at 90% 10%,
-            rgba(91, 132, 255, .07),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 5% 80%,
-            rgba(49, 92, 255, .045),
-            transparent 30%
-        ),
-        #f5f8ff;
-}
-
-.loan-workspace {
-    width: 100%;
-    max-width: 1500px;
-    margin: auto;
-}
-
-
-/* =========================================================
-   07. MOBILE HEADER
-========================================================= */
-
-.mobile-header {
-    display: none;
-}
-
-.menu-button svg {
-    width: 21px;
-    height: 21px;
-
-    fill: none;
-    stroke: #19345d;
-
-    stroke-width: 2;
-    stroke-linecap: round;
-}
-
-
-/* =========================================================
-   08. GREETING SECTION
-========================================================= */
-
-.fincentrix-greeting {
-    width: 100%;
-    position: relative;
-
-    margin-bottom: 28px;
-
-    z-index: 2;
-}
-
-.loan-topbar {
-    animation: greetingAppear .8s ease both;
-}
-
-.greeting-label {
-    letter-spacing: 1.6px;
-}
-
-.greeting-text h1 {
-    font-size: clamp(21px, 2.5vw, 28px);
-}
-
-.greeting-text p {
-    line-height: 1.7;
-}
-
-.greeting-wave {
-    display: inline-block;
-
-    transform-origin: 70% 70%;
-
-    animation: greetingWave 2.5s infinite;
-}
-
-
-/* =========================================================
-   09. GREETING ACTION BUTTONS
-========================================================= */
-
-.notification-btn {
-    position: relative;
-    transition: .3s ease;
-}
-
-.notification-btn:hover {
-    transform: translateY(-4px);
-
-    box-shadow: 0 8px 20px rgba(49, 92, 255, .12);
-}
-
-.notification-btn .notification-dot {
-    position: absolute;
-
-    top: 8px;
-    right: 8px;
-
-    width: 8px;
-    height: 8px;
-
-    margin: 0;
-
-    background: #ff6578;
-
-    border: 2px solid white;
-    border-radius: 50%;
-
-    animation: notificationPulse 1.6s infinite;
-}
-
-.greeting-avatar {
-    transition: .3s ease;
-}
-
-.greeting-avatar:hover {
-    transform: scale(1.08) rotate(5deg);
-}
-
-
-/* =========================================================
-   10. WELCOME BANNER
-========================================================= */
-
-.loan-welcome-banner {
-    position: relative;
-    isolation: isolate;
-
-    overflow: hidden;
-
-    box-shadow: 0 15px 38px rgba(31, 65, 150, .16);
-}
-
 .loan-welcome-banner::before {
     content: "";
-
     position: absolute;
     inset: -100%;
-
-    z-index: -1;
-
+    z-index: 1;
     background: linear-gradient(
         115deg,
         transparent 43%,
-        rgba(255, 255, 255, .13) 50%,
+        rgba(255, 255, 255, 0.13) 50%,
         transparent 57%
     );
-
     animation: bannerShine 9s linear infinite;
-
     pointer-events: none;
 }
 
 .loan-welcome-banner::after {
     content: "";
-
     position: absolute;
-
     width: 360px;
     height: 360px;
-
-    right: 10%;
-    top: -250px;
-
-    z-index: -1;
-
-    border: 1px solid rgba(255, 255, 255, .18);
-
+    right: 8%;
+    top: -240px;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 50%;
-
     animation: bannerRotate 25s linear infinite;
-
     pointer-events: none;
 }
 
-
 /* =========================================================
-   11. BANNER GLOW EFFECTS
+   04. INDIVIDUAL LOAN CARD COLOR THEMES
 ========================================================= */
-
-.banner-glow {
-    position: absolute;
-    z-index: -1;
-
-    width: 220px;
-    height: 220px;
-
-    border-radius: 50%;
-
-    filter: blur(65px);
-
-    opacity: .45;
-
-    pointer-events: none;
-}
-
-.glow-one {
-    top: -100px;
-    left: 30%;
-
-    background: #65b8ff;
-
-    animation: glowMovement 8s ease-in-out infinite alternate;
-}
-
-.glow-two {
-    right: 10%;
-    bottom: -130px;
-
-    background: #a28bff;
-
-    animation: glowMovement 10s ease-in-out infinite alternate-reverse;
-}
-
-.banner-light-wave {
-    position: absolute;
-
-    z-index: -1;
-
-    width: 65%;
-    height: 150px;
-
-    left: 20%;
-    bottom: -100px;
-
-    border-top: 2px solid rgba(255, 255, 255, .3);
-
-    border-radius: 50%;
-
-    filter: blur(2px);
-
-    animation: waveMovement 7s ease-in-out infinite alternate;
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   12. BANNER CONTENT
-========================================================= */
-
-.welcome-content {
-    position: relative;
-    z-index: 3;
-
-    animation: contentEntrance .9s ease both;
-}
-
-.welcome-tag {
-    letter-spacing: 1.2px;
-}
-
-.welcome-btn {
-    transition: .35s ease;
-}
-
-.welcome-btn:hover {
-    transform: translateY(-4px);
-
-    box-shadow: 0 10px 25px rgba(255, 255, 255, .2);
-}
-
-.welcome-btn i {
-    transition: transform .3s ease;
-}
-
-.welcome-btn:hover i {
-    transform: translateX(5px);
-}
-
-
-/* =========================================================
-   13. BANNER IMAGE / VIDEO
-========================================================= */
-
-.welcome-image-wrapper {
-    position: relative;
-
-    width: 85%;
-    height: 80%;
-
-    overflow: hidden;
-
-    border-radius: 15px;
-
-    background: transparent;
-
-    box-shadow: 0 12px 35px rgba(0, 0, 0, .23);
-
-    animation: imageFloating 5s ease-in-out infinite;
-}
-
-.welcome-image {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-    object-position: center center;
-
-    border-radius: inherit;
-}
-
-
-/* =========================================================
-   14. LOAN SECTION
-========================================================= */
-
-.loan-types-section {
-    position: relative;
-
-    scroll-margin-top: 30px;
-}
-
-.loan-section-heading h2 {
-    letter-spacing: -.7px;
-}
-
-.loan-count {
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   15. LOAN CARD GRID
-========================================================= */
-
-.loan-card-grid {
-    display: grid;
-
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-
-    align-items: start;
-
-    column-gap: 16px;
-    row-gap: 24px;
-
-    width: 100%;
-
-    overflow: visible;
-}
-
-
-/* =========================================================
-   16. LOAN PRODUCT CARD
-========================================================= */
-
 .loan-product-card {
     --accent: #315cff;
     --accent-soft: #edf2ff;
-    --accent-glow: rgba(49, 92, 255, .18);
-
+    --accent-glow: rgba(49, 92, 255, 0.18);
     position: relative;
     isolation: isolate;
-
     display: flex;
     flex-direction: column;
-
     width: 100%;
     min-width: 0;
-
     height: auto !important;
     min-height: 0;
-
     aspect-ratio: 1 / 1;
-
     padding: 9px;
-
     z-index: 1;
-
-    background: rgba(255, 255, 255, .94);
-
-    border: 1px solid rgba(226, 233, 247, .95);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(226, 233, 247, 0.95);
     border-radius: 16px;
-
-    box-shadow: 0 5px 18px rgba(20, 45, 90, .055);
-
+    box-shadow: 0 5px 18px rgba(20, 45, 90, 0.055);
     overflow: visible;
-
     transition:
-        transform .4s cubic-bezier(.2, .8, .2, 1),
-        border-color .35s ease,
-        box-shadow .35s ease,
-        background .35s ease;
+        transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        background 0.35s ease;
 }
 
+.loan-product-card[data-loan-card="home"]     { --accent: #315cff; --accent-soft: #edf2ff; --accent-glow: rgba(49, 92, 255, 0.18); }
+.loan-product-card[data-loan-card="personal"] { --accent: #168778; --accent-soft: #e9f7f3; --accent-glow: rgba(22, 135, 120, 0.18); }
+.loan-product-card[data-loan-card="car"]      { --accent: #e58a35; --accent-soft: #fff3e7; --accent-glow: rgba(229, 138, 53, 0.18); }
+.loan-product-card[data-loan-card="education"]{ --accent: #7956d8; --accent-soft: #f2edff; --accent-glow: rgba(121, 86, 216, 0.18); }
+.loan-product-card[data-loan-card="business"] { --accent: #168eaa; --accent-soft: #eaf7fb; --accent-glow: rgba(22, 142, 170, 0.18); }
+.loan-product-card[data-loan-card="gold"]     { --accent: #c79b35; --accent-soft: #fff8e7; --accent-glow: rgba(199, 155, 53, 0.18); }
+.loan-product-card[data-loan-card="property"] { --accent: #d45b77; --accent-soft: #fff0f4; --accent-glow: rgba(212, 91, 119, 0.18); }
+.loan-product-card[data-loan-card="wedding"]  { --accent: #d45b91; --accent-soft: #fff0f6; --accent-glow: rgba(212, 91, 145, 0.18); }
+.loan-product-card[data-loan-card="medical"]  { --accent: #159c8a; --accent-soft: #e8f8f4; --accent-glow: rgba(21, 156, 138, 0.18); }
+.loan-product-card[data-loan-card="travel"]   { --accent: #3b82c4; --accent-soft: #edf6ff; --accent-glow: rgba(59, 130, 196, 0.18); }
 
 /* =========================================================
-   17. INDIVIDUAL LOAN CARD THEMES
+   05. LOAN CARD HOVER & GLASSMORPHISM EXPANDED DETAILS
 ========================================================= */
 
-.loan-product-card[data-loan-card="home"] {
-    --accent: #315cff;
-    --accent-soft: #edf2ff;
-    --accent-glow: rgba(49, 92, 255, .18);
+/* Desktop Hover States */
+@media (hover: hover) and (pointer: fine) {
+    .loan-product-card:hover {
+        z-index: 50 !important;
+        background: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border-color: rgba(255, 255, 255, 0.95) !important;
+        box-shadow:
+            0 15px 35px var(--accent-glow),
+            0 0 0 1px rgba(255, 255, 255, 0.65) !important;
+        transform: translateY(-5px);
+    }
+
+    .loan-product-card:hover .loan-card-visual img {
+        transform: scale(1.07);
+    }
+
+    .loan-product-card:hover .loan-card-arrow {
+        transform: rotate(45deg);
+        background: var(--accent);
+        color: white;
+    }
+
+    .loan-product-card:hover .loan-extra-details {
+        max-height: 500px;
+        padding: 13px 10px;
+        margin-top: 10px;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .loan-product-card:hover .apply-loan-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.loan-product-card[data-loan-card="personal"] {
-    --accent: #168778;
-    --accent-soft: #e9f7f3;
-    --accent-glow: rgba(22, 135, 120, .18);
+/* Touch Device Expansion (.expanded) */
+.loan-product-card.expanded {
+    z-index: 50 !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow:
+        0 15px 35px var(--accent-glow),
+        0 0 0 1px rgba(255, 255, 255, 0.65) !important;
 }
 
-.loan-product-card[data-loan-card="car"] {
-    --accent: #e58a35;
-    --accent-soft: #fff3e7;
-    --accent-glow: rgba(229, 138, 53, .18);
+.loan-product-card.expanded .loan-card-arrow {
+    transform: rotate(45deg);
+    background: var(--accent);
+    color: white;
 }
 
-.loan-product-card[data-loan-card="education"] {
-    --accent: #7956d8;
-    --accent-soft: #f2edff;
-    --accent-glow: rgba(121, 86, 216, .18);
+.loan-product-card.expanded .loan-extra-details {
+    max-height: 500px;
+    padding: 13px 10px;
+    margin-top: 10px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
-.loan-product-card[data-loan-card="business"] {
-    --accent: #168eaa;
-    --accent-soft: #eaf7fb;
-    --accent-glow: rgba(22, 142, 170, .18);
+.loan-product-card.expanded .apply-loan-btn {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.loan-product-card[data-loan-card="gold"] {
-    --accent: #c79b35;
-    --accent-soft: #fff8e7;
-    --accent-glow: rgba(199, 155, 53, .18);
-}
-
-.loan-product-card[data-loan-card="property"] {
-    --accent: #d45b77;
-    --accent-soft: #fff0f4;
-    --accent-glow: rgba(212, 91, 119, .18);
-}
-
-.loan-product-card[data-loan-card="wedding"] {
-    --accent: #d45b91;
-    --accent-soft: #fff0f6;
-    --accent-glow: rgba(212, 91, 145, .18);
-}
-
-.loan-product-card[data-loan-card="medical"] {
-    --accent: #159c8a;
-    --accent-soft: #e8f8f4;
-    --accent-glow: rgba(21, 156, 138, .18);
-}
-
-.loan-product-card[data-loan-card="travel"] {
-    --accent: #3b82c4;
-    --accent-soft: #edf6ff;
-    --accent-glow: rgba(59, 130, 196, .18);
-}
-
-
-/* =========================================================
-   18. LOAN CARD IMAGE
-========================================================= */
-
-.loan-card-visual {
-    position: relative;
-
-    display: block;
-
-    width: 100%;
-    height: 100px !important;
-
-    flex-shrink: 0;
-
-    overflow: hidden;
-
-    background: var(--accent-soft);
-
-    border-radius: 11px;
-}
-
-.loan-card-visual img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    transition: transform .65s ease;
-}
-
-.loan-card-visual::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    background: linear-gradient(
-        180deg,
-        rgba(7, 26, 67, .25),
-        transparent 75%
-    );
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   19. LOAN CATEGORY BADGE
-========================================================= */
-
-.loan-category {
-    position: absolute;
-
-    z-index: 2;
-
-    top: 9px;
-    left: 9px;
-
-    padding: 5px 8px;
-
-    background: rgba(255, 255, 255, .92);
-
-    border-radius: 5px;
-
-    color: #29446e;
-
-    font-size: 8px;
-    font-weight: 800;
-
-    letter-spacing: .6px;
-
-    backdrop-filter: blur(10px);
-}
-
-
-/* =========================================================
-   20. POPULAR BADGE
-========================================================= */
-
-.popular-badge {
-    position: absolute;
-
-    z-index: 3;
-
-    top: 9px;
-    right: 9px;
-
-    padding: 5px 8px;
-
-    background: #e4f8f0;
-
-    border-radius: 20px;
-
-    color: #168778;
-
-    font-size: 8px;
-    font-weight: 800;
-}
-
-
-/* =========================================================
-   21. LOAN CARD CONTENT
-========================================================= */
-
-.loan-card-content {
-    position: relative;
-
-    padding: 10px 3px 4px;
-}
-
-.loan-card-heading {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 6px;
-}
-
-.loan-card-heading h3 {
-    color: var(--navy);
-
-    font-size: 12px;
-    font-weight: 800;
-
-    line-height: 1.4;
-}
-
-.loan-card-arrow {
-    width: 25px;
-    height: 25px;
-
-    flex-shrink: 0;
-
-    display: grid;
-    place-items: center;
-
-    background: var(--accent-soft);
-
-    border-radius: 50%;
-
-    color: var(--accent);
-
-    transition: .35s ease;
-}
-
-.loan-short-description {
-    margin-top: 5px;
-
-    color: var(--muted);
-
-    font-size: 10px;
-    line-height: 1.5;
-}
-
-
-/* =========================================================
-   22. GLASSMORPHISM EXPANDED DETAILS
-========================================================= */
-
+/* Glassmorphism Details Box */
 .loan-extra-details {
     position: relative;
-
     width: 100%;
-
     display: block;
-
     max-height: 0;
-
     padding: 0 10px;
-
     margin-top: 0;
-
     overflow: hidden;
-
     opacity: 0;
     visibility: hidden;
-
-    background: rgba(255, 255, 255, .62);
-
-    border: 1px solid rgba(255, 255, 255, .75);
-
+    background: rgba(255, 255, 255, 0.62) !important;
+    border: 1px solid rgba(255, 255, 255, 0.75) !important;
     border-radius: 12px;
-
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
+    backdrop-filter: blur(18px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, .8),
-        0 8px 25px rgba(49, 92, 255, .08);
-
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 8px 25px rgba(49, 92, 255, 0.08) !important;
     transform: translateY(-8px);
-
     transition:
-        max-height .45s ease,
-        opacity .35s ease,
-        padding .4s ease,
-        margin .4s ease,
-        transform .4s ease,
-        visibility .35s ease;
+        max-height 0.45s ease,
+        opacity 0.35s ease,
+        padding 0.4s ease,
+        margin 0.4s ease,
+        transform 0.4s ease,
+        visibility 0.35s ease;
 }
 
 .loan-extra-details > p {
     color: #68778e;
-
     font-size: 10px;
     line-height: 1.7;
+    margin: 0;
 }
 
-
-/* =========================================================
-   23. LOAN BENEFITS
-========================================================= */
-
+/* Benefits Tags */
 .loan-benefits {
     display: flex;
     flex-wrap: wrap;
-
     gap: 6px;
-
     margin-top: 12px;
 }
 
 .loan-benefits span {
     padding: 6px 7px;
-
-    background: rgba(255, 255, 255, .65);
-
-    border: 1px solid color-mix(
-        in srgb,
-        var(--accent) 18%,
-        white
-    );
-
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid color-mix(in srgb, var(--accent) 18%, white);
     border-radius: 6px;
-
     color: var(--accent);
-
     font-size: 8px;
     font-weight: 700;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-
-/* =========================================================
-   24. APPLY LOAN BUTTON
-========================================================= */
-
+/* Apply Loan Button */
 .apply-loan-btn {
     width: 100%;
-
     display: flex;
-
     align-items: center;
     justify-content: space-between;
-
     margin-top: 12px;
     padding: 10px 12px;
-
-    background: linear-gradient(
-        100deg,
-        var(--accent),
-        var(--primary-light)
-    );
-
+    background: linear-gradient(100deg, var(--accent), var(--primary-light));
     border: none;
     border-radius: 8px;
-
     color: white;
-
     font-size: 10px;
     font-weight: 800;
-
     opacity: 0;
-
     transform: translateY(8px);
-
     transition:
-        opacity .3s ease,
-        transform .35s ease,
-        box-shadow .3s ease;
+        opacity 0.3s ease,
+        transform 0.35s ease,
+        box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .apply-loan-btn span {
     font-size: 17px;
-
-    transition: transform .3s ease;
+    transition: transform 0.3s ease;
 }
 
 .apply-loan-btn:hover span {
@@ -1014,191 +291,15 @@ a:focus-visible {
     box-shadow: 0 7px 18px var(--accent-glow);
 }
 
-
 /* =========================================================
-   25. DESKTOP HOVER INTERACTIONS
+   06. KEYFRAME ANIMATIONS
 ========================================================= */
-
-@media (hover: hover) and (pointer: fine) {
-
-    .loan-product-card:hover {
-        z-index: 20;
-
-        background: rgba(255, 255, 255, .75);
-
-        border-color: rgba(255, 255, 255, .95);
-
-        box-shadow:
-            0 15px 35px var(--accent-glow),
-            0 0 0 1px rgba(255, 255, 255, .65);
-
-        transform: translateY(-5px);
-    }
-
-    .loan-product-card:hover .loan-card-visual img {
-        transform: scale(1.07);
-    }
-
-    .loan-product-card:hover .loan-card-arrow {
-        transform: rotate(45deg);
-
-        background: var(--accent);
-        color: white;
-    }
-
-    .loan-product-card:hover .loan-extra-details {
-        max-height: 500px;
-
-        padding: 13px 10px;
-
-        margin-top: 10px;
-
-        opacity: 1;
-        visibility: visible;
-
-        transform: translateY(0);
-    }
-
-    .loan-product-card:hover .apply-loan-btn {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-
-/* =========================================================
-   26. TOUCH SCREEN EXPANSION
-========================================================= */
-
-.loan-product-card.expanded {
-    z-index: 20;
-
-    background: rgba(255, 255, 255, .75);
-
-    border-color: rgba(255, 255, 255, .95);
-
-    box-shadow:
-        0 15px 35px var(--accent-glow),
-        0 0 0 1px rgba(255, 255, 255, .65);
-}
-
-.loan-product-card.expanded .loan-extra-details {
-    max-height: 500px;
-
-    padding: 13px 10px;
-
-    margin-top: 10px;
-
-    opacity: 1;
-    visibility: visible;
-
-    transform: translateY(0);
-}
-
-.loan-product-card.expanded .apply-loan-btn {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* =========================================================
-   27. MOBILE BOTTOM NAVIGATION
-========================================================= */
-
-.bottom-navigation {
-    display: none;
-}
-
-.bottom-nav-link {
-    transition: .3s ease;
-}
-
-.bottom-nav-link svg {
-    width: 20px;
-    height: 20px;
-
-    fill: none;
-
-    stroke: currentColor;
-
-    stroke-width: 1.7;
-
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.bottom-nav-link.active {
-    color: var(--primary);
-}
-
-.mobile-alert-icon {
-    position: relative;
-}
-
-.mobile-alert-icon svg {
-    width: 20px;
-    height: 20px;
-
-    fill: none;
-
-    stroke: currentColor;
-    stroke-width: 1.7;
-}
-
-.mobile-alert-icon i {
-    position: absolute;
-
-    top: 0;
-    right: -2px;
-
-    width: 6px;
-    height: 6px;
-
-    background: #ff6578;
-
-    border: 1px solid white;
-
-    border-radius: 50%;
-}
-
-
-/* =========================================================
-   28. ANIMATIONS
-========================================================= */
-
-@keyframes greetingAppear {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes greetingWave {
-    0%, 60%, 100% {
-        transform: rotate(0);
-    }
-
-    10%, 30% {
-        transform: rotate(18deg);
-    }
-
-    20%, 40% {
-        transform: rotate(-10deg);
-    }
-}
-
 @keyframes bannerShine {
     from {
-        transform: translateX(-30%) rotate(15deg);
+        transform: translateX(-35%) rotate(15deg);
     }
-
     to {
-        transform: translateX(30%) rotate(15deg);
+        transform: translateX(35%) rotate(15deg);
     }
 }
 
@@ -1208,444 +309,16 @@ a:focus-visible {
     }
 }
 
-@keyframes glowMovement {
-    from {
-        transform: translate(0, 0) scale(1);
-    }
-
-    to {
-        transform: translate(45px, 25px) scale(1.3);
-    }
-}
-
-@keyframes waveMovement {
-    from {
-        transform: translateX(-25px) rotate(-10deg);
-    }
-
-    to {
-        transform: translateX(35px) rotate(-3deg);
-    }
-}
-
-@keyframes imageFloating {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-7px);
-    }
-}
-
-@keyframes notificationPulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(255, 101, 120, .4);
-    }
-
-    50% {
-        box-shadow: 0 0 0 7px rgba(255, 101, 120, 0);
-    }
-}
-
-@keyframes contentEntrance {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-
 /* =========================================================
-   29. TABLET RESPONSIVE
+   07. ACCESSIBILITY (REDUCED MOTION)
 ========================================================= */
-
-@media (max-width: 1100px) {
-
-    .workspace {
-        padding: 30px 25px 45px;
-    }
-
-    .loan-card-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        column-gap: 15px;
-        row-gap: 22px;
-    }
-
-    .loan-product-card {
-        padding: 8px;
-    }
-
-    .loan-card-visual {
-        height: 110px !important;
-    }
-}
-
-
-/* =========================================================
-   30. MOBILE RESPONSIVE
-========================================================= */
-
-@media (max-width: 650px) {
-
-    /* SIDEBAR */
-
-    .sidebar {
-        width: 280px;
-
-        transform: translateX(-100%);
-    }
-
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    .sidebar-close {
-        display: block;
-    }
-
-    .sidebar-overlay {
-        position: fixed;
-
-        inset: 0;
-
-        z-index: 90;
-
-        display: block;
-
-        background: rgba(5, 15, 35, .55);
-
-        opacity: 0;
-        visibility: hidden;
-
-        transition: .3s ease;
-    }
-
-    .sidebar-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    body.sidebar-open {
-        overflow: hidden;
-    }
-
-
-    /* MAIN CONTENT */
-
-    .main-content {
-        margin-left: 0;
-    }
-
-    .workspace {
-        padding: 25px 17px 110px;
-    }
-
-
-    /* MOBILE HEADER */
-
-    .mobile-header {
-        position: sticky;
-
-        top: 0;
-
-        z-index: 50;
-
-        height: 65px;
-
-        padding: 0 17px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: space-between;
-
-        background: white;
-
-        border-bottom: 1px solid #edf0f6;
-
-        box-shadow: 0 3px 12px rgba(20, 40, 80, .04);
-    }
-
-
-    /* GREETING */
-
-    .loan-topbar {
-        align-items: flex-start;
-
-        margin-bottom: 20px;
-    }
-
-    .greeting-text h1 {
-        font-size: 22px;
-    }
-
-    .greeting-text p {
-        font-size: 11px;
-    }
-
-    .greeting-actions {
-        gap: 8px;
-    }
-
-    .notification-btn,
-    .greeting-avatar {
-        width: 36px;
-        height: 36px;
-    }
-
-
-    /* WELCOME BANNER */
-
-    .loan-welcome-banner {
-        min-height: 190px;
-
-        padding: 23px 18px;
-
-        border-radius: 16px;
-    }
-
-    .welcome-content {
-        max-width: 70%;
-    }
-
-    .welcome-content h2 {
-        font-size: 23px;
-    }
-
-    .welcome-content p {
-        font-size: 10px;
-    }
-
-    .welcome-tag {
-        font-size: 7px;
-        padding: 6px 8px;
-    }
-
-    .welcome-decoration {
-        width: 38%;
-    }
-
-    .welcome-image-wrapper {
-        width: 95%;
-        height: 65%;
-    }
-
-    .welcome-btn {
-        margin-top: 14px;
-        padding: 10px 12px;
-
-        font-size: 9px;
-
-        gap: 10px;
-    }
-
-
-    /* LOAN SECTION */
-
-    .loan-section-heading {
-        align-items: flex-start;
-
-        flex-direction: column;
-
-        margin-bottom: 19px;
-    }
-
-    .loan-section-heading h2 {
-        font-size: 21px;
-    }
-
-    .loan-section-heading p {
-        font-size: 11px;
-    }
-
-    .loan-count {
-        font-size: 9px;
-    }
-
-
-    /* LOAN GRID */
-
-    .loan-card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-
-        column-gap: 12px;
-        row-gap: 24px;
-    }
-
-    .loan-product-card {
-        height: auto !important;
-
-        aspect-ratio: 1 / 1;
-
-        padding: 7px;
-
-        border-radius: 13px;
-    }
-
-    .loan-card-visual {
-        height: 85px !important;
-
-        border-radius: 9px;
-    }
-
-    .loan-card-content {
-        padding: 8px 4px;
-    }
-
-    .loan-card-heading h3 {
-        font-size: 11px;
-    }
-
-    .loan-card-arrow {
-        width: 22px;
-        height: 22px;
-    }
-
-    .loan-short-description {
-        font-size: 9px;
-    }
-
-    .loan-extra-details {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .loan-extra-details > p {
-        font-size: 9px;
-    }
-
-    .loan-benefits {
-        gap: 5px;
-    }
-
-    .loan-benefits span {
-        font-size: 7px;
-        padding: 5px 6px;
-    }
-
-    .apply-loan-btn {
-        padding: 9px 10px;
-        font-size: 9px;
-    }
-
-
-    /* MOBILE BOTTOM NAVIGATION */
-
-    .bottom-navigation {
-        position: fixed;
-
-        bottom: 0;
-        left: 0;
-
-        z-index: 80;
-
-        width: 100%;
-        height: 68px;
-
-        padding: 7px 12px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: space-around;
-
-        background: white;
-
-        border-top: 1px solid #e9edf5;
-
-        box-shadow: 0 -5px 20px rgba(20, 40, 80, .06);
-    }
-
-    .bottom-nav-link {
-        min-width: 55px;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-        justify-content: center;
-
-        gap: 5px;
-
-        color: #8b98ad;
-
-        font-size: 9px;
-        font-weight: 600;
-    }
-}
-
-
-/* =========================================================
-   31. SMALL MOBILE RESPONSIVE
-========================================================= */
-
-@media (max-width: 380px) {
-
-    .workspace {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-
-    .loan-card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-
-        column-gap: 9px;
-        row-gap: 20px;
-    }
-
-    .loan-product-card {
-        height: auto !important;
-
-        aspect-ratio: 1 / 1;
-
-        padding: 6px;
-    }
-
-    .loan-card-visual {
-        height: 75px !important;
-    }
-
-    .loan-card-heading h3 {
-        font-size: 10px;
-    }
-
-    .loan-short-description {
-        font-size: 8px;
-    }
-
-    .welcome-content {
-        max-width: 100%;
-    }
-
-    .welcome-decoration {
-        opacity: .18;
-        width: 55%;
-    }
-}
-
-
-/* =========================================================
-   32. ACCESSIBILITY
-========================================================= */
-
 @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
-        animation-duration: .01ms !important;
-
+        animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
-
-        transition-duration: .01ms !important;
-
+        transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
 }

@@ -24,13 +24,71 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#315cff',
-                        navy: '#102958',
+                        primary: {
+                            DEFAULT: '#315cff',
+                            light: '#4778ff',
+                            dark: '#2450e8'
+                        },
+                        navy: {
+                            DEFAULT: '#102958',
+                            dark: '#071a43',
+                            darker: '#061638',
+                            light: '#19345d'
+                        },
                         background: '#f5f8ff',
                         muted: '#8492a9'
                     },
                     fontFamily: {
                         inter: ['Inter', 'sans-serif']
+                    },
+                    screens: {
+                        'xs': '420px',
+                        'sm': '651px',
+                        'md': '768px',
+                        'lg': '1025px',
+                        'xl': '1280px',
+                        '2xl': '1440px',
+                    },
+                    keyframes: {
+                        greetingAppear: {
+                            '0%': { opacity: '0', transform: 'translateY(-15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        greetingWave: {
+                            '0%, 60%, 100%': { transform: 'rotate(0deg)' },
+                            '10%, 30%': { transform: 'rotate(18deg)' },
+                            '20%, 40%': { transform: 'rotate(-10deg)' }
+                        },
+                        notificationPulse: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(255, 101, 120, 0.4)' },
+                            '50%': { boxShadow: '0 0 0 7px rgba(255, 101, 120, 0)' }
+                        },
+                        glowMovement: {
+                            '0%': { transform: 'translate(0, 0) scale(1)' },
+                            '100%': { transform: 'translate(45px, 25px) scale(1.3)' }
+                        },
+                        waveMovement: {
+                            '0%': { transform: 'translateX(-25px) rotate(-10deg)' },
+                            '100%': { transform: 'translateX(35px) rotate(-3deg)' }
+                        },
+                        imageFloating: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-7px)' }
+                        },
+                        contentEntrance: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    },
+                    animation: {
+                        greetingAppear: 'greetingAppear 0.8s ease forwards',
+                        greetingWave: 'greetingWave 2.5s infinite',
+                        notificationPulse: 'notificationPulse 1.6s infinite',
+                        glowMovement: 'glowMovement 8s ease-in-out infinite alternate',
+                        glowMovementReverse: 'glowMovement 10s ease-in-out infinite alternate-reverse',
+                        waveMovement: 'waveMovement 7s ease-in-out infinite alternate',
+                        imageFloating: 'imageFloating 5s ease-in-out infinite',
+                        contentEntrance: 'contentEntrance 0.9s ease forwards'
                     }
                 }
             }
@@ -51,14 +109,14 @@
     ========================================== -->
 
     <aside id="sidebar"
-        class="sidebar fixed left-0 top-0 z-[100] flex h-screen w-[265px] flex-col bg-gradient-to-b from-[#071a43] via-[#091e49] to-[#061638] px-[18px] py-[27px] transition-transform duration-300">
+        class="sidebar fixed left-0 top-0 z-[100] flex h-screen w-[280px] sm:w-[265px] flex-col bg-gradient-to-b from-[#071a43] via-[#091e49] to-[#061638] px-4 sm:px-[18px] py-6 sm:py-[27px] transition-transform duration-300 -translate-x-full sm:translate-x-0 [&.active]:translate-x-0 shadow-2xl sm:shadow-none">
 
         <!-- BRAND -->
-        <div class="brand-section mb-[60px] flex items-center justify-between px-2">
+        <div class="brand-section mb-10 sm:mb-[60px] flex items-center justify-between px-2">
 
             <a href="#" class="brand flex items-center gap-[11px]">
 
-                <span class="brand-logo grid h-[39px] w-[39px] place-items-center rounded-[11px] bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-[25px] font-extrabold italic text-white shadow-lg">
+                <span class="brand-logo grid h-[39px] w-[39px] place-items-center rounded-[11px] bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-[25px] font-extrabold italic text-white shadow-[0_5px_18px_rgba(49,92,255,0.35)]">
                     F
                 </span>
 
@@ -69,7 +127,7 @@
             </a>
 
             <button id="sidebarClose"
-                class="sidebar-close hidden border-0 bg-transparent text-[27px] text-white"
+                class="sidebar-close block sm:hidden border-0 bg-transparent text-[27px] text-white/80 hover:text-white transition-colors cursor-pointer"
                 aria-label="Close sidebar">
                 &times;
             </button>
@@ -80,15 +138,15 @@
         <!-- SIDEBAR NAVIGATION -->
         <div class="sidebar-navigation">
 
-            <p class="nav-heading mb-[17px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9]">
+            <p class="nav-heading mb-[17px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9] select-none">
                 WORKSPACE
             </p>
 
             <nav class="nav-menu flex flex-col gap-2">
 
-                <a href="#" class="nav-link active flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white" data-page="home">
+                <a href="#" class="nav-link active relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="home">
 
-                    <svg viewBox="0 0 24 24">
+                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
                         <path d="M3 10.5L12 3l9 7.5V21H3V10.5Z"/>
                         <path d="M9 21v-7h6v7"/>
                     </svg>
@@ -98,25 +156,25 @@
                 </a>
 
 
-                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="loans">
+                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="loans">
 
-                    <svg viewBox="0 0 24 24">
+                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
                         <rect x="4" y="3" width="16" height="18" rx="3"/>
                         <path d="M8 8h8M8 12h8M8 16h4"/>
                     </svg>
 
                     <span>My Loans</span>
 
-                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-1 text-[10px] font-bold text-white">
+                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white">
                         03
                     </span>
 
                 </a>
 
 
-                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="applications">
+                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="applications">
 
-                    <svg viewBox="0 0 24 24">
+                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
                         <path d="M7 3h7l5 5v13H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/>
                         <path d="M14 3v6h5M8 13h7M8 17h7"/>
                     </svg>
@@ -126,16 +184,16 @@
                 </a>
 
 
-                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="notifications">
+                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="notifications">
 
-                    <svg viewBox="0 0 24 24">
+                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
                         <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
                         <path d="M10 21h4"/>
                     </svg>
 
                     <span>Notifications</span>
 
-                    <span class="notification-dot ml-auto"></span>
+                    <span class="notification-dot ml-auto w-2 h-2 rounded-full bg-[#ff6c79] shadow-[0_0_0_4px_rgba(255,108,121,0.12)]"></span>
 
                 </a>
 
@@ -143,15 +201,15 @@
 
 
             <!-- PREFERENCES -->
-            <p class="nav-heading preferences-heading mb-[17px] mt-[42px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9]">
+            <p class="nav-heading preferences-heading mb-[17px] mt-8 sm:mt-[42px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9] select-none">
                 PREFERENCES
             </p>
 
             <nav class="nav-menu flex flex-col gap-2">
 
-                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="settings">
+                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="settings">
 
-                    <svg viewBox="0 0 24 24">
+                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 3.1-.2-.1a1.7 1.7 0 0 0-1.8.1l-.2.1h-3.6l-.1-.2a1.7 1.7 0 0 0-1.6-1l-.3.1-3.1-1.8.1-.3a1.7 1.7 0 0 0-.2-1.8l-.1-.2v-3.6l.2-.1a1.7 1.7 0 0 0 1-1.6l-.1-.3 1.8-3.1.3.1a1.7 1.7 0 0 0 1.8-.2l.2-.1h3.6l.1.2a1.7 1.7 0 0 0 1.6 1l.3-.1 3.1 1.8-.1.3a1.7 1.7 0 0 0 .2 1.8l.1.2v3.6Z"/>
                     </svg>
@@ -168,9 +226,9 @@
         <!-- SIDEBAR BOTTOM -->
         <div class="sidebar-bottom mt-auto">
 
-            <div class="upgrade-card mb-[22px] rounded-[13px] border border-white/10 bg-gradient-to-br from-[#123b79] to-[#086c91] p-[17px_15px]">
+            <div class="upgrade-card mb-[22px] rounded-[13px] border border-white/10 bg-gradient-to-br from-[#123b79] to-[#086c91] p-[17px_15px] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,100,180,0.2)]">
 
-                <div class="upgrade-icon grid h-7 w-7 place-items-center rounded-lg bg-white/10 text-[#a9c8ff]">
+                <div class="upgrade-icon grid h-7 w-7 place-items-center rounded-lg bg-white/10 text-[#a9c8ff] text-sm">
                     ✦
                 </div>
 
@@ -183,9 +241,9 @@
                 </p>
 
                 <button type="button" id="upgradeButton"
-                    class="mt-[14px] flex w-full items-center justify-between rounded-lg bg-white px-[11px] py-[10px] text-[10px] font-bold text-[#1746a8] transition hover:bg-[#eaf0ff]">
+                    class="mt-[14px] flex w-full items-center justify-between rounded-lg bg-white px-3 py-2.5 text-[10px] font-bold text-[#1746a8] transition-colors duration-200 hover:bg-[#eaf0ff] active:scale-95">
 
-                    Explore Benefits
+                    <span>Explore Benefits</span>
                     <span class="text-[15px]">→</span>
 
                 </button>
@@ -206,14 +264,15 @@
                         Sabir Khan
                     </h4>
 
-                    <p class="mt-[5px] text-[9px] text-[#8295b4]">
+                    <p class="mt-0.5 text-[9px] text-[#8295b4]">
                         Premium Customer
                     </p>
 
                 </div>
 
                 <button id="profileButton"
-                    class="profile-button ml-auto border-0 bg-transparent text-[23px] text-[#9baecc]">
+                    class="profile-button ml-auto border-0 bg-transparent text-[23px] text-[#9baecc] hover:text-white transition-colors cursor-pointer"
+                    aria-label="Profile options">
                     ⋯
                 </button>
 
@@ -225,33 +284,33 @@
 
 
     <!-- SIDEBAR OVERLAY -->
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 z-[90] bg-[#050f23]/60 opacity-0 invisible transition-all duration-300 [&.active]:opacity-100 [&.active]:visible sm:hidden"></div>
 
 
     <!-- =========================================
          02. MAIN CONTENT
     ========================================== -->
 
-    <main class="main-content min-h-screen ml-[265px]">
+    <main class="main-content min-h-screen ml-0 sm:ml-[265px] transition-all duration-300">
 
 
         <!-- MOBILE HEADER -->
-        <header class="mobile-header hidden">
+        <header class="mobile-header sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-white px-4 border-b border-[#edf0f6] shadow-[0_3px_12px_rgba(20,40,80,0.04)] sm:hidden">
 
             <button id="menuButton"
-                class="menu-button grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-[#f1f4fc]"
+                class="menu-button grid h-10 w-10 place-items-center rounded-xl bg-[#f1f4fc] text-[#19345d] transition-colors hover:bg-[#e4ebf8] active:scale-95"
                 aria-label="Open menu">
 
-                <svg viewBox="0 0 24 24">
+                <svg class="w-5 h-5 fill-none stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
                     <path d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
 
             </button>
 
 
-            <a href="#" class="mobile-brand flex items-center gap-[9px] text-[17px] font-extrabold italic text-navy">
+            <a href="#" class="mobile-brand flex items-center gap-2 text-lg font-extrabold italic text-navy">
 
-                <span class="brand-logo grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-xl text-white">
+                <span class="brand-logo grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-xl font-extrabold italic text-white shadow-md">
                     F
                 </span>
 
@@ -260,7 +319,7 @@
             </a>
 
 
-            <button class="mobile-avatar h-9 w-9 rounded-[10px] bg-gradient-to-br from-primary to-[#713bea] text-[10px] font-extrabold text-white">
+            <button class="mobile-avatar h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-[10px] font-extrabold text-white shadow-sm">
                 SK
             </button>
 
@@ -271,7 +330,7 @@
              03. DASHBOARD WORKSPACE
         ====================================== -->
 
-        <section class="workspace min-h-screen px-[42px] py-[38px]">
+        <section class="workspace relative isolate min-h-screen px-4 sm:px-6 lg:px-10 py-6 sm:py-8 lg:py-10 pb-24 sm:pb-10">
 
             <div class="loan-workspace mx-auto w-full max-w-[1500px]">
 
@@ -280,29 +339,29 @@
                      04. GREETING SECTION
                 ================================== -->
 
-                <section class="fincentrix-greeting mb-7 w-full">
+                <section class="fincentrix-greeting relative z-[2] mb-7 w-full">
 
-                    <div class="loan-topbar mb-[25px] flex items-center justify-between gap-5">
+                    <div class="loan-topbar mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-greetingAppear">
 
                         <div class="greeting-text">
 
-                            <span class="greeting-label mb-[9px] block text-[10px] font-extrabold tracking-[1.6px] text-[#4263eb]">
+                            <span class="greeting-label mb-2 block text-[10px] font-extrabold tracking-[1.6px] text-[#4263eb]">
                                 FINCENTRIX WORKSPACE
                             </span>
 
-                            <h1 class="text-[28px] font-extrabold tracking-tight text-navy">
+                            <h1 class="text-2xl sm:text-[26px] lg:text-[28px] font-extrabold tracking-tight text-navy">
 
                                 <span id="greetingMessage">
                                     Welcome back, Sabir!
                                 </span>
 
-                                <span class="greeting-wave inline-block">
+                                <span class="greeting-wave inline-block origin-[70%_70%] animate-greetingWave">
                                     👋
                                 </span>
 
                             </h1>
 
-                            <p class="mt-[9px] text-xs leading-relaxed text-muted">
+                            <p class="mt-2 text-xs leading-relaxed text-muted max-w-xl">
                                 Your financial journey starts here.
                                 Explore smart loan solutions designed around your needs.
                             </p>
@@ -311,19 +370,19 @@
 
 
                         <!-- GREETING ACTIONS -->
-                        <div class="greeting-actions flex items-center gap-[14px]">
+                        <div class="greeting-actions flex items-center gap-3 self-end sm:self-auto">
 
-                            <button class="notification-btn relative grid h-[43px] w-[43px] place-items-center rounded-[13px] border border-[#e8edf6] bg-white text-[#526783] transition hover:-translate-y-1 hover:bg-[#edf2ff] hover:text-primary"
+                            <button class="notification-btn relative grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-[#e8edf6] bg-white text-[#526783] transition-all duration-300 hover:-translate-y-1 hover:bg-[#edf2ff] hover:text-primary hover:shadow-[0_8px_20px_rgba(49,92,255,0.12)]"
                                 aria-label="Notifications">
 
-                                <i class="fa-regular fa-bell"></i>
+                                <i class="fa-regular fa-bell text-sm sm:text-base"></i>
 
-                                <span class="notification-dot"></span>
+                                <span class="notification-dot absolute top-2 right-2 w-2 h-2 rounded-full bg-[#ff6578] border-2 border-white animate-notificationPulse"></span>
 
                             </button>
 
 
-                            <button class="greeting-avatar h-[43px] w-[43px] rounded-[13px] bg-gradient-to-br from-primary to-[#713bea] text-xs font-extrabold text-white shadow-lg"
+                            <button class="greeting-avatar h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-xs font-extrabold text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:rotate-3"
                                 aria-label="Your profile">
                                 SK
                             </button>
@@ -337,41 +396,35 @@
                          05. WELCOME BANNER
                     ================================== -->
 
-                    <section class="loan-welcome-banner relative isolate flex min-h-[235px] items-center justify-between overflow-hidden rounded-[20px] border border-white/15 bg-gradient-to-br from-[#0b2051] via-[#17439b] to-[#5269e8] px-[38px] py-8 shadow-xl">
+                    <section class="loan-welcome-banner relative isolate flex min-h-[210px] sm:min-h-[235px] flex-col sm:flex-row items-center justify-between overflow-hidden rounded-2xl sm:rounded-[20px] border border-white/15 bg-gradient-to-br from-[#0b2051] via-[#17439b] to-[#5269e8] p-5 sm:px-9 sm:py-8 shadow-xl">
 
-                        <div class="banner-glow glow-one"></div>
-                        <div class="banner-glow glow-two"></div>
-                        <div class="banner-light-wave"></div>
+                        <div class="banner-glow glow-one absolute -top-24 left-[30%] -z-10 h-52 w-52 rounded-full bg-[#65b8ff] opacity-45 blur-[65px] animate-glowMovement pointer-events-none"></div>
+                        <div class="banner-glow glow-two absolute -bottom-32 right-[10%] -z-10 h-52 w-52 rounded-full bg-[#a28bff] opacity-45 blur-[65px] animate-glowMovementReverse pointer-events-none"></div>
+                        <div class="banner-light-wave absolute -bottom-24 left-[20%] -z-10 h-36 w-[65%] rounded-[50%] border-t-2 border-white/30 blur-[2px] animate-waveMovement pointer-events-none"></div>
 
 
                         <!-- BANNER CONTENT -->
-                        <div class="welcome-content relative z-[3] w-[55%] max-w-[55%]"
+                        <div class="welcome-content relative z-[3] w-full sm:w-[60%] lg:w-[55%] animate-contentEntrance"
                             id="loanEligibilityBanner">
 
                             <span id="eligibilityBadge"
-                                class="welcome-tag inline-block rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[9px] font-extrabold tracking-[1.2px] text-[#e2eaff]">
-
+                                class="welcome-tag inline-block rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[8px] sm:text-[9px] font-extrabold tracking-[1.2px] text-[#e2eaff] backdrop-blur-sm">
                                 FINCENTRIX LOAN ELIGIBILITY
-
                             </span>
 
 
                             <h2 id="eligibilityHeading"
-                                class="mt-3 text-[32px] font-extrabold leading-tight tracking-tight text-white">
-
+                                class="mt-3 text-2xl sm:text-[28px] lg:text-[32px] font-extrabold leading-tight tracking-tight text-white">
                                 Your Financial Journey
                                 <br>
                                 Starts Here.
-
                             </h2>
 
 
                             <p id="eligibilityDescription"
-                                class="mt-3 max-w-[390px] text-[12px] leading-[1.8] text-[#d0dcf8]">
-
+                                class="mt-2.5 max-w-[390px] text-xs leading-relaxed text-[#d0dcf8]">
                                 Complete your document verification
                                 to discover your personalized loan eligibility.
-
                             </p>
 
 
@@ -383,7 +436,7 @@
                                 </p>
 
                                 <h3 id="eligibleLoanAmount"
-                                    class="mt-1 text-[38px] font-extrabold tracking-tight text-white">
+                                    class="mt-1 text-2xl sm:text-3xl lg:text-[38px] font-extrabold tracking-tight text-white">
                                     ₹0
                                 </h3>
 
@@ -397,11 +450,11 @@
                             <!-- ACTION BUTTON -->
                             <a href="javascript:void(0)"
                                 id="eligibilityActionButton"
-                                class="welcome-btn mt-5 inline-flex items-center gap-[18px] rounded-lg bg-white px-[17px] py-3 text-[11px] font-extrabold text-[#1746a8] transition hover:-translate-y-1 hover:bg-[#edf2ff]">
+                                class="welcome-btn mt-4 sm:mt-5 inline-flex items-center gap-3 sm:gap-4 rounded-lg bg-white px-4 py-2.5 sm:py-3 text-[10px] sm:text-[11px] font-extrabold text-[#1746a8] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#edf2ff] hover:shadow-[0_10px_25px_rgba(255,255,255,0.2)] group">
 
                                 Complete Verification
 
-                                <i class="fa-solid fa-arrow-right"></i>
+                                <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
 
                             </a>
 
@@ -409,11 +462,11 @@
 
 
                         <!-- BANNER VIDEO -->
-                        <div class="welcome-decoration absolute right-0 top-0 z-[2] flex h-full w-[42%] items-center justify-center">
+                        <div class="welcome-decoration relative sm:absolute right-0 top-0 z-[2] flex h-48 sm:h-full w-full sm:w-[40%] lg:w-[42%] items-center justify-center mt-4 sm:mt-0 max-sm:opacity-90">
 
-                            <div class="welcome-image-wrapper h-[80%] w-[85%] overflow-hidden rounded-[15px] shadow-2xl">
+                            <div class="welcome-image-wrapper h-[85%] w-[90%] sm:h-[80%] sm:w-[85%] overflow-hidden rounded-xl sm:rounded-[15px] shadow-2xl animate-imageFloating">
 
-                                <video class="welcome-image"
+                                <video class="welcome-image h-full w-full object-cover rounded-[inherit]"
                                     autoplay
                                     muted
                                     loop
@@ -442,26 +495,26 @@
 
 
                     <!-- SECTION HEADING -->
-                    <div class="loan-section-heading mb-6 flex items-end justify-between gap-4">
+                    <div class="loan-section-heading mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
 
                         <div>
 
-                            <span class="section-eyebrow text-[9px] font-extrabold tracking-[1.6px] text-primary">
+                            <span class="section-eyebrow text-[9px] font-extrabold tracking-[1.6px] text-primary uppercase">
                                 EXPLORE FINANCING
                             </span>
 
-                            <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-navy">
+                            <h2 class="mt-1.5 text-xl sm:text-2xl font-extrabold tracking-tight text-navy">
                                 Explore Loan Products
                             </h2>
 
-                            <p class="mt-[7px] text-xs leading-relaxed text-[#8996a9]">
+                            <p class="mt-1 text-xs text-[#8996a9]">
                                 Choose the right financial solution for your needs.
                             </p>
 
                         </div>
 
 
-                        <span class="loan-count rounded-full border border-[#e0e8ff] bg-[#edf2ff] px-[13px] py-2 text-[10px] font-extrabold tracking-wide text-primary">
+                        <span class="loan-count self-start sm:self-auto rounded-full border border-[#e0e8ff] bg-[#edf2ff] px-3.5 py-1.5 text-[10px] font-extrabold tracking-wide text-primary whitespace-nowrap">
                             10 PRODUCTS
                         </span>
 
@@ -472,39 +525,42 @@
                          07. LOAN CARD GRID
                     ================================== -->
 
-                    <div class="loan-card-grid grid grid-cols-5 items-start gap-x-5 gap-y-[35px]">
+                    <div class="loan-card-grid grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-7 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-4 xl:gap-y-8 items-start overflow-visible">
 
 
                         <!-- HOME LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="home">
+                        <article class="loan-product-card group" data-loan-card="home">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#edf2ff]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700"
                                     alt="Modern home"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">PROPERTY</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    PROPERTY
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Home Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] leading-snug text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Buy, build or renovate your dream home.
                                 </p>
 
@@ -536,36 +592,41 @@
 
 
                         <!-- PERSONAL LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="personal">
+                        <article class="loan-product-card group" data-loan-card="personal">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#e9f7f3]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=700"
                                     alt="Personal finance"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">PERSONAL FINANCE</span>
-                                <span class="popular-badge">POPULAR</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    PERSONAL FINANCE
+                                </span>
+                                <span class="popular-badge absolute top-2 right-2 z-[3] px-2 py-1 rounded-full bg-[#e4f8f0] text-[#168778] text-[8px] font-extrabold">
+                                    POPULAR
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Personal Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Quick funds for your personal needs.
                                 </p>
 
@@ -597,35 +658,38 @@
 
 
                         <!-- CAR LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="car">
+                        <article class="loan-product-card group" data-loan-card="car">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff3e7]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=700"
                                     alt="Premium car"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">VEHICLE</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    VEHICLE
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Car Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Finance your new or used car.
                                 </p>
 
@@ -656,35 +720,38 @@
 
 
                         <!-- EDUCATION LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="education">
+                        <article class="loan-product-card group" data-loan-card="education">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#f2edff]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700"
                                     alt="University education"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">EDUCATION</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    EDUCATION
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Education Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Invest in your education and future.
                                 </p>
 
@@ -715,35 +782,38 @@
 
 
                         <!-- BUSINESS LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="business">
+                        <article class="loan-product-card group" data-loan-card="business">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#eaf7fb]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=700"
                                     alt="Modern business office"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">BUSINESS</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    BUSINESS
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Business Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Grow and expand your business.
                                 </p>
 
@@ -774,35 +844,38 @@
 
 
                         <!-- GOLD LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="gold">
+                        <article class="loan-product-card group" data-loan-card="gold">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff8e7]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=700"
                                     alt="Gold jewellery"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">GOLD ASSET</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    GOLD ASSET
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Gold Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-5 w-5 xs:h-6 xs:w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Unlock funds against your gold assets.
                                 </p>
 
@@ -833,35 +906,38 @@
 
 
                         <!-- LOAN AGAINST PROPERTY -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="property">
+                        <article class="loan-product-card group" data-loan-card="property">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff0f4]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=700"
                                     alt="Luxury property"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">PROPERTY ASSET</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    PROPERTY ASSET
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Loan Against Property
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Unlock the value of your property.
                                 </p>
 
@@ -892,35 +968,38 @@
 
 
                         <!-- WEDDING LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="wedding">
+                        <article class="loan-product-card group" data-loan-card="wedding">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff0f6]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=700"
                                     alt="Wedding celebration"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">CELEBRATION</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    CELEBRATION
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Wedding Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Make your special day unforgettable.
                                 </p>
 
@@ -951,35 +1030,38 @@
 
 
                         <!-- MEDICAL LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="medical">
+                        <article class="loan-product-card group" data-loan-card="medical">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#e8f8f4]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700"
                                     alt="Medical healthcare"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">HEALTHCARE</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    HEALTHCARE
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Medical Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Financial support for healthcare needs.
                                 </p>
 
@@ -1010,35 +1092,38 @@
 
 
                         <!-- TRAVEL LOAN -->
-                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
-                            data-loan-card="travel">
+                        <article class="loan-product-card group" data-loan-card="travel">
 
-                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#edf6ff]">
+                            <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
                                 <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=700"
                                     alt="Travel destination"
-                                    class="h-full w-full object-cover transition duration-700"
+                                    class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
 
-                                <span class="loan-category">TRAVEL</span>
+                                <span class="loan-category absolute top-2 left-2 z-[2] px-2 py-1 rounded-[5px] bg-white/90 backdrop-blur-md text-[#29446e] text-[8px] font-extrabold tracking-wider">
+                                    TRAVEL
+                                </span>
 
                             </div>
 
 
-                            <div class="loan-card-content px-[5px] pt-[9px]">
+                            <div class="loan-card-content px-1 pt-2.5">
 
-                                <div class="loan-card-heading flex items-center justify-between gap-2">
+                                <div class="loan-card-heading flex items-center justify-between gap-1.5">
 
-                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                    <h3 class="text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-navy truncate">
                                         Travel Loan
                                     </h3>
 
-                                    <span class="loan-card-arrow">↗</span>
+                                    <span class="loan-card-arrow grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--accent-soft)] text-xs text-[var(--accent)] transition-all duration-300">
+                                        ↗
+                                    </span>
 
                                 </div>
 
 
-                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                <p class="loan-short-description mt-1 text-[9px] xs:text-[10px] leading-tight text-muted line-clamp-2">
                                     Turn your dream vacation into reality.
                                 </p>
 
@@ -1084,11 +1169,11 @@
          08. MOBILE BOTTOM NAVIGATION
     ========================================== -->
 
-    <nav class="bottom-navigation">
+    <nav class="bottom-navigation fixed bottom-0 left-0 right-0 z-40 flex h-16 w-full items-center justify-around bg-white border-t border-[#e9edf5] shadow-[0_-5px_20px_rgba(20,40,80,0.06)] px-3 py-1 sm:hidden">
 
-        <a href="#" class="bottom-nav-link active" data-page="home">
+        <a href="#" class="bottom-nav-link active flex flex-col items-center justify-center gap-1 min-w-[55px] text-[9px] font-semibold text-[#8b98ad] transition-colors [&.active]:text-primary" data-page="home">
 
-            <svg viewBox="0 0 24 24">
+            <svg class="w-5 h-5 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
                 <path d="M3 10.5L12 3l9 7.5V21H3V10.5Z"/>
                 <path d="M9 21v-7h6v7"/>
             </svg>
@@ -1098,9 +1183,9 @@
         </a>
 
 
-        <a href="#" class="bottom-nav-link" data-page="loans">
+        <a href="#" class="bottom-nav-link flex flex-col items-center justify-center gap-1 min-w-[55px] text-[9px] font-semibold text-[#8b98ad] transition-colors [&.active]:text-primary" data-page="loans">
 
-            <svg viewBox="0 0 24 24">
+            <svg class="w-5 h-5 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
                 <rect x="4" y="3" width="16" height="18" rx="3"/>
                 <path d="M8 8h8M8 12h8M8 16h4"/>
             </svg>
@@ -1110,16 +1195,16 @@
         </a>
 
 
-        <a href="#" class="bottom-nav-link" data-page="notifications">
+        <a href="#" class="bottom-nav-link flex flex-col items-center justify-center gap-1 min-w-[55px] text-[9px] font-semibold text-[#8b98ad] transition-colors [&.active]:text-primary" data-page="notifications">
 
-            <span class="mobile-alert-icon">
+            <span class="mobile-alert-icon relative">
 
-                <svg viewBox="0 0 24 24">
+                <svg class="w-5 h-5 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
                     <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
                     <path d="M10 21h4"/>
                 </svg>
 
-                <i></i>
+                <i class="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[#ff6578] border border-white rounded-full"></i>
 
             </span>
 
@@ -1128,9 +1213,9 @@
         </a>
 
 
-        <a href="#" class="bottom-nav-link" data-page="settings">
+        <a href="#" class="bottom-nav-link flex flex-col items-center justify-center gap-1 min-w-[55px] text-[9px] font-semibold text-[#8b98ad] transition-colors [&.active]:text-primary" data-page="settings">
 
-            <svg viewBox="0 0 24 24">
+            <svg class="w-5 h-5 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 3.1-.2-.1a1.7 1.7 0 0 0-1.8.1l-.2.1h-3.6l-.1-.2a1.7 1.7 0 0 0-1.6-1l-.3.1-3.1-1.8.1-.3a1.7 1.7 0 0 0-.2-1.8l-.1-.2v-3.6l.2-.1a1.7 1.7 0 0 0 1-1.6l-.1-.3 1.8-3.1.3.1a1.7 1.7 0 0 0 1.8-.2l.2-.1h3.6l.1.2a1.7 1.7 0 0 0 1.6 1l.3-.1 3.1 1.8-.1.3a1.7 1.7 0 0 0 .2 1.8l.1.2v3.6Z"/>
             </svg>

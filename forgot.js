@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (err) {
             console.error("Error sending OTP:", err);
-            showMessage("Unable to connect to the backend server. Please verify port 3000.", "error");
+            showMessage("Unable to connect to the backend server.", "error");
             sendOtpButton.disabled = false;
             sendOtpButton.textContent = "Send Verification Code";
         }

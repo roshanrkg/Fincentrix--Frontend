@@ -79,7 +79,7 @@ form.addEventListener("submit", async function (event) {
 
   } catch (error) {
     console.error("Login request failed:", error);
-    errorMessage.textContent = "Unable to connect to the backend server. Please verify it is running on port 3000.";
+    errorMessage.textContent = "Unable to connect to the backend server.";
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = originalButtonText;

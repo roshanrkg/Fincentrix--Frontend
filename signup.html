@@ -35,13 +35,13 @@
 
                 <h3>Aadhaar &amp; PAN Documents</h3>
                 <p class="section-description">
-                    Add your document details and select the related files. Automatic data extraction and file upload are not enabled in this demo.
+                    Add your document details and select the related files. We will automatically extract information from the uploaded documents.
                 </p>
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="aadhaar_number">Aadhaar Number</label>
-                        <input type="text" id="aadhaar_number"
+                        <input required type="text" id="aadhaar_number"
                             name="aadhaar_number"
                             placeholder="Enter Aadhaar number"
                             inputmode="numeric"
@@ -62,7 +62,7 @@
 
                     <div class="form-group">
                         <label for="pan_number">PAN Number</label>
-                        <input type="text" id="pan_number"
+                        <input required type="text" id="pan_number"
                             name="pan_number"
                             maxlength="10"
                             placeholder="Enter PAN number"
@@ -113,8 +113,9 @@
                         <div class="email-input-wrapper" style="display: flex; gap: 8px;">
                             <input type="email" id="email" name="email"
                                 placeholder="Enter email address" required style="flex: 1;">
-                            <button type="button" id="sendSignupOtpBtn" class="verify-email-btn" style="padding: 0 16px; height: 44px; background: #315cff; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background-color 0.2s;">
-                                Verify Email
+                               
+                            <button type="button" id="sendSignupOtpBtn" class="verify-email-btn" style="padding: 0 10px; height: 34px; background: #315cff; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 10px; cursor: pointer; white-space: nowrap; transition: background-color 0.2s;">
+                                Verify
                             </button>
                         </div>
                         <div id="emailOtpRow" style="display: none; margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">

@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const file = this.files[0];
             if (!file) return;
 
-            showAlertBanner("✨ Mistral AI is analyzing your Aadhaar card to auto-fill your details...", "info");
+            showAlertBanner("AI is analyzing your Aadhaar card to auto-fill your details...", "info");
 
             try {
                 const fileObj = await fileToBase64(file);
@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const file = this.files[0];
             if (!file) return;
 
-            showAlertBanner("✨ Mistral AI is analyzing your PAN card to auto-fill details...", "info");
+            showAlertBanner(" AI is analyzing your PAN card to auto-fill details...", "info");
 
             try {
                 const fileObj = await fileToBase64(file);
@@ -716,7 +716,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const file = this.files[0];
             if (!file) return;
 
-            showAlertBanner("✨ Mistral AI is analyzing your bank passbook to auto-fill details...", "info");
+            showAlertBanner(" AI is analyzing your bank passbook to auto-fill details...", "info");
 
             try {
                 const fileObj = await fileToBase64(file);

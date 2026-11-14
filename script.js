@@ -75,7 +75,7 @@ form.addEventListener("submit", async function (event) {
     localStorage.setItem("fincentrix_user", JSON.stringify(data.data));
 
     // Redirect to protected dashboard
-    window.location.href = "dashboard.html";
+    window.location.href = "dashboard2.html";
 
   } catch (error) {
     console.error("Login request failed:", error);

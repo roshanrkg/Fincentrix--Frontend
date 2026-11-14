@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Loan Details | Fincentrix</title>
+
+    <!-- Route Guard Layer 1: Instant Client Gatekeeper -->
+    <script>
+        (function () {
+            const token = localStorage.getItem("fincentrix_token");
+            if (!token) {
+                window.location.replace("index.html");
+            }
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#315cff',
+                            light: '#4778ff',
+                            dark: '#2450e8'
+                        },
+                        navy: {
+                            DEFAULT: '#102958',
+                            dark: '#071a43',
+                            darker: '#061638',
+                            light: '#19345d'
+                        },
+                        background: '#f5f8ff',
+                        muted: '#8492a9'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Companion Stylesheet -->
+    <link rel="stylesheet" href="dashboard2.css">
+
+    <style>
+        .calculator-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e2e8f0;
+            outline: none;
+        }
+        .calculator-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #315cff;
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(49, 92, 255, 0.2);
+            transition: all 0.2s;
+        }
+        .calculator-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .doc-card {
+            transition: all 0.2s ease;
+        }
+        .doc-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: 0 8px 20px rgba(16, 41, 88, 0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-[#1a2e4c] font-inter antialiased min-h-screen">
+
+    <!-- =========================================
+         01. SIDEBAR NAVIGATION
+    ========================================== -->
+    <aside id="sidebar"
+        class="sidebar fixed top-0 left-0 z-[100] h-screen w-[265px] -translate-x-full sm:translate-x-0 transition-transform duration-300 ease-out bg-navy-darker border-r border-white/10 flex flex-col justify-between p-5 text-white shadow-2xl">
+
+        <div class="sidebar-top flex flex-col">
+            <!-- BRAND HEADER -->
+            <div class="sidebar-header flex items-center justify-between pb-5 border-b border-white/10">
+                <a href="dashboard2.html" class="brand flex items-center gap-2.5 text-xl font-extrabold italic text-white tracking-tight">
+                    <span class="brand-logo grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-2xl font-extrabold italic text-white shadow-lg">
+                        F
+                    </span>
+                    <span>Fincentrix</span>
+                </a>
+
+                <button id="sidebarClose" class="sidebar-close sm:hidden grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-white/70 hover:text-white" aria-label="Close menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- NAVIGATION LINKS -->
+            <nav class="sidebar-nav mt-6 flex flex-col gap-1.5" aria-label="Main Navigation">
+                <a href="dashboard2.html" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group">
+                    <i class="fa-solid fa-house text-base w-[20px] text-center"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="loans.html" class="nav-link active relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white transition-all duration-300 border border-primary/40 group">
+                    <i class="fa-solid fa-hand-holding-dollar text-base w-[20px] text-center text-primary-light"></i>
+                    <span>Loan Products</span>
+                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white">
+                        10
+                    </span>
+                </a>
+
+                <a href="dashboard2.html#loanTypes" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group">
+                    <i class="fa-solid fa-list-check text-base w-[20px] text-center"></i>
+                    <span>My Applications</span>
+                </a>
+
+                <a href="dashboard2.html" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group">
+                    <i class="fa-solid fa-gear text-base w-[20px] text-center"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- SIDEBAR FOOTER -->
+        <div class="sidebar-footer flex flex-col gap-4">
+            <!-- USER PROFILE -->
+            <div class="user-profile flex items-center gap-[11px] border-t border-white/10 pt-[17px]">
+                <div id="sidebarUserAvatar" class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white uppercase">
+                    FX
+                </div>
+                <div class="user-info">
+                    <h4 id="sidebarUserName" class="text-[11px] font-bold text-white">
+                        User Profile
+                    </h4>
+                    <p id="sidebarUserRole" class="mt-0.5 text-[9px] text-[#8295b4]">
+                        Customer
+                    </p>
+                </div>
+                <button id="logoutButton"
+                    class="profile-button ml-auto border-0 bg-transparent text-[#9baecc] hover:text-red-400 transition-colors cursor-pointer text-sm font-semibold p-1.5 rounded-lg hover:bg-white/5"
+                    title="Log Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY FOR MOBILE -->
+    <div id="sidebarOverlay" class="fixed inset-0 z-[90] bg-[#050f23]/60 opacity-0 invisible transition-all duration-300 sm:hidden"></div>
+
+    <!-- =========================================
+         02. MAIN WORKSPACE
+    ========================================== -->
+    <main class="min-h-screen ml-0 sm:ml-[265px] transition-all duration-300 flex flex-col">
+
+        <!-- MOBILE TOPBAR -->
+        <header class="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-white px-4 border-b border-[#edf0f6] shadow-sm sm:hidden">
+            <button id="menuButton" class="grid h-10 w-10 place-items-center rounded-xl bg-[#f1f4fc] text-[#19345d]">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <a href="dashboard2.html" class="flex items-center gap-2 text-lg font-extrabold italic text-navy">
+                <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-xl font-extrabold text-white">F</span>
+                <span>Fincentrix</span>
+            </a>
+            <div id="topbarMobileAvatar" class="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-xs font-bold text-white grid place-items-center uppercase">
+                FX
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="workspace flex-1 px-4 sm:px-8 lg:px-12 py-6 sm:py-8 max-w-[1450px] w-full mx-auto">
+
+            <!-- BREADCRUMB & BACK ACTION -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-2 text-xs font-medium text-muted">
+                    <a href="dashboard2.html" class="hover:text-primary transition-colors flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <span>/</span>
+                    <span class="text-navy font-semibold">Loan Products</span>
+                    <span>/</span>
+                    <span id="breadcrumbLoanName" class="text-primary font-bold">Personal Loan</span>
+                </div>
+
+                <!-- QUICK LOAN SELECTOR -->
+                <div class="flex items-center gap-2">
+                    <label for="loanProductSelector" class="text-xs text-muted font-medium whitespace-nowrap">Switch Loan:</label>
+                    <select id="loanProductSelector" class="bg-white border border-[#cbd5e1] rounded-lg px-3 py-1.5 text-xs font-semibold text-navy outline-none focus:border-primary shadow-sm cursor-pointer">
+                        <!-- Dynamically filled with all 10 products -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- =========================================
+                 03. HERO BANNER SECTION
+            ========================================== -->
+            <section class="relative isolate overflow-hidden rounded-2xl sm:rounded-[22px] border border-white/20 bg-gradient-to-br from-[#0c2253] via-[#143e8d] to-[#4058d4] text-white p-6 sm:p-10 shadow-xl mb-8">
+                <!-- Decorative background elements -->
+                <div class="absolute -top-24 left-[20%] -z-10 h-64 w-64 rounded-full bg-[#5bb2ff] opacity-25 blur-[75px] pointer-events-none"></div>
+                <div class="absolute -bottom-24 right-[10%] -z-10 h-64 w-64 rounded-full bg-[#9f85ff] opacity-25 blur-[75px] pointer-events-none"></div>
+
+                <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+                    <!-- Left Hero Content -->
+                    <div class="max-w-2xl">
+                        <div class="flex items-center gap-2.5 mb-3 flex-wrap">
+                            <span id="heroCategory" class="px-2.5 py-1 rounded-md bg-white/15 backdrop-blur-md text-[10px] font-extrabold tracking-wider uppercase border border-white/20">
+                                PERSONAL FINANCE
+                            </span>
+                            <span id="heroBadge" class="px-2.5 py-1 rounded-full bg-emerald-400/20 text-emerald-200 text-[10px] font-extrabold tracking-wider uppercase border border-emerald-400/30">
+                                POPULAR
+                            </span>
+                        </div>
+
+                        <h1 id="heroLoanName" class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                            Personal Loan
+                        </h1>
+
+                        <p id="heroShortDesc" class="mt-2 text-xs sm:text-sm text-blue-100 max-w-xl leading-relaxed">
+                            Quick funds for your personal needs with zero collateral and fast digital approval.
+                        </p>
+
+                        <!-- Highlight Metrics Strip -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-white/15">
+                            <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                                <span class="text-[10px] uppercase font-semibold text-blue-200 block">Interest Rate</span>
+                                <span id="metricInterest" class="text-sm sm:text-base font-extrabold text-white mt-0.5 block">From 10.49%</span>
+                            </div>
+
+                            <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                                <span class="text-[10px] uppercase font-semibold text-blue-200 block">Max Amount</span>
+                                <span id="metricMaxAmount" class="text-sm sm:text-base font-extrabold text-white mt-0.5 block">Up to ₹25 Lakh</span>
+                            </div>
+
+                            <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                                <span class="text-[10px] uppercase font-semibold text-blue-200 block">Max Tenure</span>
+                                <span id="metricTenure" class="text-sm sm:text-base font-extrabold text-white mt-0.5 block">Up to 5 Years</span>
+                            </div>
+
+                            <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                                <span class="text-[10px] uppercase font-semibold text-blue-200 block">Processing Fee</span>
+                                <span id="metricFee" class="text-sm sm:text-base font-extrabold text-white mt-0.5 block">1.50%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Hero Visual -->
+                    <div class="w-full lg:w-[380px] shrink-0">
+                        <div class="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 aspect-[16/10] bg-slate-900">
+                            <img id="heroImage" src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=700" alt="Loan Product" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
+                                <span class="flex items-center gap-1.5 font-semibold text-[11px] bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-md">
+                                    <i id="heroIcon" class="fa-solid fa-user-shield text-primary-light"></i>
+                                    <span>Verified Product</span>
+                                </span>
+                                <span class="text-[10px] bg-white/20 backdrop-blur-md px-2 py-0.5 rounded">
+                                    256-Bit Encrypted
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================================
+                 04. MAIN TWO-COLUMN BODY LAYOUT
+            ========================================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- LEFT COLUMN: CONTENT, FEATURES, ELIGIBILITY, DOCS (8 Cols) -->
+                <div class="lg:col-span-8 space-y-8">
+
+                    <!-- OVERVIEW & FEATURES -->
+                    <div class="bg-white rounded-2xl p-6 sm:p-7 border border-[#e2e8f0] shadow-sm">
+                        <h2 class="text-lg font-extrabold text-navy flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-circle-info text-primary"></i>
+                            <span>About this Loan</span>
+                        </h2>
+                        <p id="loanOverviewText" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                            A flexible financing option for medical expenses, travel, weddings, emergencies, and other personal requirements with zero collateral and fast digital approval.
+                        </p>
+
+                        <h3 class="text-sm font-extrabold text-navy mt-6 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-500"></i>
+                            <span>Key Product Highlights</span>
+                        </h3>
+                        <div id="featuresList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- INTERACTIVE LIVE EMI CALCULATOR -->
+                    <div class="bg-white rounded-2xl p-6 sm:p-7 border border-[#e2e8f0] shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-extrabold text-navy flex items-center gap-2">
+                                <i class="fa-solid fa-calculator text-primary"></i>
+                                <span>Interactive EMI Calculator</span>
+                            </h2>
+                            <span class="text-[10px] font-bold text-muted uppercase bg-slate-100 px-2 py-1 rounded">Live Estimate</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Sliders -->
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-600">Loan Amount:</span>
+                                        <span id="sliderAmountValue" class="text-primary font-bold text-sm">₹5,00,000</span>
+                                    </div>
+                                    <input type="range" id="loanAmountSlider" class="calculator-slider" min="25000" max="2500000" step="5000" value="500000">
+                                    <div class="flex justify-between text-[10px] text-muted mt-1">
+                                        <span id="sliderMinAmount">₹25,000</span>
+                                        <span id="sliderMaxAmount">₹25,00,000</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-600">Tenure (Months):</span>
+                                        <span id="sliderTenureValue" class="text-primary font-bold text-sm">36 Months</span>
+                                    </div>
+                                    <input type="range" id="loanTenureSlider" class="calculator-slider" min="12" max="60" step="6" value="36">
+                                    <div class="flex justify-between text-[10px] text-muted mt-1">
+                                        <span id="sliderMinTenure">12 Mo</span>
+                                        <span id="sliderMaxTenure">60 Mo</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-600">Estimated Interest Rate:</span>
+                                        <span id="sliderRateValue" class="text-slate-800 font-bold">10.49% p.a.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live Calculation Output Card -->
+                            <div class="bg-gradient-to-br from-[#f8fafc] to-[#edf4ff] rounded-xl p-5 border border-[#dbe6f8] flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[11px] font-bold text-muted uppercase tracking-wider block">Estimated Monthly EMI</span>
+                                    <h3 id="calcEmiOutput" class="text-2xl sm:text-3xl font-extrabold text-primary mt-1">₹16,250</h3>
+                                    <p class="text-[10px] text-slate-500 mt-0.5">Calculated on standard reducing balance</p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3 pt-4 border-t border-[#d8e3f5] mt-4 text-xs">
+                                    <div>
+                                        <span class="text-[10px] text-muted block">Total Interest</span>
+                                        <span id="calcTotalInterest" class="font-bold text-slate-800">₹85,000</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-muted block">Total Payable</span>
+                                        <span id="calcTotalPayable" class="font-bold text-slate-800">₹5,85,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ELIGIBILITY CRITERIA -->
+                    <div class="bg-white rounded-2xl p-6 sm:p-7 border border-[#e2e8f0] shadow-sm">
+                        <h2 class="text-lg font-extrabold text-navy flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-user-check text-emerald-600"></i>
+                            <span>Eligibility Criteria</span>
+                        </h2>
+
+                        <!-- 4 Stat Pills -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Age Limit</span>
+                                <span id="eligibilityAge" class="text-xs sm:text-sm font-extrabold text-slate-800">21 - 58 Yrs</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Min. CIBIL</span>
+                                <span id="eligibilityCibil" class="text-xs sm:text-sm font-extrabold text-slate-800">700+</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Min. Income</span>
+                                <span id="eligibilityIncome" class="text-xs sm:text-sm font-extrabold text-slate-800">₹20,000 / mo</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Experience</span>
+                                <span id="eligibilityExperience" class="text-xs sm:text-sm font-extrabold text-slate-800">12 Months</span>
+                            </div>
+                        </div>
+
+                        <!-- Rules Checklist -->
+                        <div id="eligibilityRulesList" class="space-y-2.5 text-xs text-slate-700">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- REQUIRED DOCUMENTS -->
+                    <div class="bg-white rounded-2xl p-6 sm:p-7 border border-[#e2e8f0] shadow-sm">
+                        <h2 class="text-lg font-extrabold text-navy flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-folder-open text-primary"></i>
+                            <span>Documents Required</span>
+                        </h2>
+
+                        <div id="documentsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Injected dynamically: Identity, Address, Income, Asset proofs -->
+                        </div>
+                    </div>
+
+                    <!-- TERMS & CONDITIONS -->
+                    <div class="bg-white rounded-2xl p-6 sm:p-7 border border-[#e2e8f0] shadow-sm">
+                        <h2 class="text-lg font-extrabold text-navy flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-file-contract text-slate-600"></i>
+                            <span>Terms, Fees & Prepayment Rules</span>
+                        </h2>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-xs">
+                            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Interest Type</span>
+                                <span id="termInterestType" class="font-bold text-slate-800 capitalize">Fixed</span>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Foreclosure</span>
+                                <span id="termForeclosure" class="font-bold text-slate-800">Zero after 6 EMIs</span>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                                <span class="text-[10px] font-bold text-muted block uppercase">Prepayment</span>
+                                <span id="termPrepayment" class="font-bold text-slate-800">Nil</span>
+                            </div>
+                        </div>
+
+                        <div id="termsList" class="space-y-2 text-xs text-slate-600">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: STICKY APPLICATION CARD (4 Cols) -->
+                <div class="lg:col-span-4 sticky top-6 space-y-6">
+
+                    <!-- APPLICATION CARD -->
+                    <div class="bg-white rounded-2xl p-6 border border-[#e2e8f0] shadow-md">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
+                            <div>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-muted block">Pre-Approved Offer</span>
+                                <h3 class="text-sm font-extrabold text-navy">Ready to Apply?</h3>
+                            </div>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </div>
+
+                        <!-- User eligibility badge -->
+                        <div id="userPreapprovedBox" class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mb-5 text-xs text-emerald-900">
+                            <div class="flex items-center gap-2 font-bold mb-1 text-emerald-800">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>Verified Profile Advantage</span>
+                            </div>
+                            <p class="text-[11px] leading-relaxed text-emerald-700">
+                                Your KYC is complete. You can enjoy fast-track digital approval with instant verification.
+                            </p>
+                        </div>
+
+                        <div class="space-y-3 mb-6 text-xs text-slate-600">
+                            <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                                <span>Approval Time:</span>
+                                <span class="font-bold text-slate-800">⚡ 10 Minutes</span>
+                            </div>
+                            <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                                <span>Documentation:</span>
+                                <span class="font-bold text-slate-800">100% Paperless</span>
+                            </div>
+                            <div class="flex items-center justify-between py-1 border-b border-slate-50">
+                                <span>Security:</span>
+                                <span class="font-bold text-slate-800">No Collateral</span>
+                            </div>
+                        </div>
+
+                        <button id="openApplyModalBtn" type="button" class="w-full h-12 rounded-xl bg-primary hover:bg-primary-dark text-white font-extrabold text-sm shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+                            <span>Apply for This Loan</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                        <p class="text-[10px] text-center text-muted mt-3">
+                            <i class="fa-solid fa-lock text-[9px]"></i> Your data is 256-bit encrypted and safe.
+                        </p>
+                    </div>
+
+                    <!-- HELPLINE / SUPPORT -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 text-xs">
+                        <h4 class="font-bold text-navy mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-headset text-primary"></i>
+                            <span>Need Assistance?</span>
+                        </h4>
+                        <p class="text-slate-600 text-[11px] leading-relaxed mb-3">
+                            Our lending advisory team is available to assist you with loan inquiries and custom terms.
+                        </p>
+                        <a href="mailto:support@fincentrix.com" class="text-primary font-bold hover:underline inline-flex items-center gap-1">
+                            <span>Contact Loan Advisor</span>
+                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- =========================================
+         05. APPLICATION MODAL
+    ========================================== -->
+    <div id="applicationModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm opacity-0 invisible transition-all duration-300 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-all duration-300">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 bg-navy text-white">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-primary/20 grid place-items-center text-primary-light">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Apply for <span id="modalLoanTitle">Loan</span></h3>
+                        <p class="text-[10px] text-blue-200">Pre-filled with your verified KYC</p>
+                    </div>
+                </div>
+                <button id="closeModalBtn" class="text-white/70 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="loanApplyForm" class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                        <label class="block text-slate-600 font-semibold mb-1">Applicant Name</label>
+                        <input id="modalApplicantName" type="text" class="w-full px-3 py-2 border rounded-lg bg-slate-50 text-slate-700" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 font-semibold mb-1">Registered Phone</label>
+                        <input id="modalApplicantPhone" type="text" class="w-full px-3 py-2 border rounded-lg bg-slate-50 text-slate-700" readonly>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                        <label class="block text-slate-600 font-semibold mb-1">CIBIL Score</label>
+                        <input id="modalApplicantCibil" type="text" class="w-full px-3 py-2 border rounded-lg bg-slate-50 text-slate-700" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-slate-600 font-semibold mb-1">Monthly Income</label>
+                        <input id="modalApplicantIncome" type="text" class="w-full px-3 py-2 border rounded-lg bg-slate-50 text-slate-700" readonly>
+                    </div>
+                </div>
+
+                <div class="text-xs">
+                    <label class="block text-slate-700 font-bold mb-1">Requested Loan Amount (₹) *</label>
+                    <input id="modalLoanAmount" type="number" step="1000" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm font-bold text-navy focus:border-primary outline-none" required>
+                </div>
+
+                <div class="text-xs">
+                    <label class="block text-slate-700 font-bold mb-1">Requested Tenure (Months) *</label>
+                    <input id="modalLoanTenure" type="number" min="6" max="360" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm font-bold text-navy focus:border-primary outline-none" required>
+                </div>
+
+                <div class="text-xs">
+                    <label class="block text-slate-700 font-bold mb-1">Loan Purpose (Optional)</label>
+                    <textarea id="modalLoanPurpose" rows="2" placeholder="Tell us briefly how you plan to use this loan" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-primary outline-none resize-none"></textarea>
+                </div>
+
+                <div id="modalAlertBox" class="text-xs p-3 rounded-lg hidden"></div>
+
+                <button id="submitApplicationBtn" type="submit" class="w-full h-11 bg-primary hover:bg-primary-dark text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                    <span>Submit Digital Loan Application</span>
+                    <i class="fa-solid fa-check"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="loans.js"></script>
+</body>
+
+</html>

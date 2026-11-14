@@ -7,6 +7,16 @@
 
     <title>Fincentrix | Dashboard</title>
 
+    <!-- Route Guard Layer 1: Instant Client Gatekeeper (Executes before page renders) -->
+    <script>
+        (function () {
+            const token = localStorage.getItem("fincentrix_token");
+            if (!token) {
+                window.location.replace("index.html");
+            }
+        })();
+    </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,181 +115,76 @@
 <div class="app-container min-h-screen">
 
     <!-- =========================================
-         01. SIDEBAR
+         01. SIDEBAR NAVIGATION
     ========================================== -->
-
     <aside id="sidebar"
-        class="sidebar fixed left-0 top-0 z-[100] flex h-screen w-[280px] sm:w-[265px] flex-col bg-gradient-to-b from-[#071a43] via-[#091e49] to-[#061638] px-4 sm:px-[18px] py-6 sm:py-[27px] transition-transform duration-300 -translate-x-full sm:translate-x-0 [&.active]:translate-x-0 shadow-2xl sm:shadow-none">
+        class="sidebar fixed top-0 left-0 z-[100] h-screen w-[265px] -translate-x-full sm:translate-x-0 [&.active]:translate-x-0 transition-transform duration-300 ease-out bg-navy-darker border-r border-white/10 flex flex-col justify-between p-5 text-white shadow-2xl">
 
-        <!-- BRAND -->
-        <div class="brand-section mb-10 sm:mb-[60px] flex items-center justify-between px-2">
-
-            <a href="#" class="brand flex items-center gap-[11px]">
-
-                <span class="brand-logo grid h-[39px] w-[39px] place-items-center rounded-[11px] bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-[25px] font-extrabold italic text-white shadow-[0_5px_18px_rgba(49,92,255,0.35)]">
-                    F
-                </span>
-
-                <span class="brand-name text-[22px] font-extrabold italic tracking-tight text-white">
-                    Fincentrix
-                </span>
-
-            </a>
-
-            <button id="sidebarClose"
-                class="sidebar-close block sm:hidden border-0 bg-transparent text-[27px] text-white/80 hover:text-white transition-colors cursor-pointer"
-                aria-label="Close sidebar">
-                &times;
-            </button>
-
-        </div>
-
-
-        <!-- SIDEBAR NAVIGATION -->
-        <div class="sidebar-navigation">
-
-            <p class="nav-heading mb-[17px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9] select-none">
-                WORKSPACE
-            </p>
-
-            <nav class="nav-menu flex flex-col gap-2">
-
-                <a href="#" class="nav-link active relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="home">
-
-                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
-                        <path d="M3 10.5L12 3l9 7.5V21H3V10.5Z"/>
-                        <path d="M9 21v-7h6v7"/>
-                    </svg>
-
-                    <span>Home</span>
-
-                </a>
-
-
-                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="loans">
-
-                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
-                        <rect x="4" y="3" width="16" height="18" rx="3"/>
-                        <path d="M8 8h8M8 12h8M8 16h4"/>
-                    </svg>
-
-                    <span>My Loans</span>
-
-                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white">
-                        03
+        <div class="sidebar-top flex flex-col">
+            <!-- BRAND HEADER -->
+            <div class="sidebar-header flex items-center justify-between pb-5 border-b border-white/10">
+                <a href="dashboard2.html" class="brand flex items-center gap-2.5 text-xl font-extrabold italic text-white tracking-tight">
+                    <span class="brand-logo grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-2xl font-extrabold italic text-white shadow-lg">
+                        F
                     </span>
-
+                    <span>Fincentrix</span>
                 </a>
 
-
-                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="applications">
-
-                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
-                        <path d="M7 3h7l5 5v13H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/>
-                        <path d="M14 3v6h5M8 13h7M8 17h7"/>
-                    </svg>
-
-                    <span>Applications</span>
-
-                </a>
-
-
-                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="notifications">
-
-                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
-                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
-                        <path d="M10 21h4"/>
-                    </svg>
-
-                    <span>Notifications</span>
-
-                    <span class="notification-dot ml-auto w-2 h-2 rounded-full bg-[#ff6c79] shadow-[0_0_0_4px_rgba(255,108,121,0.12)]"></span>
-
-                </a>
-
-            </nav>
-
-
-            <!-- PREFERENCES -->
-            <p class="nav-heading preferences-heading mb-[17px] mt-8 sm:mt-[42px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9] select-none">
-                PREFERENCES
-            </p>
-
-            <nav class="nav-menu flex flex-col gap-2">
-
-                <a href="#" class="nav-link relative flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white [&:not(.active):hover]:bg-[#315cff]/[0.08] [&:not(.active):hover]:border-[#315cff]/25 group" data-page="settings">
-
-                    <svg class="w-[21px] h-[21px] shrink-0 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 3.1-.2-.1a1.7 1.7 0 0 0-1.8.1l-.2.1h-3.6l-.1-.2a1.7 1.7 0 0 0-1.6-1l-.3.1-3.1-1.8.1-.3a1.7 1.7 0 0 0-.2-1.8l-.1-.2v-3.6l.2-.1a1.7 1.7 0 0 0 1-1.6l-.1-.3 1.8-3.1.3.1a1.7 1.7 0 0 0 1.8-.2l.2-.1h3.6l.1.2a1.7 1.7 0 0 0 1.6 1l.3-.1 3.1 1.8-.1.3a1.7 1.7 0 0 0 .2 1.8l.1.2v3.6Z"/>
-                    </svg>
-
-                    <span>Settings</span>
-
-                </a>
-
-            </nav>
-
-        </div>
-
-
-        <!-- SIDEBAR BOTTOM -->
-        <div class="sidebar-bottom mt-auto">
-
-            <div class="upgrade-card mb-[22px] rounded-[13px] border border-white/10 bg-gradient-to-br from-[#123b79] to-[#086c91] p-[17px_15px] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(0,100,180,0.2)]">
-
-                <div class="upgrade-icon grid h-7 w-7 place-items-center rounded-lg bg-white/10 text-[#a9c8ff] text-sm">
-                    ✦
-                </div>
-
-                <h4 class="mt-[13px] text-xs font-bold text-white">
-                    Get Higher Loan Limit
-                </h4>
-
-                <p class="mt-[7px] text-[10px] leading-relaxed text-[#c1d3ec]">
-                    Complete your profile to unlock more benefits.
-                </p>
-
-                <button type="button" id="upgradeButton"
-                    class="mt-[14px] flex w-full items-center justify-between rounded-lg bg-white px-3 py-2.5 text-[10px] font-bold text-[#1746a8] transition-colors duration-200 hover:bg-[#eaf0ff] active:scale-95">
-
-                    <span>Explore Benefits</span>
-                    <span class="text-[15px]">→</span>
-
+                <button id="sidebarClose" class="sidebar-close sm:hidden grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-white/70 hover:text-white" aria-label="Close menu">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
-
             </div>
 
+            <!-- NAVIGATION LINKS -->
+            <nav class="sidebar-nav mt-6 flex flex-col gap-1.5" aria-label="Main Navigation">
+                <a href="dashboard2.html" class="nav-link active relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white transition-all duration-300 border border-primary/40 group" data-page="home">
+                    <i class="fa-solid fa-house text-base w-[20px] text-center text-primary-light"></i>
+                    <span>Dashboard</span>
+                </a>
 
+                <a href="loans.html" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group" data-page="loans">
+                    <i class="fa-solid fa-hand-holding-dollar text-base w-[20px] text-center"></i>
+                    <span>Loan Products</span>
+                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white">
+                        10
+                    </span>
+                </a>
+
+                <a href="#loanTypes" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group" data-page="applications">
+                    <i class="fa-solid fa-list-check text-base w-[20px] text-center"></i>
+                    <span>My Applications</span>
+                </a>
+
+                <a href="#loanTypes" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group" data-page="settings">
+                    <i class="fa-solid fa-gear text-base w-[20px] text-center"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- SIDEBAR FOOTER -->
+        <div class="sidebar-footer flex flex-col gap-4">
             <!-- USER PROFILE -->
             <div class="user-profile flex items-center gap-[11px] border-t border-white/10 pt-[17px]">
-
-                <div class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white">
-                    SK
+                <div id="sidebarUserAvatar" class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white uppercase">
+                    FX
                 </div>
-
                 <div class="user-info">
-
-                    <h4 class="text-[11px] font-bold text-white">
-                        Sabir Khan
+                    <h4 id="sidebarUserName" class="text-[11px] font-bold text-white">
+                        User Profile
                     </h4>
-
-                    <p class="mt-0.5 text-[9px] text-[#8295b4]">
-                        Premium Customer
+                    <p id="sidebarUserRole" class="mt-0.5 text-[9px] text-[#8295b4]">
+                        Customer
                     </p>
-
                 </div>
-
-                <button id="profileButton"
-                    class="profile-button ml-auto border-0 bg-transparent text-[23px] text-[#9baecc] hover:text-white transition-colors cursor-pointer"
-                    aria-label="Profile options">
-                    ⋯
+                <button id="logoutButton"
+                    class="profile-button ml-auto border-0 bg-transparent text-[#9baecc] hover:text-red-400 transition-colors cursor-pointer text-sm font-semibold p-1.5 rounded-lg hover:bg-white/5"
+                    title="Log Out"
+                    aria-label="Log Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
-
             </div>
-
         </div>
-
     </aside>
 
 
@@ -382,9 +287,9 @@
                             </button>
 
 
-                            <button class="greeting-avatar h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-xs font-extrabold text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:rotate-3"
+                            <button id="topbarUserAvatar" class="greeting-avatar h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-xs font-extrabold text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:rotate-3 uppercase"
                                 aria-label="Your profile">
-                                SK
+                                FX
                             </button>
 
                         </div>
@@ -514,7 +419,7 @@
                         </div>
 
 
-                        <span class="loan-count self-start sm:self-auto rounded-full border border-[#e0e8ff] bg-[#edf2ff] px-3.5 py-1.5 text-[10px] font-extrabold tracking-wide text-primary whitespace-nowrap">
+                        <span id="loanProductsCount" class="loan-count self-start sm:self-auto rounded-full border border-[#e0e8ff] bg-[#edf2ff] px-3.5 py-1.5 text-[10px] font-extrabold tracking-wide text-primary whitespace-nowrap">
                             10 PRODUCTS
                         </span>
 
@@ -525,7 +430,7 @@
                          07. LOAN CARD GRID
                     ================================== -->
 
-                    <div class="loan-card-grid grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-7 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-4 xl:gap-y-8 items-start overflow-visible">
+                    <div id="loanCardGrid" class="loan-card-grid grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-7 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-4 xl:gap-y-8 items-start overflow-visible">
 
 
                         <!-- HOME LOAN -->
@@ -724,7 +629,7 @@
 
                             <div class="loan-card-visual relative w-full h-[85px] sm:h-[100px] shrink-0 overflow-hidden rounded-[11px] bg-[var(--accent-soft)]">
 
-                                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700"
+                                <img src="https://media.assettype.com/outlookmoney/2024-11-08/cy89odqi/Vidyalaxmi.jpg?w=768&auto=format%2Ccompress&fit=max&format=webp&dpr=1.0"
                                     alt="University education"
                                     class="h-full w-full object-cover transition-transform duration-700"
                                     loading="lazy">
@@ -1183,7 +1088,7 @@
         </a>
 
 
-        <a href="#" class="bottom-nav-link flex flex-col items-center justify-center gap-1 min-w-[55px] text-[9px] font-semibold text-[#8b98ad] transition-colors [&.active]:text-primary" data-page="loans">
+        <a href="loans.html" class="bottom-nav-link flex flex-col items-center justify-center gap-1 min-w-[55px] text-[9px] font-semibold text-[#8b98ad] transition-colors [&.active]:text-primary" data-page="loans">
 
             <svg class="w-5 h-5 fill-none stroke-current stroke-[1.7] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
                 <rect x="4" y="3" width="16" height="18" rx="3"/>

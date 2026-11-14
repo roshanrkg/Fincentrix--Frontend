@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fincentrix | Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#315cff',
+                        navy: '#102958',
+                        background: '#f5f8ff',
+                        muted: '#8492a9'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="dashboard2.css">
+
+</head>
+
+<body class="font-inter bg-background text-[#26364d] antialiased">
+
+<div class="app-container min-h-screen">
+
+    <!-- =========================================
+         01. SIDEBAR
+    ========================================== -->
+
+    <aside id="sidebar"
+        class="sidebar fixed left-0 top-0 z-[100] flex h-screen w-[265px] flex-col bg-gradient-to-b from-[#071a43] via-[#091e49] to-[#061638] px-[18px] py-[27px] transition-transform duration-300">
+
+        <!-- BRAND -->
+        <div class="brand-section mb-[60px] flex items-center justify-between px-2">
+
+            <a href="#" class="brand flex items-center gap-[11px]">
+
+                <span class="brand-logo grid h-[39px] w-[39px] place-items-center rounded-[11px] bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-[25px] font-extrabold italic text-white shadow-lg">
+                    F
+                </span>
+
+                <span class="brand-name text-[22px] font-extrabold italic tracking-tight text-white">
+                    Fincentrix
+                </span>
+
+            </a>
+
+            <button id="sidebarClose"
+                class="sidebar-close hidden border-0 bg-transparent text-[27px] text-white"
+                aria-label="Close sidebar">
+                &times;
+            </button>
+
+        </div>
+
+
+        <!-- SIDEBAR NAVIGATION -->
+        <div class="sidebar-navigation">
+
+            <p class="nav-heading mb-[17px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9]">
+                WORKSPACE
+            </p>
+
+            <nav class="nav-menu flex flex-col gap-2">
+
+                <a href="#" class="nav-link active flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white" data-page="home">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 10.5L12 3l9 7.5V21H3V10.5Z"/>
+                        <path d="M9 21v-7h6v7"/>
+                    </svg>
+
+                    <span>Home</span>
+
+                </a>
+
+
+                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="loans">
+
+                    <svg viewBox="0 0 24 24">
+                        <rect x="4" y="3" width="16" height="18" rx="3"/>
+                        <path d="M8 8h8M8 12h8M8 16h4"/>
+                    </svg>
+
+                    <span>My Loans</span>
+
+                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-1 text-[10px] font-bold text-white">
+                        03
+                    </span>
+
+                </a>
+
+
+                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="applications">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7 3h7l5 5v13H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/>
+                        <path d="M14 3v6h5M8 13h7M8 17h7"/>
+                    </svg>
+
+                    <span>Applications</span>
+
+                </a>
+
+
+                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="notifications">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                        <path d="M10 21h4"/>
+                    </svg>
+
+                    <span>Notifications</span>
+
+                    <span class="notification-dot ml-auto"></span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- PREFERENCES -->
+            <p class="nav-heading preferences-heading mb-[17px] mt-[42px] pl-[14px] text-[10px] font-bold tracking-[1.5px] text-[#7185a9]">
+                PREFERENCES
+            </p>
+
+            <nav class="nav-menu flex flex-col gap-2">
+
+                <a href="#" class="nav-link flex h-[51px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca]" data-page="settings">
+
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 3.1-.2-.1a1.7 1.7 0 0 0-1.8.1l-.2.1h-3.6l-.1-.2a1.7 1.7 0 0 0-1.6-1l-.3.1-3.1-1.8.1-.3a1.7 1.7 0 0 0-.2-1.8l-.1-.2v-3.6l.2-.1a1.7 1.7 0 0 0 1-1.6l-.1-.3 1.8-3.1.3.1a1.7 1.7 0 0 0 1.8-.2l.2-.1h3.6l.1.2a1.7 1.7 0 0 0 1.6 1l.3-.1 3.1 1.8-.1.3a1.7 1.7 0 0 0 .2 1.8l.1.2v3.6Z"/>
+                    </svg>
+
+                    <span>Settings</span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="sidebar-bottom mt-auto">
+
+            <div class="upgrade-card mb-[22px] rounded-[13px] border border-white/10 bg-gradient-to-br from-[#123b79] to-[#086c91] p-[17px_15px]">
+
+                <div class="upgrade-icon grid h-7 w-7 place-items-center rounded-lg bg-white/10 text-[#a9c8ff]">
+                    ✦
+                </div>
+
+                <h4 class="mt-[13px] text-xs font-bold text-white">
+                    Get Higher Loan Limit
+                </h4>
+
+                <p class="mt-[7px] text-[10px] leading-relaxed text-[#c1d3ec]">
+                    Complete your profile to unlock more benefits.
+                </p>
+
+                <button type="button" id="upgradeButton"
+                    class="mt-[14px] flex w-full items-center justify-between rounded-lg bg-white px-[11px] py-[10px] text-[10px] font-bold text-[#1746a8] transition hover:bg-[#eaf0ff]">
+
+                    Explore Benefits
+                    <span class="text-[15px]">→</span>
+
+                </button>
+
+            </div>
+
+
+            <!-- USER PROFILE -->
+            <div class="user-profile flex items-center gap-[11px] border-t border-white/10 pt-[17px]">
+
+                <div class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white">
+                    SK
+                </div>
+
+                <div class="user-info">
+
+                    <h4 class="text-[11px] font-bold text-white">
+                        Sabir Khan
+                    </h4>
+
+                    <p class="mt-[5px] text-[9px] text-[#8295b4]">
+                        Premium Customer
+                    </p>
+
+                </div>
+
+                <button id="profileButton"
+                    class="profile-button ml-auto border-0 bg-transparent text-[23px] text-[#9baecc]">
+                    ⋯
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- SIDEBAR OVERLAY -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+
+    <!-- =========================================
+         02. MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content min-h-screen ml-[265px]">
+
+
+        <!-- MOBILE HEADER -->
+        <header class="mobile-header hidden">
+
+            <button id="menuButton"
+                class="menu-button grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-[#f1f4fc]"
+                aria-label="Open menu">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+
+            </button>
+
+
+            <a href="#" class="mobile-brand flex items-center gap-[9px] text-[17px] font-extrabold italic text-navy">
+
+                <span class="brand-logo grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-xl text-white">
+                    F
+                </span>
+
+                <span>Fincentrix</span>
+
+            </a>
+
+
+            <button class="mobile-avatar h-9 w-9 rounded-[10px] bg-gradient-to-br from-primary to-[#713bea] text-[10px] font-extrabold text-white">
+                SK
+            </button>
+
+        </header>
+
+
+        <!-- =====================================
+             03. DASHBOARD WORKSPACE
+        ====================================== -->
+
+        <section class="workspace min-h-screen px-[42px] py-[38px]">
+
+            <div class="loan-workspace mx-auto w-full max-w-[1500px]">
+
+
+                <!-- =================================
+                     04. GREETING SECTION
+                ================================== -->
+
+                <section class="fincentrix-greeting mb-7 w-full">
+
+                    <div class="loan-topbar mb-[25px] flex items-center justify-between gap-5">
+
+                        <div class="greeting-text">
+
+                            <span class="greeting-label mb-[9px] block text-[10px] font-extrabold tracking-[1.6px] text-[#4263eb]">
+                                FINCENTRIX WORKSPACE
+                            </span>
+
+                            <h1 class="text-[28px] font-extrabold tracking-tight text-navy">
+
+                                <span id="greetingMessage">
+                                    Welcome back, Sabir!
+                                </span>
+
+                                <span class="greeting-wave inline-block">
+                                    👋
+                                </span>
+
+                            </h1>
+
+                            <p class="mt-[9px] text-xs leading-relaxed text-muted">
+                                Your financial journey starts here.
+                                Explore smart loan solutions designed around your needs.
+                            </p>
+
+                        </div>
+
+
+                        <!-- GREETING ACTIONS -->
+                        <div class="greeting-actions flex items-center gap-[14px]">
+
+                            <button class="notification-btn relative grid h-[43px] w-[43px] place-items-center rounded-[13px] border border-[#e8edf6] bg-white text-[#526783] transition hover:-translate-y-1 hover:bg-[#edf2ff] hover:text-primary"
+                                aria-label="Notifications">
+
+                                <i class="fa-regular fa-bell"></i>
+
+                                <span class="notification-dot"></span>
+
+                            </button>
+
+
+                            <button class="greeting-avatar h-[43px] w-[43px] rounded-[13px] bg-gradient-to-br from-primary to-[#713bea] text-xs font-extrabold text-white shadow-lg"
+                                aria-label="Your profile">
+                                SK
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================
+                         05. WELCOME BANNER
+                    ================================== -->
+
+                    <section class="loan-welcome-banner relative isolate flex min-h-[235px] items-center justify-between overflow-hidden rounded-[20px] border border-white/15 bg-gradient-to-br from-[#0b2051] via-[#17439b] to-[#5269e8] px-[38px] py-8 shadow-xl">
+
+                        <div class="banner-glow glow-one"></div>
+                        <div class="banner-glow glow-two"></div>
+                        <div class="banner-light-wave"></div>
+
+
+                        <!-- BANNER CONTENT -->
+                        <div class="welcome-content relative z-[3] w-[55%] max-w-[55%]"
+                            id="loanEligibilityBanner">
+
+                            <span id="eligibilityBadge"
+                                class="welcome-tag inline-block rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[9px] font-extrabold tracking-[1.2px] text-[#e2eaff]">
+
+                                FINCENTRIX LOAN ELIGIBILITY
+
+                            </span>
+
+
+                            <h2 id="eligibilityHeading"
+                                class="mt-3 text-[32px] font-extrabold leading-tight tracking-tight text-white">
+
+                                Your Financial Journey
+                                <br>
+                                Starts Here.
+
+                            </h2>
+
+
+                            <p id="eligibilityDescription"
+                                class="mt-3 max-w-[390px] text-[12px] leading-[1.8] text-[#d0dcf8]">
+
+                                Complete your document verification
+                                to discover your personalized loan eligibility.
+
+                            </p>
+
+
+                            <!-- ELIGIBILITY AMOUNT -->
+                            <div id="eligibilityAmountBox" class="mt-4 hidden">
+
+                                <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#d0dcf8]">
+                                    YOUR MAXIMUM LOAN ELIGIBILITY
+                                </p>
+
+                                <h3 id="eligibleLoanAmount"
+                                    class="mt-1 text-[38px] font-extrabold tracking-tight text-white">
+                                    ₹0
+                                </h3>
+
+                                <p class="mt-1 text-[10px] text-[#d0dcf8]">
+                                    Subject to final lender approval and terms.
+                                </p>
+
+                            </div>
+
+
+                            <!-- ACTION BUTTON -->
+                            <a href="javascript:void(0)"
+                                id="eligibilityActionButton"
+                                class="welcome-btn mt-5 inline-flex items-center gap-[18px] rounded-lg bg-white px-[17px] py-3 text-[11px] font-extrabold text-[#1746a8] transition hover:-translate-y-1 hover:bg-[#edf2ff]">
+
+                                Complete Verification
+
+                                <i class="fa-solid fa-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+
+                        <!-- BANNER VIDEO -->
+                        <div class="welcome-decoration absolute right-0 top-0 z-[2] flex h-full w-[42%] items-center justify-center">
+
+                            <div class="welcome-image-wrapper h-[80%] w-[85%] overflow-hidden rounded-[15px] shadow-2xl">
+
+                                <video class="welcome-image"
+                                    autoplay
+                                    muted
+                                    loop
+                                    playsinline
+                                    preload="auto">
+
+                                    <source src="videos/welcome-banner-video.mp4"
+                                        type="video/mp4">
+
+                                </video>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </section>
+
+
+                <!-- =================================
+                     06. LOAN PRODUCTS SECTION
+                ================================== -->
+
+                <section id="loanTypes" class="loan-types-section scroll-mt-[30px]">
+
+
+                    <!-- SECTION HEADING -->
+                    <div class="loan-section-heading mb-6 flex items-end justify-between gap-4">
+
+                        <div>
+
+                            <span class="section-eyebrow text-[9px] font-extrabold tracking-[1.6px] text-primary">
+                                EXPLORE FINANCING
+                            </span>
+
+                            <h2 class="mt-2 text-2xl font-extrabold tracking-tight text-navy">
+                                Explore Loan Products
+                            </h2>
+
+                            <p class="mt-[7px] text-xs leading-relaxed text-[#8996a9]">
+                                Choose the right financial solution for your needs.
+                            </p>
+
+                        </div>
+
+
+                        <span class="loan-count rounded-full border border-[#e0e8ff] bg-[#edf2ff] px-[13px] py-2 text-[10px] font-extrabold tracking-wide text-primary">
+                            10 PRODUCTS
+                        </span>
+
+                    </div>
+
+
+                    <!-- =================================
+                         07. LOAN CARD GRID
+                    ================================== -->
+
+                    <div class="loan-card-grid grid grid-cols-5 items-start gap-x-5 gap-y-[35px]">
+
+
+                        <!-- HOME LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="home">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#edf2ff]">
+
+                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700"
+                                    alt="Modern home"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">PROPERTY</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Home Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] leading-snug text-muted">
+                                    Buy, build or renovate your dream home.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Make your dream of owning a home
+                                        a reality with financing options
+                                        for purchasing, constructing or
+                                        renovating residential property.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>Home Purchase</span>
+                                        <span>Flexible Tenure</span>
+                                        <span>Competitive Rates</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Home Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- PERSONAL LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="personal">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#e9f7f3]">
+
+                                <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=700"
+                                    alt="Personal finance"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">PERSONAL FINANCE</span>
+                                <span class="popular-badge">POPULAR</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Personal Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Quick funds for your personal needs.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        A flexible financing option for
+                                        medical expenses, travel, weddings,
+                                        emergencies and other personal
+                                        requirements.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>⚡ Quick Processing</span>
+                                        <span>📊 Flexible EMI</span>
+                                        <span>📅 Flexible Tenure</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Personal Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- CAR LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="car">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff3e7]">
+
+                                <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=700"
+                                    alt="Premium car"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">VEHICLE</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Car Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Finance your new or used car.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Get financial assistance to purchase
+                                        your preferred new or pre-owned vehicle
+                                        with convenient repayment options.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>New & Used Cars</span>
+                                        <span>Flexible EMI</span>
+                                        <span>Easy Repayment</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Car Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- EDUCATION LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="education">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#f2edff]">
+
+                                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700"
+                                    alt="University education"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">EDUCATION</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Education Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Invest in your education and future.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Finance higher education, tuition fees,
+                                        accommodation and other eligible
+                                        academic expenses.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>🎓 Higher Studies</span>
+                                        <span>📚 Academic Expenses</span>
+                                        <span>🌍 Study Abroad</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Education Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- BUSINESS LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="business">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#eaf7fb]">
+
+                                <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=700"
+                                    alt="Modern business office"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">BUSINESS</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Business Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Grow and expand your business.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Support your business growth,
+                                        working capital requirements,
+                                        equipment purchases and expansion plans.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>📈 Business Growth</span>
+                                        <span>💼 Working Capital</span>
+                                        <span>🏢 Expansion</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Business Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- GOLD LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="gold">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff8e7]">
+
+                                <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=700"
+                                    alt="Gold jewellery"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">GOLD ASSET</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Gold Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Unlock funds against your gold assets.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Use eligible gold jewellery as collateral
+                                        to access funds for your financial
+                                        requirements.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>Gold Collateral</span>
+                                        <span>Quick Processing</span>
+                                        <span>Flexible Repayment</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Gold Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- LOAN AGAINST PROPERTY -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="property">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff0f4]">
+
+                                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=700"
+                                    alt="Luxury property"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">PROPERTY ASSET</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Loan Against Property
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Unlock the value of your property.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Use eligible residential or commercial
+                                        property as collateral to meet larger
+                                        financial requirements.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>🏢 Property Collateral</span>
+                                        <span>💰 Larger Funding</span>
+                                        <span>📅 Flexible Tenure</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Loan Against Property">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- WEDDING LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="wedding">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#fff0f6]">
+
+                                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=700"
+                                    alt="Wedding celebration"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">CELEBRATION</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Wedding Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Make your special day unforgettable.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Manage wedding expenses, venue bookings,
+                                        catering, decorations and other
+                                        celebration requirements.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>💍 Wedding Expenses</span>
+                                        <span>💰 Flexible EMI</span>
+                                        <span>✨ Easy Planning</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Wedding Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- MEDICAL LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="medical">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#e8f8f4]">
+
+                                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700"
+                                    alt="Medical healthcare"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">HEALTHCARE</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Medical Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Financial support for healthcare needs.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Manage medical bills, hospital expenses,
+                                        surgeries, treatments and other
+                                        healthcare requirements.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>Medical Bills</span>
+                                        <span>Healthcare</span>
+                                        <span>Quick Support</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Medical Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- TRAVEL LOAN -->
+                        <article class="loan-product-card group relative min-w-0 rounded-[15px] border border-[#e5ebf7] bg-white p-2 shadow-sm transition duration-300"
+                            data-loan-card="travel">
+
+                            <div class="loan-card-visual relative w-full overflow-hidden rounded-[10px] bg-[#edf6ff]">
+
+                                <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=700"
+                                    alt="Travel destination"
+                                    class="h-full w-full object-cover transition duration-700"
+                                    loading="lazy">
+
+                                <span class="loan-category">TRAVEL</span>
+
+                            </div>
+
+
+                            <div class="loan-card-content px-[5px] pt-[9px]">
+
+                                <div class="loan-card-heading flex items-center justify-between gap-2">
+
+                                    <h3 class="text-[13px] font-extrabold text-navy">
+                                        Travel Loan
+                                    </h3>
+
+                                    <span class="loan-card-arrow">↗</span>
+
+                                </div>
+
+
+                                <p class="loan-short-description mt-[5px] text-[10px] text-muted">
+                                    Turn your dream vacation into reality.
+                                </p>
+
+
+                                <div class="loan-extra-details">
+
+                                    <p>
+                                        Plan your domestic or international
+                                        vacation with financial assistance
+                                        for flights, accommodation and
+                                        travel expenses.
+                                    </p>
+
+                                    <div class="loan-benefits">
+                                        <span>✈️ Flight Expenses</span>
+                                        <span>🌍 International Trips</span>
+                                        <span>🏖️ Vacation</span>
+                                    </div>
+
+                                    <button type="button" class="apply-loan-btn" data-loan="Travel Loan">
+                                        Apply Now <span>→</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         08. MOBILE BOTTOM NAVIGATION
+    ========================================== -->
+
+    <nav class="bottom-navigation">
+
+        <a href="#" class="bottom-nav-link active" data-page="home">
+
+            <svg viewBox="0 0 24 24">
+                <path d="M3 10.5L12 3l9 7.5V21H3V10.5Z"/>
+                <path d="M9 21v-7h6v7"/>
+            </svg>
+
+            <span>Home</span>
+
+        </a>
+
+
+        <a href="#" class="bottom-nav-link" data-page="loans">
+
+            <svg viewBox="0 0 24 24">
+                <rect x="4" y="3" width="16" height="18" rx="3"/>
+                <path d="M8 8h8M8 12h8M8 16h4"/>
+            </svg>
+
+            <span>My Loans</span>
+
+        </a>
+
+
+        <a href="#" class="bottom-nav-link" data-page="notifications">
+
+            <span class="mobile-alert-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                    <path d="M10 21h4"/>
+                </svg>
+
+                <i></i>
+
+            </span>
+
+            <span>Alerts</span>
+
+        </a>
+
+
+        <a href="#" class="bottom-nav-link" data-page="settings">
+
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 3.1-.2-.1a1.7 1.7 0 0 0-1.8.1l-.2.1h-3.6l-.1-.2a1.7 1.7 0 0 0-1.6-1l-.3.1-3.1-1.8.1-.3a1.7 1.7 0 0 0-.2-1.8l-.1-.2v-3.6l.2-.1a1.7 1.7 0 0 0 1-1.6l-.1-.3 1.8-3.1.3.1a1.7 1.7 0 0 0 1.8-.2l.2-.1h3.6l.1.2a1.7 1.7 0 0 0 1.6 1l.3-.1 3.1 1.8-.1.3a1.7 1.7 0 0 0 .2 1.8l.1.2v3.6Z"/>
+            </svg>
+
+            <span>Settings</span>
+
+        </a>
+
+    </nav>
+
+</div>
+
+
+<!-- =========================================
+     09. JAVASCRIPT
+========================================== -->
+
+<script src="dashboard2.js"></script>
+
+</body>
+</html>

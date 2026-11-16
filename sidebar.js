@@ -38,6 +38,8 @@
         const isLoans = activeTab === "loans";
         const isApps = activeTab === "applications";
         const isSettings = activeTab === "settings";
+        const sidebarDesktopClass = isApps ? "lg:translate-x-0" : "sm:translate-x-0";
+        const sidebarCloseClass = isApps ? "lg:hidden" : "sm:hidden";
 
         const baseLinkClass = "nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium transition-all duration-300 border group";
         const activeLinkClass = "active text-white border-primary/40";
@@ -48,7 +50,7 @@
              SHARED UNIVERSAL SIDEBAR
         ========================================== -->
         <aside id="sidebar"
-            class="sidebar fixed top-0 left-0 z-[100] h-screen w-[265px] -translate-x-full sm:translate-x-0 [&.active]:translate-x-0 transition-transform duration-300 ease-out bg-navy-darker border-r border-white/10 flex flex-col justify-between p-5 text-white shadow-2xl">
+            class="sidebar fixed top-0 left-0 z-[100] h-screen w-[265px] -translate-x-full ${sidebarDesktopClass} [&.active]:translate-x-0 transition-transform duration-300 ease-out bg-navy-darker border-r border-white/10 flex flex-col justify-between p-5 text-white shadow-2xl">
 
             <div class="sidebar-top flex flex-col">
                 <!-- BRAND HEADER -->
@@ -60,7 +62,7 @@
                         <span>Fincentrix</span>
                     </a>
 
-                    <button id="sidebarClose" class="sidebar-close sm:hidden grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-white/70 hover:text-white cursor-pointer" aria-label="Close menu">
+                    <button id="sidebarClose" class="sidebar-close ${sidebarCloseClass} grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-white/70 hover:text-white cursor-pointer" aria-label="Close menu">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -121,7 +123,7 @@
         </aside>
 
         <!-- SIDEBAR OVERLAY FOR MOBILE -->
-        <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 z-[90] bg-[#050f23]/60 opacity-0 invisible transition-all duration-300 [&.active]:opacity-100 [&.active]:visible sm:hidden"></div>
+        <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 z-[90] bg-[#050f23]/60 opacity-0 invisible transition-all duration-300 [&.active]:opacity-100 [&.active]:visible ${sidebarCloseClass}"></div>
         `;
     }
 

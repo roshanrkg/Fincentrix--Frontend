@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         return `
             <div class="mt-6 pt-6 border-t border-slate-100">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                     <span class="text-[11px] font-bold text-navy uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-timeline text-primary"></i>
                         <span>Underwriting & Sanction Stages</span>
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     <span class="text-[10px] text-muted font-medium">Standard SLA: 24-48 Hours</span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-2 relative">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-3 relative">
                     ${stages.map((stage, idx) => {
                         let circleClass = "bg-slate-100 text-slate-400 border border-slate-200";
                         let titleClass = "text-slate-600";
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between gap-1">
-                                        <h5 class="text-xs font-bold ${titleClass} truncate">
+                                        <h5 class="text-xs font-bold ${titleClass} break-words">
                                             Stage ${stage.number}: ${stage.title}
                                         </h5>
                                     </div>
@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     </div>
 
                     <!-- Key Financials Snapshot Strip -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-5 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/80 rounded-xl px-4 my-4 border border-slate-100">
+                    <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 py-5 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/80 rounded-xl px-4 my-4 border border-slate-100">
                         <div>
                             <span class="text-[10px] font-bold text-muted uppercase block">Requested Amount</span>
                             <span class="text-sm sm:text-base font-extrabold text-navy font-mono mt-0.5 block">${amountFormatted}</span>

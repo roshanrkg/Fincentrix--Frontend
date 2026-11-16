@@ -535,6 +535,62 @@ document.addEventListener("DOMContentLoaded", async function () {
                 }).join("");
             }
 
+            // Check if user has an active application for this loan
+            if (token) {
+                try {
+                    const appsRes = await fetch(`${API_BASE}/loans/my-applications`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    if (appsRes.ok) {
+                        const appsData = await appsRes.json();
+                        const userApps = appsData.data || [];
+                        const existingApp = userApps.find(a => a.loan_slug === currentLoan.slug);
+
+                        const sidebarBadge = document.getElementById("sidebarApplicationsBadge");
+                        if (sidebarBadge) {
+                            if (userApps.length > 0) {
+                                sidebarBadge.textContent = userApps.length.toString().padStart(2, "0");
+                                sidebarBadge.classList.remove("hidden");
+                            } else {
+                                sidebarBadge.classList.add("hidden");
+                            }
+                        }
+
+                        if (existingApp && userPreapprovedBox) {
+                            const appDateFormatted = new Date(existingApp.applied_at).toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric"
+                            });
+
+                            userPreapprovedBox.className = "bg-amber-50 border border-amber-300 rounded-xl p-3.5 mb-5 text-xs text-amber-900";
+                            userPreapprovedBox.innerHTML = `
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="flex items-center gap-1.5 font-bold text-amber-800">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                        <span>Application Under Review</span>
+                                    </span>
+                                    <span class="font-mono text-[10px] font-bold bg-white px-2 py-0.5 rounded border border-amber-200">${existingApp.application_ref}</span>
+                                </div>
+                                <p class="text-[11px] leading-relaxed text-amber-700">
+                                    You have already applied for <strong>${formatCurrency(existingApp.requested_amount)}</strong> (${existingApp.requested_tenure_months} Mo) on ${appDateFormatted}. Credit underwriting is in progress.
+                                </p>
+                            `;
+
+                            if (openApplyModalBtn) {
+                                openApplyModalBtn.className = "w-full h-12 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer";
+                                openApplyModalBtn.innerHTML = `
+                                    <i class="fa-solid fa-clock"></i>
+                                    <span>Application Under Review</span>
+                                `;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to check active applications:", err);
+                }
+            }
+
         } catch (error) {
             console.error("Error loading loan product details:", error);
         }

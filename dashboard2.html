@@ -115,81 +115,10 @@
 <div class="app-container min-h-screen">
 
     <!-- =========================================
-         01. SIDEBAR NAVIGATION
+         01. UNIVERSAL SHARED SIDEBAR
     ========================================== -->
-    <aside id="sidebar"
-        class="sidebar fixed top-0 left-0 z-[100] h-screen w-[265px] -translate-x-full sm:translate-x-0 [&.active]:translate-x-0 transition-transform duration-300 ease-out bg-navy-darker border-r border-white/10 flex flex-col justify-between p-5 text-white shadow-2xl">
-
-        <div class="sidebar-top flex flex-col">
-            <!-- BRAND HEADER -->
-            <div class="sidebar-header flex items-center justify-between pb-5 border-b border-white/10">
-                <a href="dashboard2.html" class="brand flex items-center gap-2.5 text-xl font-extrabold italic text-white tracking-tight">
-                    <span class="brand-logo grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-2xl font-extrabold italic text-white shadow-lg">
-                        F
-                    </span>
-                    <span>Fincentrix</span>
-                </a>
-
-                <button id="sidebarClose" class="sidebar-close sm:hidden grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-white/70 hover:text-white" aria-label="Close menu">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- NAVIGATION LINKS -->
-            <nav class="sidebar-nav mt-6 flex flex-col gap-1.5" aria-label="Main Navigation">
-                <a href="dashboard2.html" class="nav-link active relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-white transition-all duration-300 border border-primary/40 group" data-page="home">
-                    <i class="fa-solid fa-house text-base w-[20px] text-center text-primary-light"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <a href="loans.html" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group" data-page="loans">
-                    <i class="fa-solid fa-hand-holding-dollar text-base w-[20px] text-center"></i>
-                    <span>Loan Products</span>
-                    <span class="nav-count ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold text-white">
-                        10
-                    </span>
-                </a>
-
-                <a href="#loanTypes" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group" data-page="applications">
-                    <i class="fa-solid fa-list-check text-base w-[20px] text-center"></i>
-                    <span>My Applications</span>
-                </a>
-
-                <a href="#loanTypes" class="nav-link relative flex h-[48px] items-center gap-[14px] rounded-xl px-[14px] text-[13px] font-medium text-[#a3b1ca] transition-all duration-300 border border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25 group" data-page="settings">
-                    <i class="fa-solid fa-gear text-base w-[20px] text-center"></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-        </div>
-
-        <!-- SIDEBAR FOOTER -->
-        <div class="sidebar-footer flex flex-col gap-4">
-            <!-- USER PROFILE -->
-            <div class="user-profile flex items-center gap-[11px] border-t border-white/10 pt-[17px]">
-                <div id="sidebarUserAvatar" class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white uppercase">
-                    FX
-                </div>
-                <div class="user-info">
-                    <h4 id="sidebarUserName" class="text-[11px] font-bold text-white">
-                        User Profile
-                    </h4>
-                    <p id="sidebarUserRole" class="mt-0.5 text-[9px] text-[#8295b4]">
-                        Customer
-                    </p>
-                </div>
-                <button id="logoutButton"
-                    class="profile-button ml-auto border-0 bg-transparent text-[#9baecc] hover:text-red-400 transition-colors cursor-pointer text-sm font-semibold p-1.5 rounded-lg hover:bg-white/5"
-                    title="Log Out"
-                    aria-label="Log Out">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </button>
-            </div>
-        </div>
-    </aside>
-
-
-    <!-- SIDEBAR OVERLAY -->
-    <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 z-[90] bg-[#050f23]/60 opacity-0 invisible transition-all duration-300 [&.active]:opacity-100 [&.active]:visible sm:hidden"></div>
+    <div id="sidebar-container" data-active="dashboard"></div>
+    <script src="sidebar.js"></script>
 
 
     <!-- =========================================
@@ -1133,6 +1062,121 @@
 
 </div>
 
+<!-- =========================================
+     APPLICATION TRACKING MODAL
+========================================== -->
+<div id="trackingModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm opacity-0 invisible transition-all duration-300 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-all duration-300">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-navy text-white">
+            <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/20 grid place-items-center text-amber-400">
+                    <i class="fa-solid fa-file-invoice text-sm"></i>
+                </span>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Application Status</h3>
+                    <p id="trackModalRef" class="text-[10px] text-amber-200 font-mono font-semibold">Ref: FXL-...</p>
+                </div>
+            </div>
+            <button id="closeTrackingModalBtn" class="text-white/70 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-5">
+            <!-- Product Details Card -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div class="flex items-center justify-between mb-2">
+                    <h4 id="trackModalLoanName" class="font-extrabold text-navy text-sm">Personal Loan</h4>
+                    <span id="trackModalStatusBadge" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                        <span>Under Review</span>
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-200/60">
+                    <div>
+                        <span class="text-[10px] text-muted block">Requested Amount:</span>
+                        <span id="trackModalAmount" class="font-extrabold text-navy text-sm font-mono">₹5,00,000</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-muted block">Tenure:</span>
+                        <span id="trackModalTenure" class="font-bold text-slate-700 text-sm">36 Months</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-muted block">Applicant Name:</span>
+                        <span id="trackModalApplicant" class="font-medium text-slate-700">Applicant</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-muted block">Applied Date:</span>
+                        <span id="trackModalDate" class="font-medium text-slate-700">14 Nov 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div>
+                <h5 class="text-xs font-bold text-navy mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-timeline text-primary"></i>
+                    <span>Verification & Approval Progress</span>
+                </h5>
+                <div class="space-y-3 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-slate-200">
+                    <!-- Step 1 -->
+                    <div class="relative flex items-start gap-3">
+                        <span class="w-7 h-7 rounded-full bg-emerald-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Application Submitted</p>
+                            <p class="text-[10px] text-muted">Your online request and requested terms have been registered.</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="relative flex items-start gap-3">
+                        <span class="w-7 h-7 rounded-full bg-amber-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm animate-pulse">
+                            <i class="fa-solid fa-clock"></i>
+                        </span>
+                        <div>
+                            <p class="text-xs font-bold text-amber-900">Document & KYC Verification (In Progress)</p>
+                            <p class="text-[10px] text-slate-600">Credit officer is reviewing Aadhaar, PAN, and bank statement verification.</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="relative flex items-start gap-3 opacity-60">
+                        <span class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 grid place-items-center text-xs shrink-0 z-10">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-700">Credit Underwriting & Sanction</p>
+                            <p class="text-[10px] text-muted">Automated CIBIL score validation and risk pricing approval.</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="relative flex items-start gap-3 opacity-60">
+                        <span class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 grid place-items-center text-xs shrink-0 z-10">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </span>
+                        <div>
+                            <p class="text-xs font-bold text-slate-700">Final Sanction & Bank Disbursal</p>
+                            <p class="text-[10px] text-muted">Digital agreement e-sign and direct transfer to your account.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Action -->
+            <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+                <a id="trackModalLoanLink" href="#" class="flex-1 h-10 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+                    <span>View Product Page</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+                <button id="trackModalCloseBtn" type="button" class="px-4 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all cursor-pointer">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- =========================================
      09. JAVASCRIPT

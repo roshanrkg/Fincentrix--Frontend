@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Loan Applications | Fincentrix</title>
+
+    <!-- Route Guard: Instant Client Gatekeeper -->
+    <script>
+        (function () {
+            const token = localStorage.getItem("fincentrix_token");
+            if (!token) {
+                window.location.replace("index.html");
+            }
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#315cff',
+                            light: '#4778ff',
+                            dark: '#2450e8'
+                        },
+                        navy: {
+                            DEFAULT: '#102958',
+                            dark: '#071a43',
+                            darker: '#061638',
+                            light: '#19345d'
+                        },
+                        background: '#f5f8ff',
+                        muted: '#8492a9'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Companion Stylesheet -->
+    <link rel="stylesheet" href="dashboard2.css">
+
+    <style>
+        .stage-line {
+            transition: all 0.3s ease;
+        }
+        .application-card {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .application-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(16, 41, 88, 0.08);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-[#1a2e4c] font-inter antialiased min-h-screen">
+
+    <!-- =========================================
+         01. UNIVERSAL SHARED SIDEBAR
+    ========================================== -->
+    <div id="sidebar-container" data-active="applications"></div>
+    <script src="sidebar.js"></script>
+
+    <!-- =========================================
+         02. MAIN WORKSPACE
+    ========================================== -->
+    <main class="min-h-screen ml-0 sm:ml-[265px] transition-all duration-300 flex flex-col">
+
+        <!-- MOBILE TOPBAR -->
+        <header class="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-white px-4 border-b border-[#edf0f6] shadow-sm sm:hidden">
+            <button id="menuButton" class="grid h-10 w-10 place-items-center rounded-xl bg-[#f1f4fc] text-[#19345d]">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <a href="dashboard2.html" class="flex items-center gap-2 text-lg font-extrabold italic text-navy">
+                <span class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-xl font-extrabold text-white">F</span>
+                <span>Fincentrix</span>
+            </a>
+            <div id="topbarMobileAvatar" class="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-xs font-bold text-white grid place-items-center uppercase">
+                FX
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="workspace flex-1 px-4 sm:px-8 lg:px-12 py-6 sm:py-8 max-w-[1450px] w-full mx-auto">
+
+            <!-- BREADCRUMB & HEADER -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <div class="flex items-center gap-2 text-xs font-medium text-muted mb-2">
+                        <a href="dashboard2.html" class="hover:text-primary transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <span>/</span>
+                        <span class="text-navy font-semibold">My Applications</span>
+                    </div>
+
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+                        Loan Application Status
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                        Track underwriting verification stages, digital KYC approval, and sanction timelines in real-time.
+                    </p>
+                </div>
+
+                <!-- CTA -->
+                <a href="loans.html" class="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold shadow-lg shadow-primary/20 transition-all active:scale-95">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Apply for New Loan</span>
+                </a>
+            </div>
+
+            <!-- =========================================
+                 03. SUMMARY METRIC CARDS
+            ========================================== -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 mb-8">
+                <!-- Total -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-muted block">Total Submitted</span>
+                        <h3 id="statTotalApps" class="text-xl sm:text-2xl font-extrabold text-navy mt-1">0</h3>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl bg-blue-50 text-primary grid place-items-center text-sm font-bold">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </span>
+                </div>
+
+                <!-- In Review -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-muted block">In Review</span>
+                        <h3 id="statInReviewApps" class="text-xl sm:text-2xl font-extrabold text-amber-600 mt-1">0</h3>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 grid place-items-center text-sm font-bold">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </span>
+                </div>
+
+                <!-- Approved -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-muted block">Approved</span>
+                        <h3 id="statApprovedApps" class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-1">0</h3>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 grid place-items-center text-sm font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </span>
+                </div>
+
+                <!-- Total Requested -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-muted block">Total Requested</span>
+                        <h3 id="statTotalAmount" class="text-xl sm:text-2xl font-extrabold text-navy mt-1">₹0</h3>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 grid place-items-center text-sm font-bold">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- =========================================
+                 04. FILTER TABS
+            ========================================== -->
+            <div class="flex items-center gap-2 mb-6 border-b border-slate-200 pb-3 overflow-x-auto">
+                <button type="button" class="filter-tab active px-3.5 py-1.5 rounded-lg text-xs font-bold bg-navy text-white transition-all cursor-pointer whitespace-nowrap" data-filter="all">
+                    All Applications
+                </button>
+                <button type="button" class="filter-tab px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-navy hover:bg-slate-100 transition-all cursor-pointer whitespace-nowrap" data-filter="pending">
+                    In Review
+                </button>
+                <button type="button" class="filter-tab px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-navy hover:bg-slate-100 transition-all cursor-pointer whitespace-nowrap" data-filter="approved">
+                    Approved
+                </button>
+            </div>
+
+            <!-- =========================================
+                 05. APPLICATIONS LIST WITH STAGES
+            ========================================== -->
+            <div id="applicationsContainer" class="space-y-6">
+                <!-- Dynamically generated with real stages timeline -->
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div id="loadingState" class="py-16 text-center">
+                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-primary"></i>
+                <p class="text-xs text-slate-500 mt-3 font-medium">Fetching your loan applications...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden bg-white rounded-2xl p-12 text-center border border-slate-200/80 shadow-sm max-w-lg mx-auto mt-6">
+                <div class="w-16 h-16 rounded-2xl bg-blue-50 text-primary grid place-items-center text-2xl mx-auto mb-4">
+                    <i class="fa-solid fa-file-circle-question"></i>
+                </div>
+                <h3 class="text-base font-extrabold text-navy">No Applications Found</h3>
+                <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                    You have not submitted any loan applications yet. Explore our verified financing options and apply in minutes with zero paperwork.
+                </p>
+                <a href="loans.html" class="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-md">
+                    <span>Explore Loan Products</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Companion Script -->
+    <script src="applications.js"></script>
+
+</body>
+
+</html>

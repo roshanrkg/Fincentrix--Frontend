@@ -69,6 +69,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const eligibilityAmountBox = document.getElementById("eligibilityAmountBox");
     const eligibleLoanAmount = document.getElementById("eligibleLoanAmount");
     const eligibilityActionButton = document.getElementById("eligibilityActionButton");
+    const payNowBtn = document.getElementById("payNowBtn");
+    const activeFacilityEmiGrid = document.getElementById("activeFacilityEmiGrid");
+    const eligibilityStandardAmount = document.getElementById("eligibilityStandardAmount");
 
     const loanProductsCount = document.getElementById("loanProductsCount");
     const loanCardGrid = document.getElementById("loanCardGrid");
@@ -147,6 +150,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 05. TOP BANNER & DYNAMIC ELIGIBILITY SYSTEM
     // =============================================
 
+    function calculateMonthlyEmi(principal, annualRate, tenureMonths) {
+        const P = parseFloat(principal || 0);
+        const N = parseInt(tenureMonths || 0, 10);
+        const R = (parseFloat(annualRate || 10.49)) / (12 * 100);
+
+        if (P <= 0 || N <= 0) return 0;
+        const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+        return Math.round(emi);
+    }
+
+    function getNextEmiDate(disbursalDateRaw) {
+        const base = new Date(disbursalDateRaw || Date.now());
+        const dueDay = base.getDate(); // Use disbursement date as recurring day of the month
+        const now = new Date();
+        
+        // Consider disbursement date as EMI recurring date starting from next months
+        let nextDate = new Date(now.getFullYear(), now.getMonth() + 1, dueDay);
+        if (nextDate.getDate() !== dueDay) {
+            nextDate.setDate(0); // Protect against month-end edge
+        }
+        return nextDate.toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
+    }
+
     function formatLoanAmount(amount) {
         return new Intl.NumberFormat("en-IN", {
             style: "currency",
@@ -168,41 +198,107 @@ document.addEventListener("DOMContentLoaded", async () => {
                 month: "short",
                 year: "numeric"
             });
-            const requestedFormatted = formatLoanAmount(pendingApp.requested_amount);
-            const statusLabel = pendingApp.status === "approved"
-                ? "Approved"
-                : pendingApp.status === "rejected"
-                ? "Action Required"
-                : "Under Review";
+            const isApproved = ["approved", "sanctioned", "disbursed"].includes(pendingApp.status);
+            const displayAmt = pendingApp.sanctioned_amount || pendingApp.requested_amount;
+            const displayTenure = pendingApp.sanctioned_tenure_months || pendingApp.requested_tenure_months;
+            const requestedFormatted = formatLoanAmount(displayAmt);
 
-            eligibilityBadge.innerHTML = `<i class="fa-solid fa-clock-rotate-left mr-1"></i> APPLICATION IN REVIEW`;
-            eligibilityBadge.className = "welcome-tag inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/20 px-3.5 py-1.5 text-[8px] sm:text-[9px] font-extrabold tracking-[1.2px] text-amber-200 backdrop-blur-sm";
+            const maturityDateFormatted = pendingApp.tenure_end_date 
+                ? new Date(pendingApp.tenure_end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+                : null;
 
-            eligibilityHeading.innerHTML = `
-                Application in Progress, ${userFirstName}!
-                <br>
-                <span class="text-amber-300 font-extrabold text-xl sm:text-[26px]">${pendingApp.loan_name}</span>
-            `;
+            if (isApproved) {
+                // Calculate next EMI date based on disbursement date / applied date
+                const disbursalDateRaw = pendingApp.disbursed_at || pendingApp.applied_at || Date.now();
+                const nextEmiDateStr = getNextEmiDate(disbursalDateRaw);
+                const annualRate = pendingApp.sanctioned_interest_rate || pendingApp.min_interest_rate || 10.49;
+                const emiValue = pendingApp.sanctioned_emi || calculateMonthlyEmi(displayAmt, annualRate, displayTenure);
+                const emiFormatted = formatLoanAmount(emiValue);
 
-            eligibilityDescription.innerHTML = `
-                Your application (<strong class="font-mono text-white tracking-wide">${pendingApp.application_ref}</strong>) submitted on ${appDate} is currently being processed by our underwriting team.
-            `;
+                eligibilityBadge.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ACTIVE LOAN FACILITY`;
+                eligibilityBadge.className = "welcome-tag inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-3.5 py-1.5 text-[8px] sm:text-[9px] font-extrabold tracking-[1.2px] text-emerald-200 backdrop-blur-sm";
+
+                eligibilityHeading.innerHTML = `
+                    Active Facility Approved, ${userFirstName}!
+                    <br>
+                    <span class="text-emerald-300 font-extrabold text-xl sm:text-[26px]">${pendingApp.loan_name}</span>
+                `;
+
+                eligibilityDescription.innerHTML = `
+                    Your loan (<strong class="font-mono text-white tracking-wide">${pendingApp.application_ref}</strong>) is active. Further loan applications are blocked until tenure completion on <strong>${maturityDateFormatted || 'maturity'}</strong>.
+                `;
+
+                // Show dynamic dual-card stats (Sanctioned Amount + Next Monthly EMI)
+                if (eligibilityStandardAmount) eligibilityStandardAmount.classList.add("hidden");
+                if (activeFacilityEmiGrid) {
+                    activeFacilityEmiGrid.classList.remove("hidden");
+                    const sanctionedAmtEl = document.getElementById("activeSanctionedAmount");
+                    const tenureSubtextEl = document.getElementById("activeLoanTenureSubtext");
+                    const emiAmtEl = document.getElementById("activeNextEmiAmount");
+                    const emiDateEl = document.getElementById("activeNextEmiDate");
+
+                    if (sanctionedAmtEl) sanctionedAmtEl.textContent = requestedFormatted;
+                    if (tenureSubtextEl) {
+                        tenureSubtextEl.innerHTML = `Tenure: <strong>${displayTenure} Months</strong> • <span class="text-emerald-300 font-semibold">Approved & Sanctioned</span>`;
+                    }
+                    if (emiAmtEl) emiAmtEl.textContent = emiFormatted;
+                    if (emiDateEl) emiDateEl.textContent = nextEmiDateStr;
+                }
+
+                // Show static Pay EMI Now button
+                if (payNowBtn) {
+                    payNowBtn.classList.remove("hidden");
+                    payNowBtn.onclick = (e) => {
+                        e.preventDefault();
+                        openPayNowModal({
+                            ref: pendingApp.application_ref,
+                            loanName: pendingApp.loan_name,
+                            amount: emiFormatted,
+                            dueDate: nextEmiDateStr
+                        });
+                    };
+                }
+            } else {
+                if (activeFacilityEmiGrid) activeFacilityEmiGrid.classList.add("hidden");
+                if (eligibilityStandardAmount) eligibilityStandardAmount.classList.remove("hidden");
+                if (payNowBtn) payNowBtn.classList.add("hidden");
+
+                const statusLabel = pendingApp.status === "rejected"
+                    ? "Action Required"
+                    : "Under Review";
+
+                eligibilityBadge.innerHTML = `<i class="fa-solid fa-clock-rotate-left mr-1"></i> APPLICATION IN REVIEW`;
+                eligibilityBadge.className = "welcome-tag inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/20 px-3.5 py-1.5 text-[8px] sm:text-[9px] font-extrabold tracking-[1.2px] text-amber-200 backdrop-blur-sm";
+
+                eligibilityHeading.innerHTML = `
+                    Application in Progress, ${userFirstName}!
+                    <br>
+                    <span class="text-amber-300 font-extrabold text-xl sm:text-[26px]">${pendingApp.loan_name}</span>
+                `;
+
+                eligibilityDescription.innerHTML = `
+                    Your application (<strong class="font-mono text-white tracking-wide">${pendingApp.application_ref}</strong>) submitted on ${appDate} is currently being processed by our underwriting team.
+                `;
+
+                const amountLabel = eligibilityAmountBox.querySelector("p");
+                if (amountLabel) {
+                    amountLabel.textContent = "REQUESTED LOAN AMOUNT";
+                }
+
+                eligibleLoanAmount.textContent = requestedFormatted;
+
+                const subtext = eligibilityAmountBox.querySelectorAll("p")[1];
+                if (subtext) {
+                    const statusBadgeText = pendingApp.status === "rejected"
+                        ? "Rejected"
+                        : "Under Review";
+                    const statusColor = "text-amber-200";
+                    subtext.innerHTML = `Tenure: <strong>${displayTenure} Months</strong> • Status: <span class="${statusColor} font-semibold">${statusBadgeText}</span>`;
+                }
+            }
 
             eligibilityAmountBox.classList.remove("hidden");
             eligibilityAmountBox.style.display = "block";
-
-            // Update heading inside amount box
-            const amountLabel = eligibilityAmountBox.querySelector("p");
-            if (amountLabel) {
-                amountLabel.textContent = "REQUESTED LOAN AMOUNT";
-            }
-
-            eligibleLoanAmount.textContent = requestedFormatted;
-
-            const subtext = eligibilityAmountBox.querySelectorAll("p")[1];
-            if (subtext) {
-                subtext.innerHTML = `Tenure: <strong>${pendingApp.requested_tenure_months} Months</strong> • Status: <span class="text-amber-200 font-semibold">${statusLabel}</span>`;
-            }
 
             eligibilityActionButton.innerHTML = `
                 Track Application Status
@@ -217,10 +313,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     loanName: pendingApp.loan_name,
                     slug: pendingApp.loan_slug,
                     amount: requestedFormatted,
-                    tenure: `${pendingApp.requested_tenure_months} Months`,
+                    tenure: `${displayTenure} Months`,
                     applicant: pendingApp.applicant_name || `${userFirstName} ${userLastName}`,
                     date: appDate,
-                    status: pendingApp.status
+                    status: pendingApp.status,
+                    sanctionedAmount: pendingApp.sanctioned_amount,
+                    sanctionedTenure: pendingApp.sanctioned_tenure_months,
+                    isActiveTenure: pendingApp.is_active_tenure === 1,
+                    remainingTenureMonths: pendingApp.remaining_tenure_months,
+                    tenureEndDate: pendingApp.tenure_end_date
                 });
             };
 
@@ -228,6 +329,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // STATE 2: NO APPLICATION PENDING -> SHOW PRE-APPROVED CEILING OR PROFILE INCOMPLETE
+        if (activeFacilityEmiGrid) activeFacilityEmiGrid.classList.add("hidden");
+        if (eligibilityStandardAmount) eligibilityStandardAmount.classList.remove("hidden");
+        if (payNowBtn) payNowBtn.classList.add("hidden");
         const income = parseFloat(currentUser.monthly_income || 0);
         const cibil = parseInt(currentUser.cibil_score || 0, 10);
 
@@ -344,8 +448,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             }
 
-            // Find latest active/pending application for top banner
-            const latestPendingApp = allUserApps.find(a => a.status === "pending" || a.status === "in_review") || allUserApps[0] || null;
+            // Find active approved/disbursed loan first, then pending/in-review
+            const activeLoanApp = allUserApps.find(a => a.is_active_tenure === 1 || ["approved", "sanctioned", "disbursed"].includes(a.status));
+            const latestPendingApp = activeLoanApp || allUserApps.find(a => a.status === "pending" || a.status === "in_review") || allUserApps[0] || null;
 
             // Render top hero card (pending application state OR pre-approved eligibility)
             renderTopBanner(latestPendingApp);
@@ -446,28 +551,143 @@ document.addEventListener("DOMContentLoaded", async () => {
         const refEl = document.getElementById("trackModalRef");
         const nameEl = document.getElementById("trackModalLoanName");
         const amountEl = document.getElementById("trackModalAmount");
+        const amountLabelEl = document.getElementById("trackModalAmountLabel");
         const tenureEl = document.getElementById("trackModalTenure");
         const applicantEl = document.getElementById("trackModalApplicant");
         const dateEl = document.getElementById("trackModalDate");
         const linkEl = document.getElementById("trackModalLoanLink");
         const badgeEl = document.getElementById("trackModalStatusBadge");
+        const timelineEl = document.getElementById("trackModalTimeline");
+
+        const isApproved = ["approved", "sanctioned", "disbursed"].includes(app.status);
+        const isInReview = app.status === "in_review" || app.status === "under_review";
+        const isRejected = app.status === "rejected";
 
         if (refEl) refEl.textContent = `Ref: ${app.ref}`;
         if (nameEl) nameEl.textContent = app.loanName;
         if (amountEl) amountEl.textContent = app.amount;
+        if (amountLabelEl) amountLabelEl.textContent = isApproved ? "Sanctioned Amount:" : "Requested Amount:";
         if (tenureEl) tenureEl.textContent = app.tenure;
         if (applicantEl) applicantEl.textContent = app.applicant;
         if (dateEl) dateEl.textContent = app.date;
         if (linkEl) linkEl.href = `loans.html?slug=${encodeURIComponent(app.slug)}`;
 
         if (badgeEl) {
-            if (app.status === "approved") {
+            if (app.status === "disbursed") {
                 badgeEl.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5";
-                badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>Approved</span>`;
+                badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Disbursed</span>`;
+            } else if (isApproved) {
+                badgeEl.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5";
+                badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Approved & Sanctioned</span>`;
+            } else if (isRejected) {
+                badgeEl.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 flex items-center gap-1.5";
+                badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span><span>Rejected</span>`;
+            } else if (isInReview) {
+                badgeEl.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300 flex items-center gap-1.5";
+                badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span><span>Under Credit Review</span>`;
             } else {
                 badgeEl.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1.5";
                 badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span><span>Under Review</span>`;
             }
+        }
+
+        // Dynamically build the 4-stage timeline synchronized with applications.html
+        if (timelineEl) {
+            let stage1 = {
+                status: "completed",
+                title: "Application Submitted",
+                desc: "Digital form & loan terms registered."
+            };
+            let stage2 = {
+                status: "pending",
+                title: "Document & KYC Verification",
+                desc: "Credit officer is reviewing Aadhaar, PAN, and bank statement verification."
+            };
+            let stage3 = {
+                status: "pending",
+                title: "Credit Underwriting",
+                desc: "Automated CIBIL validation & risk pricing approval."
+            };
+            let stage4 = {
+                status: "pending",
+                title: "Sanction & Disbursal",
+                desc: "Digital agreement e-sign & fund transfer to account."
+            };
+
+            if (isApproved) {
+                stage2.status = "completed";
+                stage2.title = "Document & KYC Verification (Completed)";
+                stage2.desc = "Aadhaar, PAN, and bank statements verified successfully.";
+
+                stage3.status = "completed";
+                stage3.title = "Credit Underwriting (Completed)";
+                stage3.desc = "CIBIL check passed and risk underwriting approved.";
+
+                stage4.status = "completed";
+                stage4.title = app.status === "disbursed" ? "Sanction & Disbursal (Disbursed)" : "Sanction & Disbursal (Approved & Sanctioned)";
+                stage4.desc = app.status === "disbursed" ? "Loan proceeds disbursed to bank account." : "Digital agreement finalized & ready for disbursal.";
+            } else if (isInReview) {
+                stage2.status = "completed";
+                stage2.title = "Document & KYC Verification (Completed)";
+                stage2.desc = "Documents verified and cleared for underwriting.";
+
+                stage3.status = "in_progress";
+                stage3.title = "Credit Underwriting (In Progress)";
+                stage3.desc = "Underwriting team is evaluating credit limit & risk score.";
+            } else if (isRejected) {
+                stage2.status = "rejected";
+                stage2.title = "Document & KYC Verification (Rejected)";
+                stage2.desc = "Application did not meet underwriting or KYC eligibility criteria.";
+            } else {
+                stage2.status = "in_progress";
+                stage2.title = "Document & KYC Verification (In Progress)";
+                stage2.desc = "Credit officer is reviewing Aadhaar, PAN, and bank statements.";
+            }
+
+            const steps = [
+                { ...stage1, icon: "fa-solid fa-check" },
+                { ...stage2, icon: stage2.status === "completed" ? "fa-solid fa-check" : stage2.status === "rejected" ? "fa-solid fa-xmark" : "fa-solid fa-clock" },
+                { ...stage3, icon: stage3.status === "completed" ? "fa-solid fa-check" : stage3.status === "in_progress" ? "fa-solid fa-clock" : "fa-solid fa-shield-halved" },
+                { ...stage4, icon: stage4.status === "completed" ? "fa-solid fa-check" : "fa-solid fa-hand-holding-dollar" }
+            ];
+
+            timelineEl.innerHTML = steps.map(step => {
+                let circleClass = "";
+                let titleClass = "text-xs font-bold";
+                let descClass = "text-[10px]";
+                let containerClass = "relative flex items-start gap-3";
+
+                if (step.status === "completed") {
+                    circleClass = "w-7 h-7 rounded-full bg-emerald-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm";
+                    titleClass += " text-slate-800";
+                    descClass += " text-slate-500";
+                } else if (step.status === "in_progress") {
+                    circleClass = "w-7 h-7 rounded-full bg-amber-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm animate-pulse";
+                    titleClass += " text-amber-900";
+                    descClass += " text-amber-700";
+                } else if (step.status === "rejected") {
+                    circleClass = "w-7 h-7 rounded-full bg-rose-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm";
+                    titleClass += " text-rose-900";
+                    descClass += " text-rose-600";
+                } else {
+                    containerClass += " opacity-60";
+                    circleClass = "w-7 h-7 rounded-full bg-slate-200 text-slate-500 grid place-items-center text-xs shrink-0 z-10";
+                    titleClass += " text-slate-700";
+                    descClass += " text-muted";
+                }
+
+                return `
+                    <div class="${containerClass}">
+                        <span class="${circleClass}">
+                            <i class="${step.icon}"></i>
+                        </span>
+                        <div>
+                            <p class="${titleClass}">${step.title}</p>
+                            <p class="${descClass}">${step.desc}</p>
+                        </div>
+                    </div>
+                `;
+            }).join("");
         }
 
         trackingModal.classList.remove("opacity-0", "invisible");
@@ -493,9 +713,65 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // =============================================
+    // 08.5 PAY EMI MODAL HANDLERS (STATIC DEMO)
+    // =============================================
+    const payNowModal = document.getElementById("payNowModal");
+    const closePayModalBtn = document.getElementById("closePayModalBtn");
+    const payModalCloseBtn = document.getElementById("payModalCloseBtn");
+    const payModalConfirmBtn = document.getElementById("payModalConfirmBtn");
+
+    function openPayNowModal(data) {
+        if (!payNowModal) return;
+
+        const refEl = document.getElementById("payModalRef");
+        const nameEl = document.getElementById("payModalLoanName");
+        const amountEl = document.getElementById("payModalAmount");
+        const dueDateEl = document.getElementById("payModalDueDate");
+
+        if (refEl) refEl.textContent = `Ref: ${data.ref}`;
+        if (nameEl) nameEl.textContent = data.loanName;
+        if (amountEl) amountEl.textContent = data.amount;
+        if (dueDateEl) dueDateEl.textContent = data.dueDate;
+
+        payNowModal.classList.remove("opacity-0", "invisible");
+        payNowModal.querySelector("div").classList.remove("scale-95");
+        payNowModal.querySelector("div").classList.add("scale-100");
+        document.body.classList.add("overflow-hidden");
+    }
+
+    function closePayNowModal() {
+        if (!payNowModal) return;
+        payNowModal.classList.add("opacity-0", "invisible");
+        payNowModal.querySelector("div").classList.remove("scale-100");
+        payNowModal.querySelector("div").classList.add("scale-95");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+    if (closePayModalBtn) closePayModalBtn.addEventListener("click", closePayNowModal);
+    if (payModalCloseBtn) payModalCloseBtn.addEventListener("click", closePayNowModal);
+
+    if (payModalConfirmBtn) {
+        payModalConfirmBtn.addEventListener("click", function () {
+            alert("Payment Simulation: Live UPI / NACH auto-debit will be activated upon live gateway onboarding. No debit was made.");
+            closePayNowModal();
+        });
+    }
+
+    if (payNowModal) {
+        payNowModal.addEventListener("click", function (e) {
+            if (e.target === payNowModal) closePayNowModal();
+        });
+    }
+
     document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && trackingModal && !trackingModal.classList.contains("invisible")) {
-            closeTrackingModal();
+        if (e.key === "Escape") {
+            if (trackingModal && !trackingModal.classList.contains("invisible")) {
+                closeTrackingModal();
+            }
+            if (payNowModal && !payNowModal.classList.contains("invisible")) {
+                closePayNowModal();
+            }
         }
     });
 

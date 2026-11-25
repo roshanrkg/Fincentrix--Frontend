@@ -27,6 +27,7 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="brand-logo.js"></script>
 
     <!-- Tailwind Configuration -->
     <script>
@@ -142,15 +143,7 @@
             </button>
 
 
-            <a href="#" class="mobile-brand flex items-center gap-2 text-lg font-extrabold italic text-navy">
-
-                <span class="brand-logo grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-xl font-extrabold italic text-white shadow-md">
-                    F
-                </span>
-
-                <span>Fincentrix</span>
-
-            </a>
+            <fincentrix-logo href="dashboard2.html" size="sm" theme="light" class="mobile-brand"></fincentrix-logo>
 
 
             <button class="mobile-avatar h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-[10px] font-extrabold text-white shadow-sm">
@@ -262,35 +255,89 @@
                             </p>
 
 
-                            <!-- ELIGIBILITY AMOUNT -->
+                            <!-- ELIGIBILITY AMOUNT & ACTIVE EMI SECTION -->
                             <div id="eligibilityAmountBox" class="mt-4 hidden">
+                                <div id="eligibilityStandardAmount">
+                                    <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#d0dcf8]">
+                                        YOUR MAXIMUM LOAN ELIGIBILITY
+                                    </p>
 
-                                <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#d0dcf8]">
-                                    YOUR MAXIMUM LOAN ELIGIBILITY
-                                </p>
+                                    <h3 id="eligibleLoanAmount"
+                                        class="mt-1 text-2xl sm:text-3xl lg:text-[38px] font-extrabold tracking-tight text-white font-mono">
+                                        ₹0
+                                    </h3>
 
-                                <h3 id="eligibleLoanAmount"
-                                    class="mt-1 text-2xl sm:text-3xl lg:text-[38px] font-extrabold tracking-tight text-white">
-                                    ₹0
-                                </h3>
+                                    <p class="mt-1 text-[10px] text-[#d0dcf8]">
+                                        Subject to final lender approval and terms.
+                                    </p>
+                                </div>
 
-                                <p class="mt-1 text-[10px] text-[#d0dcf8]">
-                                    Subject to final lender approval and terms.
-                                </p>
+                                <!-- Dynamic Active Facility EMI Stats Card -->
+                                <div id="activeFacilityEmiGrid" class="hidden mt-3 pt-3 border-t border-white/20">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
+                                        <!-- Left: Sanctioned Amount & Terms -->
+                                        <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/15 flex flex-col justify-between">
+                                            <div>
+                                                <span class="text-[9px] font-bold uppercase tracking-[1.2px] text-emerald-200 block">
+                                                    SANCTIONED LOAN AMOUNT
+                                                </span>
+                                                <h3 id="activeSanctionedAmount" class="mt-1 text-2xl sm:text-3xl font-extrabold font-mono text-white">
+                                                    ₹5,00,000
+                                                </h3>
+                                            </div>
+                                            <p id="activeLoanTenureSubtext" class="mt-2 text-[10px] text-emerald-100/90 font-medium">
+                                                Tenure: <strong>36 Months</strong> • <span class="text-emerald-300 font-semibold">Approved & Sanctioned</span>
+                                            </p>
+                                        </div>
 
+                                        <!-- Right: Next Monthly EMI Card -->
+                                        <div class="bg-gradient-to-br from-emerald-500/30 to-teal-600/25 backdrop-blur-md p-3.5 rounded-xl border border-emerald-400/40 flex flex-col justify-between shadow-sm">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <span class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-200 flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-calendar-check text-[10px] text-emerald-300"></i>
+                                                    NEXT MONTHLY EMI
+                                                </span>
+                                                <span class="px-2 py-0.5 rounded-full text-[8px] font-extrabold tracking-wide uppercase bg-emerald-400/25 text-emerald-100 border border-emerald-300/30">
+                                                    Upcoming
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <div class="flex items-baseline gap-1">
+                                                    <span id="activeNextEmiAmount" class="text-2xl sm:text-3xl font-extrabold font-mono text-white">₹16,249</span>
+                                                    <span class="text-[10px] text-emerald-200 font-medium">/ month</span>
+                                                </div>
+                                                <p class="mt-1 text-[10px] text-emerald-100 flex items-center gap-1.5">
+                                                    <i class="fa-regular fa-clock text-[9px] text-emerald-300"></i>
+                                                    <span>Due Date:</span>
+                                                    <strong id="activeNextEmiDate" class="text-white font-mono">15 Dec 2026</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
 
-                            <!-- ACTION BUTTON -->
-                            <a href="javascript:void(0)"
-                                id="eligibilityActionButton"
-                                class="welcome-btn mt-4 sm:mt-5 inline-flex items-center gap-3 sm:gap-4 rounded-lg bg-white px-4 py-2.5 sm:py-3 text-[10px] sm:text-[11px] font-extrabold text-[#1746a8] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#edf2ff] hover:shadow-[0_10px_25px_rgba(255,255,255,0.2)] group">
+                            <!-- ACTION BUTTONS -->
+                            <div id="bannerActionButtons" class="mt-4 sm:mt-5 flex items-center flex-wrap gap-2.5 sm:gap-3">
+                                <!-- PAY NOW BUTTON (Static) -->
+                                <button type="button"
+                                    id="payNowBtn"
+                                    class="hidden welcome-btn inline-flex items-center gap-2 rounded-lg bg-emerald-400 hover:bg-emerald-300 px-4 py-2.5 sm:py-3 text-[10px] sm:text-[11px] font-extrabold text-navy shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(52,211,153,0.35)] cursor-pointer group">
+                                    <i class="fa-solid fa-credit-card text-emerald-950 transition-transform duration-300 group-hover:scale-110"></i>
+                                    <span>Pay EMI Now</span>
+                                </button>
 
-                                Complete Verification
+                                <a href="javascript:void(0)"
+                                    id="eligibilityActionButton"
+                                    class="welcome-btn inline-flex items-center gap-3 sm:gap-4 rounded-lg bg-white px-4 py-2.5 sm:py-3 text-[10px] sm:text-[11px] font-extrabold text-[#1746a8] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#edf2ff] hover:shadow-[0_10px_25px_rgba(255,255,255,0.2)] group">
 
-                                <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                                    <span>Complete Verification</span>
 
-                            </a>
+                                    <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+
+                                </a>
+                            </div>
 
                         </div>
 
@@ -1096,7 +1143,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-200/60">
                     <div>
-                        <span class="text-[10px] text-muted block">Requested Amount:</span>
+                        <span id="trackModalAmountLabel" class="text-[10px] text-muted block">Requested Amount:</span>
                         <span id="trackModalAmount" class="font-extrabold text-navy text-sm font-mono">₹5,00,000</span>
                     </div>
                     <div>
@@ -1120,47 +1167,8 @@
                     <i class="fa-solid fa-timeline text-primary"></i>
                     <span>Verification & Approval Progress</span>
                 </h5>
-                <div class="space-y-3 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-slate-200">
-                    <!-- Step 1 -->
-                    <div class="relative flex items-start gap-3">
-                        <span class="w-7 h-7 rounded-full bg-emerald-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">Application Submitted</p>
-                            <p class="text-[10px] text-muted">Your online request and requested terms have been registered.</p>
-                        </div>
-                    </div>
-                    <!-- Step 2 -->
-                    <div class="relative flex items-start gap-3">
-                        <span class="w-7 h-7 rounded-full bg-amber-500 text-white grid place-items-center text-xs shrink-0 z-10 shadow-sm animate-pulse">
-                            <i class="fa-solid fa-clock"></i>
-                        </span>
-                        <div>
-                            <p class="text-xs font-bold text-amber-900">Document & KYC Verification (In Progress)</p>
-                            <p class="text-[10px] text-slate-600">Credit officer is reviewing Aadhaar, PAN, and bank statement verification.</p>
-                        </div>
-                    </div>
-                    <!-- Step 3 -->
-                    <div class="relative flex items-start gap-3 opacity-60">
-                        <span class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 grid place-items-center text-xs shrink-0 z-10">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </span>
-                        <div>
-                            <p class="text-xs font-bold text-slate-700">Credit Underwriting & Sanction</p>
-                            <p class="text-[10px] text-muted">Automated CIBIL score validation and risk pricing approval.</p>
-                        </div>
-                    </div>
-                    <!-- Step 4 -->
-                    <div class="relative flex items-start gap-3 opacity-60">
-                        <span class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 grid place-items-center text-xs shrink-0 z-10">
-                            <i class="fa-solid fa-hand-holding-dollar"></i>
-                        </span>
-                        <div>
-                            <p class="text-xs font-bold text-slate-700">Final Sanction & Bank Disbursal</p>
-                            <p class="text-[10px] text-muted">Digital agreement e-sign and direct transfer to your account.</p>
-                        </div>
-                    </div>
+                <div id="trackModalTimeline" class="space-y-3 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-slate-200">
+                    <!-- Populated dynamically by openTrackingModal based on application status -->
                 </div>
             </div>
 
@@ -1172,6 +1180,102 @@
                 </a>
                 <button id="trackModalCloseBtn" type="button" class="px-4 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all cursor-pointer">
                     Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     08.5 STATIC PAY EMI MODAL
+========================================== -->
+<div id="payNowModal" class="fixed inset-0 z-[210] bg-black/60 backdrop-blur-sm opacity-0 invisible transition-all duration-300 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-all duration-300">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-navy text-white">
+            <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-lg bg-emerald-500/20 grid place-items-center text-emerald-400">
+                    <i class="fa-solid fa-credit-card text-sm"></i>
+                </span>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Loan EMI Payment</h3>
+                    <p id="payModalRef" class="text-[10px] text-emerald-200 font-mono font-semibold">Ref: FXL-948618-694</p>
+                </div>
+            </div>
+            <button id="closePayModalBtn" class="text-white/70 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-4">
+            <!-- EMI Summary Box -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-muted font-bold block">Next Installment Due</span>
+                        <h4 id="payModalLoanName" class="text-xs font-extrabold text-navy">Personal Loan</h4>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1">
+                        <i class="fa-regular fa-clock text-[9px]"></i>
+                        <span>Due Soon</span>
+                    </span>
+                </div>
+                
+                <div class="mt-3 pt-3 border-t border-slate-200/60 flex items-baseline justify-between">
+                    <div>
+                        <span class="text-[10px] text-muted block">EMI Amount:</span>
+                        <span id="payModalAmount" class="text-2xl font-extrabold text-navy font-mono">₹16,249</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-muted block">Due Date:</span>
+                        <span id="payModalDueDate" class="text-xs font-bold text-slate-700 font-mono">15 Dec 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods (Static Demo) -->
+            <div>
+                <label class="text-xs font-bold text-navy block mb-2">Select Payment Method</label>
+                <div class="space-y-2 text-xs">
+                    <label class="flex items-center justify-between p-3 rounded-xl border border-primary/40 bg-blue-50/50 cursor-pointer">
+                        <span class="flex items-center gap-2.5 font-bold text-navy">
+                            <i class="fa-brands fa-google-pay text-base text-primary"></i>
+                            <span>UPI (GPay / PhonePe / Paytm / BHIM)</span>
+                        </span>
+                        <input type="radio" name="payment_method" value="upi" checked class="text-primary accent-primary">
+                    </label>
+                    <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer">
+                        <span class="flex items-center gap-2.5 font-bold text-slate-700">
+                            <i class="fa-solid fa-building-columns text-sm text-slate-500"></i>
+                            <span>Net Banking (All Indian Banks)</span>
+                        </span>
+                        <input type="radio" name="payment_method" value="netbanking" class="text-primary accent-primary">
+                    </label>
+                    <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer">
+                        <span class="flex items-center gap-2.5 font-bold text-slate-700">
+                            <i class="fa-solid fa-credit-card text-sm text-slate-500"></i>
+                            <span>Debit Card / Auto-Debit NACH</span>
+                        </span>
+                        <input type="radio" name="payment_method" value="card" class="text-primary accent-primary">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Notice -->
+            <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-200 text-[11px] text-blue-900 flex items-start gap-2">
+                <i class="fa-solid fa-circle-info text-primary mt-0.5 shrink-0"></i>
+                <span>This payment action is currently in static preview mode. Real-time bank payment gateway and e-NACH auto-debit will be activated upon live gateway onboarding.</span>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="flex items-center gap-3 pt-2">
+                <button type="button" id="payModalConfirmBtn" class="flex-1 h-10 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-lock text-[10px]"></i>
+                    <span>Proceed to Pay (Static Demo)</span>
+                </button>
+                <button type="button" id="payModalCloseBtn" class="px-4 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all cursor-pointer">
+                    Cancel
                 </button>
             </div>
         </div>

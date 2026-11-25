@@ -45,6 +45,17 @@
         const activeLinkClass = "active text-white border-primary/40";
         const inactiveLinkClass = "text-[#a3b1ca] border-transparent hover:text-white hover:bg-[#315cff]/[0.08] hover:border-[#315cff]/25";
 
+        // Ensure brand-logo system is loaded
+        if (!window.FincentrixBrand && !document.querySelector('script[src*="brand-logo.js"]')) {
+            const brandScript = document.createElement("script");
+            brandScript.src = "brand-logo.js";
+            document.head.appendChild(brandScript);
+        }
+
+        const brandLogoHtml = window.FincentrixBrand
+            ? FincentrixBrand.renderLogo({ href: 'dashboard2.html', theme: 'dark', size: 'md' })
+            : `<fincentrix-logo href="dashboard2.html" theme="dark" size="md"></fincentrix-logo>`;
+
         return `
         <!-- =========================================
              SHARED UNIVERSAL SIDEBAR
@@ -55,12 +66,7 @@
             <div class="sidebar-top flex flex-col">
                 <!-- BRAND HEADER -->
                 <div class="sidebar-header flex items-center justify-between pb-5 border-b border-white/10">
-                    <a href="dashboard2.html" class="brand flex items-center gap-2.5 text-xl font-extrabold italic text-white tracking-tight">
-                        <span class="brand-logo grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#4778ff] to-[#2450e8] text-2xl font-extrabold italic text-white shadow-lg">
-                            F
-                        </span>
-                        <span>Fincentrix</span>
-                    </a>
+                    ${brandLogoHtml}
 
                     <button id="sidebarClose" class="sidebar-close ${sidebarCloseClass} grid h-8 w-8 place-items-center rounded-lg bg-white/5 text-white/70 hover:text-white cursor-pointer" aria-label="Close menu">
                         <i class="fa-solid fa-xmark"></i>

@@ -169,6 +169,33 @@ document.addEventListener("DOMContentLoaded", async function () {
     // -------------------------------------------------------------
     // 04. Stage Calculation & Timeline Builder
     // -------------------------------------------------------------
+    function calculateMonthlyEmi(principal, annualRate, tenureMonths) {
+        const P = parseFloat(principal || 0);
+        const N = parseInt(tenureMonths || 0, 10);
+        const R = (parseFloat(annualRate || 10.49)) / (12 * 100);
+
+        if (P <= 0 || N <= 0) return 0;
+        const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+        return Math.round(emi);
+    }
+
+    function getNextEmiDate(disbursalDateRaw) {
+        const base = new Date(disbursalDateRaw || Date.now());
+        const dueDay = base.getDate();
+        const now = new Date();
+        
+        // Consider disbursement date as EMI recurring date from next months
+        let nextDate = new Date(now.getFullYear(), now.getMonth() + 1, dueDay);
+        if (nextDate.getDate() !== dueDay) {
+            nextDate.setDate(0);
+        }
+        return nextDate.toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
+    }
+
     function renderStagesTimeline(status) {
         // Status maps:
         // pending -> Stage 1 Done, Stage 2 Active (Doc Verification), Stage 3 Pending, Stage 4 Pending
@@ -181,10 +208,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         let stage3Status = "pending";
         let stage4Status = "pending";
 
-        if (status === "in_review") {
+        if (status === "in_review" || status === "under_review") {
             stage2Status = "completed";
             stage3Status = "active";
-        } else if (status === "approved") {
+        } else if (["approved", "sanctioned", "disbursed"].includes(status)) {
             stage2Status = "completed";
             stage3Status = "completed";
             stage4Status = "completed";
@@ -309,18 +336,45 @@ document.addEventListener("DOMContentLoaded", async function () {
                 minute: "2-digit"
             });
 
+            const isSanctionedOrDisbursed = ["approved", "sanctioned", "disbursed"].includes(app.status);
             const amountFormatted = formatCurrency(app.requested_amount);
-            const statusLabel = app.status === "approved"
+            const displayAmount = app.sanctioned_amount ? formatCurrency(app.sanctioned_amount) : amountFormatted;
+            const displayTenure = app.sanctioned_tenure_months ? `${app.sanctioned_tenure_months} Months` : `${app.requested_tenure_months} Months`;
+
+            // Compute monthly EMI and next recurring EMI date
+            const disbursalDateRaw = app.disbursed_at || app.applied_at;
+            const nextEmiDateFormatted = isSanctionedOrDisbursed ? getNextEmiDate(disbursalDateRaw) : null;
+            const principalAmt = parseFloat(app.sanctioned_amount || app.requested_amount || 0);
+            const tenureCount = parseInt(app.sanctioned_tenure_months || app.requested_tenure_months || 0, 10);
+            const annualRate = parseFloat(app.sanctioned_interest_rate || app.min_interest_rate || 10.49);
+            const rawEmi = app.sanctioned_emi || (isSanctionedOrDisbursed ? calculateMonthlyEmi(principalAmt, annualRate, tenureCount) : null);
+            const emiDisplay = rawEmi ? formatCurrency(rawEmi) : null;
+            
+            const statusLabel = app.status === "disbursed"
+                ? "Disbursed to Bank"
+                : isSanctionedOrDisbursed
                 ? "Approved & Sanctioned"
+                : app.status === "counter_offered"
+                ? "Counter-Offer Proposed"
                 : app.status === "rejected"
                 ? "Rejected"
                 : "Under Credit Review";
 
-            const statusBadgeClass = app.status === "approved"
+            const statusBadgeClass = app.status === "disbursed"
+                ? "bg-emerald-100 text-emerald-900 border-emerald-400 font-extrabold"
+                : isSanctionedOrDisbursed
                 ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                : app.status === "counter_offered"
+                ? "bg-purple-50 text-purple-800 border-purple-300"
+                : app.status === "rejected"
+                ? "bg-rose-50 text-rose-800 border-rose-300"
                 : "bg-amber-50 text-amber-800 border-amber-300";
 
-            const statusDotColor = app.status === "approved" ? "bg-emerald-500" : "bg-amber-500";
+            const statusDotColor = isSanctionedOrDisbursed ? "bg-emerald-500" : app.status === "rejected" ? "bg-rose-500" : "bg-amber-500";
+
+            const maturityDateFormatted = app.tenure_end_date 
+                ? new Date(app.tenure_end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+                : null;
 
             return `
                 <article class="application-card bg-white rounded-2xl p-5 sm:p-7 border border-slate-200/90 shadow-sm overflow-hidden" data-ref="${app.application_ref}">
@@ -357,23 +411,46 @@ document.addEventListener("DOMContentLoaded", async function () {
                         </div>
                     </div>
 
+                    <!-- Active Loan Tenure Policy Banner -->
+                    ${app.is_active_tenure === 1 ? `
+                        <div class="my-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-7 h-7 rounded-lg bg-emerald-600 text-white grid place-items-center text-xs shrink-0 font-bold">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="font-extrabold text-emerald-950 block">Active Loan Facility • Further Applications Blocked</span>
+                                        ${emiDisplay ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-200 text-emerald-950 border border-emerald-300">Next EMI: ${emiDisplay}/mo (Due ${nextEmiDateFormatted})</span>` : ''}
+                                    </div>
+                                    <span class="text-[11px] text-emerald-800">
+                                        Per lending policy, you cannot apply for other loans until this ${displayTenure} facility completes on <strong>${maturityDateFormatted}</strong>.
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="font-bold px-2.5 py-1 rounded-lg bg-white border border-emerald-300 text-emerald-800 text-[11px] shrink-0 self-start sm:self-auto">
+                                <i class="fa-solid fa-hourglass-half mr-1 text-emerald-600"></i> ${app.remaining_tenure_months || 0} Mo. Remaining
+                            </span>
+                        </div>
+                    ` : ''}
+
                     <!-- Key Financials Snapshot Strip -->
                     <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 py-5 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/80 rounded-xl px-4 my-4 border border-slate-100">
                         <div>
-                            <span class="text-[10px] font-bold text-muted uppercase block">Requested Amount</span>
-                            <span class="text-sm sm:text-base font-extrabold text-navy font-mono mt-0.5 block">${amountFormatted}</span>
+                            <span class="text-[10px] font-bold text-muted uppercase block">${app.sanctioned_amount ? 'Sanctioned Amount' : 'Requested Amount'}</span>
+                            <span class="text-sm sm:text-base font-extrabold ${app.sanctioned_amount ? 'text-emerald-700' : 'text-navy'} font-mono mt-0.5 block">${displayAmount}</span>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-muted uppercase block">Requested Tenure</span>
-                            <span class="text-sm sm:text-base font-extrabold text-slate-800 mt-0.5 block">${app.requested_tenure_months} Months</span>
+                            <span class="text-[10px] font-bold text-muted uppercase block">${app.sanctioned_tenure_months ? 'Sanctioned Tenure' : 'Requested Tenure'}</span>
+                            <span class="text-sm sm:text-base font-extrabold text-slate-800 mt-0.5 block">${displayTenure}</span>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-muted uppercase block">Interest Rate</span>
-                            <span class="text-sm sm:text-base font-extrabold text-primary mt-0.5 block">From ${app.min_interest_rate || '10.49'}% p.a.</span>
+                            <span class="text-[10px] font-bold text-muted uppercase block">${isSanctionedOrDisbursed ? 'Monthly EMI' : 'Interest Rate'}</span>
+                            <span class="text-sm sm:text-base font-extrabold text-primary font-mono mt-0.5 block">${emiDisplay ? emiDisplay + '/mo' : 'From ' + (app.min_interest_rate || '10.49') + '% p.a.'}</span>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-muted uppercase block">Applicant Contact</span>
-                            <span class="text-xs sm:text-sm font-bold text-slate-700 mt-0.5 block truncate">${app.applicant_phone || (currentUser ? currentUser.phone : 'Verified')}</span>
+                            <span class="text-[10px] font-bold text-muted uppercase block">${isSanctionedOrDisbursed && nextEmiDateFormatted ? 'Next EMI Due Date' : maturityDateFormatted ? 'Maturity Date' : 'Applicant Contact'}</span>
+                            <span class="text-xs sm:text-sm font-bold text-slate-700 mt-0.5 block truncate">${isSanctionedOrDisbursed && nextEmiDateFormatted ? nextEmiDateFormatted : maturityDateFormatted || app.applicant_phone || (currentUser ? currentUser.phone : 'Verified')}</span>
                         </div>
                     </div>
 
@@ -388,6 +465,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                         </div>
 
                         <div class="flex items-center gap-2">
+                            ${isSanctionedOrDisbursed ? `
+                                <button type="button" class="pay-emi-static-btn px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" data-ref="${app.application_ref}" data-loan="${app.loan_name}" data-emi="${emiDisplay}" data-due="${nextEmiDateFormatted}">
+                                    <i class="fa-solid fa-credit-card text-[10px]"></i>
+                                    <span>Pay EMI Now</span>
+                                </button>
+                            ` : ''}
                             <a href="loans.html?slug=${encodeURIComponent(app.loan_slug)}" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-navy font-bold text-xs transition-colors flex items-center gap-1.5">
                                 <span>View Product Page</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -402,6 +485,16 @@ document.addEventListener("DOMContentLoaded", async function () {
                 </article>
             `;
         }).join("");
+
+        // Setup pay EMI listeners
+        document.querySelectorAll(".pay-emi-static-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const loan = this.dataset.loan;
+                const emi = this.dataset.emi;
+                const due = this.dataset.due;
+                alert(`EMI Payment Simulation: Next EMI of ${emi} for ${loan} is scheduled on ${due}. Payment gateway is in static preview mode.`);
+            });
+        });
 
         // Setup print receipt listeners
         document.querySelectorAll(".print-receipt-btn").forEach(btn => {

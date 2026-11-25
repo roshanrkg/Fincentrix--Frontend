@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Operator Sign In | Fincentrix Underwriting Portal</title>
+    <link rel="icon" href="favicon.ico" />
+    <link href="style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="brand-logo.js"></script>
+  </head>
+  <body
+    x-data="{ darkMode: false, showPassword: false, loading: false, errorMsg: '' }"
+    x-init="
+      darkMode = JSON.parse(localStorage.getItem('darkMode')) ?? false;
+      $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))
+    "
+    :class="{'dark bg-gray-900': darkMode === true}"
+    class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 antialiased font-sans flex min-h-screen items-center justify-center p-4 sm:p-6"
+  >
+    <!-- Background Decor -->   
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl"></div>
+      <div class="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-indigo-500/10 blur-3xl"></div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="w-full max-w-md">
+      <!-- Logo & Branding -->
+      <div class="text-center mb-8">
+        <fincentrix-logo layout="vertical" size="lg" badge="Operator Portal" subtitle="Credit Risk & Underwriting Console"></fincentrix-logo>
+      </div>
+
+      <!-- Login Card -->
+      <div class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="mb-6">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">Authorized Sign In</h2>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            Enter your operator email and password to access assigned loan applications.
+          </p>
+        </div>
+
+        <!-- Alert Error Message -->
+        <div 
+          x-cloak 
+          x-show="errorMsg" 
+          x-transition
+          class="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400"
+        >
+          <i class="fa-solid fa-circle-exclamation mt-0.5 text-sm"></i>
+          <span x-text="errorMsg"></span>
+        </div>
+
+        <!-- Form -->
+        <form @submit.prevent="handleLogin" class="space-y-4">
+          <!-- Email / Username -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+              Operator Email
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-envelope text-xs"></i>
+              </span>
+              <input
+                id="login-email"
+                type="email"
+                required
+                placeholder="name.operator@fincentrix.com"
+                class="w-full rounded-xl border border-gray-200 bg-transparent py-2.5 pl-10 pr-4 text-xs font-medium text-gray-900 outline-none transition-all focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+            </div>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-lock text-xs"></i>
+              </span>
+              <input
+                id="login-password"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                placeholder="••••••••••••"
+                class="w-full rounded-xl border border-gray-200 bg-transparent py-2.5 pl-10 pr-10 text-xs font-medium text-gray-900 outline-none transition-all focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              >
+                <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input 
+                type="checkbox" 
+                checked 
+                class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700" 
+              />
+              <span class="text-xs text-gray-600 dark:text-gray-400">Remember on this device</span>
+            </label>
+            <button 
+              type="button" 
+              @click="darkMode = !darkMode"
+              class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            >
+              <i :class="darkMode ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon'"></i>
+            </button>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            :disabled="loading"
+            class="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-brand-500 hover:bg-brand-600 py-3 text-xs font-bold text-white transition-all shadow-md shadow-brand-500/20 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
+          >
+            <template x-if="loading">
+              <i class="fa-solid fa-spinner animate-spin text-sm"></i>
+            </template>
+            <template x-if="!loading">
+              <span class="flex items-center gap-2">
+                <span>Sign In to Underwriting Console</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+              </span>
+            </template>
+          </button>
+        </form>
+
+        <!-- Back to Customer App -->
+        <div class="mt-6 border-t border-gray-100 pt-5 text-center dark:border-gray-800">
+          <a
+            href="../dashboard2.html"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-brand-600 transition-colors"
+          >
+            <i class="fa-solid fa-arrow-left text-[11px]"></i>
+            <span>Return to Customer Portal</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Seeded Credentials Helper -->
+      <div class="mt-6 rounded-xl border border-gray-200/80 bg-white/60 p-4 text-xs dark:border-gray-800 dark:bg-gray-900/60 backdrop-blur-xs">
+        <div class="font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center justify-between">
+          <span><i class="fa-solid fa-key text-brand-500"></i> Seeded Operator Logins</span>
+          <span class="text-[10px] text-gray-400">Pass: <strong>Operator@123</strong></span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+          <button 
+            type="button" 
+            onclick="fillLogin('priya.operator@fincentrix.com')" 
+            class="text-left p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="font-bold text-gray-900 dark:text-white block">Priya Sharma</span>
+            <span class="text-gray-500">Home Loan</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="fillLogin('rahul.operator@fincentrix.com')" 
+            class="text-left p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="font-bold text-gray-900 dark:text-white block">Rahul Verma</span>
+            <span class="text-gray-500">Home Loan</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="fillLogin('ananya.operator@fincentrix.com')" 
+            class="text-left p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="font-bold text-gray-900 dark:text-white block">Ananya Iyer</span>
+            <span class="text-gray-500">Education Loan</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="fillLogin('sneha.operator@fincentrix.com')" 
+            class="text-left p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="font-bold text-gray-900 dark:text-white block">Sneha Patel</span>
+            <span class="text-gray-500">Personal & Education</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Handler Script -->
+    <script>
+      function fillLogin(email) {
+        document.getElementById("login-email").value = email;
+        document.getElementById("login-password").value = "Operator@123";
+      }
+
+      async function handleLogin() {
+        const email = document.getElementById("login-email").value.trim();
+        const password = document.getElementById("login-password").value;
+
+        const alpineData = Alpine.$data(document.body);
+        alpineData.loading = true;
+        alpineData.errorMsg = "";
+
+        try {
+          const res = await fetch("http://localhost:3000/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contact: email, password })
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.data?.token) {
+            // Verify role
+            if (data.data.role !== "operator" && data.data.role !== "admin") {
+              alpineData.errorMsg = "Access Denied: This account is not an authorized underwriter/operator.";
+              alpineData.loading = false;
+              return;
+            }
+
+            // Save session
+            localStorage.setItem("fincentrix_token", data.data.token);
+            localStorage.setItem("fincentrix_user", JSON.stringify(data.data));
+
+            // Redirect to operator dashboard
+            window.location.href = "index.html";
+          } else {
+            alpineData.errorMsg = data.message || "Invalid credentials. Please try again.";
+          }
+        } catch (err) {
+          alpineData.errorMsg = "Unable to connect to Fincentrix authentication server.";
+        } finally {
+          alpineData.loading = false;
+        }
+      }
+    </script>
+    <script defer src="bundle.js"></script>
+  </body>
+</html>

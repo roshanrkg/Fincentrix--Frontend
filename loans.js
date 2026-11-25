@@ -544,6 +544,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     if (appsRes.ok) {
                         const appsData = await appsRes.json();
                         const userApps = appsData.data || [];
+                        const activeTenureLoan = userApps.find(a => a.is_active_tenure === 1 || ["approved", "sanctioned", "disbursed"].includes(a.status));
                         const existingApp = userApps.find(a => a.loan_slug === currentLoan.slug);
 
                         const sidebarBadge = document.getElementById("sidebarApplicationsBadge");
@@ -556,7 +557,36 @@ document.addEventListener("DOMContentLoaded", async function () {
                             }
                         }
 
-                        if (existingApp && userPreapprovedBox) {
+                        if (activeTenureLoan && userPreapprovedBox) {
+                            const tenureEndFormatted = activeTenureLoan.tenure_end_date 
+                                ? new Date(activeTenureLoan.tenure_end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+                                : "tenure maturity";
+                            const activeAmountFormatted = formatCurrency(activeTenureLoan.sanctioned_amount || activeTenureLoan.requested_amount);
+                            const activeTenureMonths = activeTenureLoan.sanctioned_tenure_months || activeTenureLoan.requested_tenure_months;
+
+                            userPreapprovedBox.className = "bg-rose-50 border border-rose-300 rounded-xl p-4 mb-5 text-xs text-rose-950 shadow-xs";
+                            userPreapprovedBox.innerHTML = `
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="flex items-center gap-1.5 font-bold text-rose-800">
+                                        <i class="fa-solid fa-lock"></i>
+                                        <span>Further Applications Restricted</span>
+                                    </span>
+                                    <span class="font-mono text-[10px] font-bold bg-white px-2 py-0.5 rounded border border-rose-200">${activeTenureLoan.application_ref}</span>
+                                </div>
+                                <p class="text-[11px] leading-relaxed text-rose-700">
+                                    You have an active ${activeTenureLoan.status === 'disbursed' ? 'disbursed' : 'approved'} <strong>${activeTenureLoan.loan_name}</strong> (${activeAmountFormatted} for ${activeTenureMonths} Mo). Under bank policy, applications for further loans are blocked until your active tenure is completed on <strong>${tenureEndFormatted}</strong> (${activeTenureLoan.remaining_tenure_months || 0} months remaining).
+                                </p>
+                            `;
+
+                            if (openApplyModalBtn) {
+                                openApplyModalBtn.disabled = true;
+                                openApplyModalBtn.className = "w-full h-12 rounded-xl bg-slate-200 text-slate-500 font-bold text-sm cursor-not-allowed flex items-center justify-center gap-2 border border-slate-300";
+                                openApplyModalBtn.innerHTML = `
+                                    <i class="fa-solid fa-lock text-xs"></i>
+                                    <span>Blocked: Active Loan In Progress</span>
+                                `;
+                            }
+                        } else if (existingApp && userPreapprovedBox) {
                             const appDateFormatted = new Date(existingApp.applied_at).toLocaleDateString("en-IN", {
                                 day: "numeric",
                                 month: "short",

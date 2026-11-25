@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a192f">
+    <title>My Profile | Fincentrix</title>
+
+    <script>
+        (function () {
+            if (!localStorage.getItem("fincentrix_token")) {
+                window.location.replace("index.html");
+            }
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="brand-logo.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { DEFAULT: "#315cff", light: "#4778ff", dark: "#2450e8" },
+                        navy: { DEFAULT: "#102958", dark: "#071a43", darker: "#061638", light: "#19345d" },
+                        background: "#f5f8ff",
+                        muted: "#8492a9"
+                    },
+                    fontFamily: { inter: ["Inter", "sans-serif"] }
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="dashboard2.css">
+    <style>
+        [hidden] { display: none !important; }
+        .profile-field:focus { outline: 2px solid rgba(49, 92, 255, .18); outline-offset: 1px; }
+        .profile-toggle:checked + span { background: #315cff; }
+        .profile-toggle:checked + span::after { transform: translateX(1.125rem); }
+        .profile-toggle + span::after {
+            content: "";
+            position: absolute;
+            left: .2rem;
+            top: .2rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 9999px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, .2);
+            transition: transform .2s ease;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-background font-inter text-[#1a2e4c] antialiased">
+    <div id="sidebar-container" data-active="profile"></div>
+    <script src="sidebar.js"></script>
+
+    <main class="ml-0 min-h-screen transition-all duration-300 sm:ml-[265px]">
+        <header class="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-[#edf0f6] bg-white px-4 shadow-sm sm:hidden">
+            <button id="menuButton" class="grid h-10 w-10 place-items-center rounded-xl bg-[#f1f4fc] text-[#19345d]" aria-label="Open navigation menu" aria-controls="sidebar">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <fincentrix-logo href="dashboard2.html" size="sm" theme="light"></fincentrix-logo>
+            <a href="#profileOverview" class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-[#713bea] text-xs font-bold uppercase text-white" aria-label="Go to profile overview">SK</a>
+        </header>
+
+        <div class="workspace min-h-screen px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
+            <div class="mx-auto w-full max-w-[1450px]">
+                <header class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <div class="mb-2 flex items-center gap-2 text-xs font-medium text-muted">
+                            <a href="dashboard2.html" class="transition-colors hover:text-primary"><i class="fa-solid fa-house mr-1"></i> Dashboard</a>
+                            <span>/</span><span class="font-semibold text-navy">My Profile</span>
+                        </div>
+                        <p class="mb-1 text-[10px] font-extrabold tracking-[1.6px] text-[#4263eb]">YOUR ACCOUNT</p>
+                        <h1 class="text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">Profile &amp; Settings</h1>
+                        <p class="mt-1 max-w-2xl text-xs leading-relaxed text-slate-500 sm:text-sm">Manage your verified information, contact details, documents, and account security.</p>
+                    </div>
+                    <a href="#accountSecurity" class="inline-flex w-fit items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-navy shadow-sm transition hover:border-primary/30 hover:text-primary">
+                        <i class="fa-solid fa-shield-halved text-primary"></i> Security settings
+                    </a>
+                </header>
+
+                <nav aria-label="Profile sections" class="mb-6 flex gap-2 overflow-x-auto rounded-2xl border border-slate-200/80 bg-white/80 p-2 shadow-sm backdrop-blur-sm">
+                    <a href="#profileOverview" class="whitespace-nowrap rounded-xl bg-blue-50 px-3 py-2 text-xs font-bold text-primary">Overview</a>
+                    <a href="#personalInformation" class="whitespace-nowrap rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Personal details</a>
+                    <a href="#contactInformation" class="whitespace-nowrap rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Contact</a>
+                    <a href="#bankDetails" class="whitespace-nowrap rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Bank</a>
+                    <a href="#documentLocker" class="whitespace-nowrap rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Documents</a>
+                    <a href="#accountSecurity" class="whitespace-nowrap rounded-xl px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Security</a>
+                </nav>
+
+                <section id="profileOverview" aria-labelledby="profileName" class="relative isolate mb-6 overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-[#0a192f] via-[#123777] to-[#315cff] p-5 text-white shadow-xl sm:p-7 lg:p-8">
+                    <div class="pointer-events-none absolute -right-10 -top-20 -z-10 h-64 w-64 rounded-full bg-blue-300/20 blur-[75px]"></div>
+                    <div class="pointer-events-none absolute -bottom-28 left-1/3 -z-10 h-56 w-56 rounded-full bg-indigo-300/20 blur-[70px]"></div>
+                    <div class="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                        <div class="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center">
+                            <div class="relative h-24 w-24 shrink-0 self-start sm:h-28 sm:w-28">
+                                <div id="profileAvatar" data-profile-avatar class="grid h-full w-full place-items-center overflow-hidden rounded-2xl border-2 border-white/30 bg-gradient-to-br from-[#4778ff] to-[#713bea] text-3xl font-extrabold shadow-lg sm:rounded-[28px]">SK</div>
+                                <label for="profilePictureInput" class="absolute -bottom-2 -right-2 grid h-10 w-10 cursor-pointer place-items-center rounded-xl border-2 border-[#17439b] bg-white text-primary shadow-lg transition hover:scale-105" title="Change profile picture">
+                                    <i class="fa-solid fa-camera"></i>
+                                    <span class="sr-only">Upload profile picture</span>
+                                </label>
+                                <input id="profilePictureInput" data-profile-picture-input type="file" accept="image/*" class="sr-only">
+                            </div>
+                            <div class="min-w-0">
+                                <p class="mb-1 text-[10px] font-bold uppercase tracking-[1.5px] text-blue-200">Customer profile</p>
+                                <h2 id="profileName" data-profile-name class="text-2xl font-extrabold tracking-tight sm:text-3xl">Sabir Khan</h2>
+                                <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-blue-100">
+                                    <span><i class="fa-solid fa-id-card mr-1.5 text-blue-200"></i>Customer ID <strong data-customer-id class="ml-1 font-bold text-white">FXC-2408917</strong></span>
+                                    <span><i class="fa-regular fa-calendar mr-1.5 text-blue-200"></i>Member since <strong data-member-since class="ml-1 font-bold text-white">March 2023</strong></span>
+                                </div>
+                                <div class="mt-4">
+                                    <span id="kycVerifiedBadge" data-kyc-badge="verified" class="hidden items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/15 px-3 py-1.5 text-[11px] font-bold text-emerald-100">
+                                        <i class="fa-solid fa-shield-check"></i> KYC Verified
+                                    </span>
+                                    <div id="kycPendingBadge" data-kyc-badge="pending" class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-amber-300/30 bg-amber-400/15 px-3 py-2 text-[11px] font-bold text-amber-100">
+                                        <span class="inline-flex items-center gap-2"><i class="fa-solid fa-clock"></i>KYC Pending Verification</span>
+                                        <span class="basis-full pl-6 text-[10px] font-medium leading-relaxed text-amber-100/90">Aadhaar, PAN, and Bank Passbook must be verified by credit underwriting.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-md sm:max-w-[270px] sm:p-5">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">CIBIL credit score</p>
+                                    <p class="mt-1 text-3xl font-extrabold tracking-tight">789 <span class="text-xs font-semibold text-emerald-200">Excellent</span></p>
+                                </div>
+                                <span class="grid h-10 w-10 place-items-center rounded-xl bg-white/15 text-emerald-200"><i class="fa-solid fa-gauge-high"></i></span>
+                            </div>
+                            <div class="mt-4 h-2 overflow-hidden rounded-full bg-white/15" role="img" aria-label="Credit score 789 out of 900">
+                                <div class="h-full w-[78.9%] rounded-full bg-gradient-to-r from-[#ef4444] via-[#f59e0b] to-[#10b981]" style="background: linear-gradient(to right, #ef4444 0%, #f59e0b 50%, #10b981 100%);"></div>
+                            </div>
+                            <div class="mt-1 flex justify-between text-[9px] font-medium text-blue-200"><span>300</span><span>900</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-2">
+                    <section id="personalInformation" aria-labelledby="personalHeading" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+                        <div class="mb-5 flex items-start justify-between gap-3">
+                            <div>
+                                <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-primary">Section A</p>
+                                <h2 id="personalHeading" class="text-lg font-extrabold text-navy">Personal &amp; identity information</h2>
+                            </div>
+                            <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-600"><i class="fa-solid fa-lock text-[9px]"></i> Locked</span>
+                        </div>
+                        <form data-profile-form="identity" class="space-y-4">
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <label class="block text-[11px] font-semibold text-slate-600">Full Name
+                                    <span class="relative mt-1.5 block"><input id="identityFullName" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">Date of Birth
+                                    <span class="relative mt-1.5 block"><input id="identityDob" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">Gender
+                                    <span class="relative mt-1.5 block"><input id="identityGender" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">Address Line 1
+                                    <span class="relative mt-1.5 block"><input id="identityAddress1" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">City
+                                    <span class="relative mt-1.5 block"><input id="identityCity" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">State
+                                    <span class="relative mt-1.5 block"><input id="identityState" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">PIN Code
+                                    <span class="relative mt-1.5 block"><input id="identityPincode" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600">PAN
+                                    <span class="relative mt-1.5 block"><input id="identityPan" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium tracking-wide text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                                <label class="block text-[11px] font-semibold text-slate-600 sm:col-span-2">Aadhaar
+                                    <span class="relative mt-1.5 block"><input id="identityAadhaar" readonly value="Loading..." class="profile-field w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 pr-9 text-xs font-medium tracking-wide text-slate-700"><i class="fa-solid fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i></span>
+                                </label>
+                            </div>
+                        </form>
+                        <p class="mt-5 flex gap-2 rounded-xl bg-blue-50/80 p-3 text-[10px] leading-relaxed text-slate-600"><i class="fa-solid fa-circle-info mt-0.5 shrink-0 text-primary"></i><span>Personal identification and demographic details are verified against government records and cannot be modified directly. Contact support to request corrections.</span></p>
+                    </section>
+
+                    <div class="space-y-5">
+                        <section id="contactInformation" aria-labelledby="contactHeading" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+                            <div class="mb-5">
+                                <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-primary">Section B</p>
+                                <h2 id="contactHeading" class="text-lg font-extrabold text-navy">Contact information</h2>
+                            </div>
+                            <div class="space-y-3">
+                                <article class="flex flex-col gap-3 rounded-xl border border-slate-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                    <div class="flex min-w-0 items-start gap-3">
+                                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-primary"><i class="fa-regular fa-envelope"></i></span>
+                                        <div class="min-w-0">
+                                            <p class="text-[10px] font-semibold text-slate-500">Email address</p>
+                                            <p data-contact-email class="mt-0.5 break-all text-sm font-bold text-navy">sabir.khan@example.com</p>
+                                            <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" data-open-modal="emailModal" class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[11px] font-bold text-navy transition hover:border-primary/40 hover:text-primary"><i class="fa-solid fa-pen text-[9px]"></i> Edit / Change</button>
+                                </article>
+                                <article class="flex flex-col gap-3 rounded-xl border border-slate-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                    <div class="flex min-w-0 items-start gap-3">
+                                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-50 text-emerald-600"><i class="fa-solid fa-mobile-screen-button"></i></span>
+                                        <div class="min-w-0">
+                                            <p class="text-[10px] font-semibold text-slate-500">Phone number</p>
+                                            <p data-contact-phone class="mt-0.5 text-sm font-bold text-navy">+91 98765 43210</p>
+                                            <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" data-open-modal="phoneModal" class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[11px] font-bold text-navy transition hover:border-primary/40 hover:text-primary"><i class="fa-solid fa-pen text-[9px]"></i> Edit</button>
+                                </article>
+                            </div>
+                        </section>
+
+                        <section id="bankDetails" aria-labelledby="bankHeading" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+                            <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
+                                <div>
+                                    <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-primary">Section C</p>
+                                    <h2 id="bankHeading" class="text-lg font-extrabold text-navy">Bank details</h2>
+                                </div>
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-circle-check"></i> Primary Account</span>
+                            </div>
+                            <div data-bank-account="primary" class="rounded-xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-50 p-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="grid h-11 w-11 place-items-center rounded-xl bg-[#0a192f] text-white"><i class="fa-solid fa-building-columns"></i></span>
+                                    <div><p data-bank-name class="text-sm font-extrabold text-navy">HDFC Bank</p><p data-account-holder class="mt-0.5 text-[10px] font-medium text-slate-500">Account holder: Sabir Khan</p></div>
+                                </div>
+                                <div class="mt-4 grid grid-cols-2 gap-3 border-t border-slate-200 pt-3">
+                                    <div><p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Account number</p><p data-account-number class="mt-1 text-xs font-bold tracking-wider text-navy">•••• •••• 4589</p></div>
+                                    <div><p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">IFSC Code</p><p data-ifsc class="mt-1 text-xs font-bold text-navy">HDFC0001234</p></div>
+                                    <div class="col-span-2"><p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Branch</p><p data-bank-branch class="mt-1 text-xs font-semibold text-slate-700">Green Park, New Delhi</p></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+                                <button type="button" id="editPrimaryBankBtn" data-open-modal="bankModal" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-primary/20 transition hover:bg-primary-dark"><i class="fa-solid fa-pen-to-square"></i> Edit Bank Details</button>
+                                <button type="button" id="addSecondaryBankBtn" data-open-modal="bankModal" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-navy transition hover:border-primary/40 hover:text-primary"><i class="fa-solid fa-plus"></i> Add Secondary Account</button>
+                            </div>
+                        </section>
+                    </div>
+
+                    <section id="documentLocker" aria-labelledby="documentsHeading" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+                        <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+                            <div>
+                                <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-primary">Section D</p>
+                                <h2 id="documentsHeading" class="text-lg font-extrabold text-navy">Document &amp; KYC locker</h2>
+                            </div>
+                            <span class="text-[10px] font-medium text-slate-500">Core documents for verification</span>
+                        </div>
+                        <div class="space-y-3">
+                            <article data-kyc-document="aadhaar" data-status="verified" class="flex flex-col gap-3 rounded-xl border border-slate-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex min-w-0 items-start gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-primary"><i class="fa-solid fa-address-card"></i></span><div class="min-w-0"><h3 class="text-xs font-bold text-navy">Aadhaar Card <span class="font-medium text-slate-500">(Front &amp; Back)</span></h3><p class="mt-1 truncate text-[10px] text-slate-500">aadhaar_front_back.pdf</p><p class="mt-1 text-[9px] text-slate-400">Uploaded 08 Nov 2026</p></div></div>
+                                <span data-document-status class="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                            </article>
+                            <article data-kyc-document="pan" data-status="verified" class="flex flex-col gap-3 rounded-xl border border-slate-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex min-w-0 items-start gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-50 text-violet-600"><i class="fa-solid fa-id-card"></i></span><div class="min-w-0"><h3 class="text-xs font-bold text-navy">PAN Card</h3><p class="mt-1 truncate text-[10px] text-slate-500">sabir_khan_pan.pdf</p><p class="mt-1 text-[9px] text-slate-400">Uploaded 08 Nov 2026</p></div></div>
+                                <span data-document-status class="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-circle-check"></i> Verified</span>
+                            </article>
+                            <article data-kyc-document="bank-passbook" data-status="pending" class="flex flex-col gap-3 rounded-xl border border-slate-200/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex min-w-0 items-start gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-50 text-amber-600"><i class="fa-solid fa-book-open"></i></span><div class="min-w-0"><h3 class="text-xs font-bold text-navy">Bank Passbook / 3-Month Bank Statement</h3><p class="mt-1 truncate text-[10px] text-slate-500">hdfc_statement_oct_2026.pdf</p><p class="mt-1 text-[9px] text-slate-400">Uploaded 12 Nov 2026</p></div></div>
+                                <span data-document-status class="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-bold text-amber-700"><i class="fa-solid fa-clock"></i> Pending Review</span>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section aria-labelledby="portfolioHeading" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+                        <div class="mb-5">
+                            <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-primary">Section E</p>
+                            <h2 id="portfolioHeading" class="text-lg font-extrabold text-navy">Credit &amp; applications</h2>
+                        </div>
+                        <article id="activeLoanContainer" class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#0a192f] to-[#1746a8] p-4 text-white sm:p-5">
+                            <div class="flex flex-wrap items-start justify-between gap-3">
+                                <div><p class="text-[9px] font-bold uppercase tracking-wider text-blue-200">Active loan facility</p><h3 id="activeLoanName" class="mt-1 text-sm font-extrabold">Personal Loan</h3><p id="activeLoanRef" class="mt-1 text-[10px] text-blue-100 font-mono">Ref: FXL-948618-694</p></div>
+                                <span class="rounded-full border border-emerald-300/30 bg-emerald-300/15 px-2.5 py-1 text-[9px] font-bold text-emerald-100">Active</span>
+                            </div>
+                            <div class="mt-4 grid grid-cols-2 gap-3 border-t border-white/15 pt-4">
+                                <div><p class="text-[9px] font-semibold text-blue-200">Sanctioned amount</p><p id="activeSanctionedAmt" class="mt-1 text-lg font-extrabold font-mono">₹5,00,000</p></div>
+                                <div><p class="text-[9px] font-semibold text-blue-200">Next EMI</p><p id="activeNextEmi" class="mt-1 text-lg font-extrabold font-mono">₹16,249</p></div>
+                                <div class="col-span-2 flex items-center justify-between gap-3">
+                                    <p class="text-[10px] text-blue-100"><i class="fa-regular fa-calendar mr-1"></i>Due <span id="activeEmiDueDate" class="font-mono">15 Dec 2026</span></p>
+                                    <a href="applications.html" class="rounded-lg bg-white px-3 py-2 text-[10px] font-extrabold text-primary transition hover:bg-blue-50">View Details <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                                </div>
+                            </div>
+                        </article>
+                        <div class="mt-5">
+                            <h3 class="mb-3 text-xs font-bold text-navy">Recent applications</h3>
+                            <ul id="recentAppsList" class="space-y-2.5">
+                                <li class="text-xs text-slate-400">Loading applications...</li>
+                            </ul>
+                        </div>
+                        <a href="applications.html" class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-center text-[11px] font-bold text-primary transition hover:bg-blue-100">View Full Application History &amp; Stages <i class="fa-solid fa-arrow-right"></i></a>
+                    </section>
+
+                    <section id="accountSecurity" aria-labelledby="securityHeading" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+                        <div class="mb-5">
+                            <p class="mb-1 text-[10px] font-bold uppercase tracking-wider text-primary">Section F</p>
+                            <h2 id="securityHeading" class="text-lg font-extrabold text-navy">Account security</h2>
+                        </div>
+                        <form data-profile-form="password" class="space-y-3">
+                            <label class="block text-[11px] font-semibold text-slate-600">Current Password
+                                <span class="relative mt-1.5 block"><input type="password" name="currentPassword" autocomplete="current-password" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-xs outline-none transition focus:border-primary" placeholder="Enter current password"><button type="button" data-toggle-password class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary" aria-label="Show current password"><i class="fa-regular fa-eye"></i></button></span>
+                            </label>
+                            <label class="block text-[11px] font-semibold text-slate-600">New Password
+                                <span class="relative mt-1.5 block"><input type="password" name="newPassword" autocomplete="new-password" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-xs outline-none transition focus:border-primary" placeholder="Create a new password"><button type="button" data-toggle-password class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary" aria-label="Show new password"><i class="fa-regular fa-eye"></i></button></span>
+                            </label>
+                            <label class="block text-[11px] font-semibold text-slate-600">Confirm New Password
+                                <span class="relative mt-1.5 block"><input type="password" name="confirmPassword" autocomplete="new-password" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-10 text-xs outline-none transition focus:border-primary" placeholder="Confirm your new password"><button type="button" data-toggle-password class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary" aria-label="Show confirm password"><i class="fa-regular fa-eye"></i></button></span>
+                            </label>
+                            <button type="submit" class="mt-1 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-xs font-bold text-white shadow-md shadow-primary/20 transition hover:bg-primary-dark sm:w-auto"><i class="fa-solid fa-key"></i> Update Password</button>
+                        </form>
+                        <div class="mt-6 border-t border-slate-100 pt-5">
+                            <h3 class="text-xs font-bold text-navy">Notification preferences</h3>
+                            <div class="mt-3 space-y-3">
+                                <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl bg-slate-50 px-3 py-3">
+                                    <span><span class="block text-[11px] font-bold text-slate-700">Email notifications</span><span class="mt-0.5 block text-[9px] text-slate-500">EMI due date alerts and application status updates</span></span>
+                                    <span class="relative inline-flex shrink-0"><input type="checkbox" class="profile-toggle peer sr-only" checked data-notification="email"><span class="relative h-6 w-11 rounded-full bg-slate-300 transition-colors"></span></span>
+                                </label>
+                                <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl bg-slate-50 px-3 py-3">
+                                    <span><span class="block text-[11px] font-bold text-slate-700">SMS notifications</span><span class="mt-0.5 block text-[9px] text-slate-500">EMI due date alerts and application status updates</span></span>
+                                    <span class="relative inline-flex shrink-0"><input type="checkbox" class="profile-toggle peer sr-only" checked data-notification="sms"><span class="relative h-6 w-11 rounded-full bg-slate-300 transition-colors"></span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <footer class="py-8 text-center text-[10px] text-slate-400">Your information is encrypted and securely stored by Fincentrix.</footer>
+            </div>
+        </div>
+    </main>
+
+    <div id="emailModal" data-modal="email" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle" aria-hidden="true" hidden class="fixed inset-0 z-[120] items-center justify-center overflow-y-auto bg-[#061638]/60 p-4 backdrop-blur-sm">
+        <div class="my-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl sm:p-6">
+            <div class="mb-5 flex items-start justify-between">
+                <div><p class="text-[10px] font-bold uppercase tracking-wider text-primary">Contact verification</p><h2 id="emailModalTitle" class="mt-1 text-xl font-extrabold text-navy">Update Email</h2></div>
+                <button type="button" data-close-modal class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div data-email-step="1">
+                <p class="mb-4 text-xs leading-relaxed text-slate-500">Enter the email address you want to use. We’ll send a one-time verification code before any change is applied.</p>
+                <label for="newEmail" class="text-[11px] font-bold text-slate-600">New email address</label>
+                <input id="newEmail" data-new-email type="email" autocomplete="email" required placeholder="name@example.com" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-3 text-sm outline-none focus:border-primary">
+                <button type="button" data-email-next class="mt-4 w-full rounded-xl bg-primary px-4 py-3 text-xs font-bold text-white hover:bg-primary-dark">Continue to verification <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            </div>
+            <div data-email-step="2" hidden>
+                <p class="mb-4 text-xs leading-relaxed text-slate-500">Enter the 6-digit code sent to <strong data-email-destination class="break-all text-navy"></strong>.</p>
+                <label for="emailOtp" class="text-[11px] font-bold text-slate-600">Email verification code</label>
+                <input id="emailOtp" data-email-otp inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required placeholder="· · · · · ·" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-3 text-center text-lg font-bold tracking-[.5em] outline-none focus:border-primary">
+                <button type="button" data-email-verify class="mt-4 w-full rounded-xl bg-primary px-4 py-3 text-xs font-bold text-white hover:bg-primary-dark">Verify &amp; apply change</button>
+                <button type="button" data-email-back class="mt-3 w-full py-2 text-xs font-semibold text-slate-500 hover:text-primary"><i class="fa-solid fa-arrow-left mr-1"></i> Change email address</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="phoneModal" data-modal="phone" role="dialog" aria-modal="true" aria-labelledby="phoneModalTitle" aria-hidden="true" hidden class="fixed inset-0 z-[120] items-center justify-center overflow-y-auto bg-[#061638]/60 p-4 backdrop-blur-sm">
+        <div class="my-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl sm:p-6">
+            <div class="mb-5 flex items-start justify-between"><div><p class="text-[10px] font-bold uppercase tracking-wider text-primary">Contact details</p><h2 id="phoneModalTitle" class="mt-1 text-xl font-extrabold text-navy">Update Phone Number</h2></div><button type="button" data-close-modal class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-slate-500" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button></div>
+            <form data-phone-form>
+                <div data-phone-step="1">
+                    <label for="newPhone" class="text-[11px] font-bold text-slate-600">New phone number</label>
+                    <div class="mt-1.5 flex gap-2"><span class="grid place-items-center rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600">+91</span><input id="newPhone" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit mobile number" class="min-w-0 flex-1 rounded-xl border border-slate-200 px-3 py-3 text-sm outline-none focus:border-primary"></div>
+                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500">A verification code will be sent to your new number before it is updated.</p>
+                    <button type="button" data-phone-next class="mt-4 w-full rounded-xl bg-primary px-4 py-3 text-xs font-bold text-white hover:bg-primary-dark">Continue to phone verification</button>
+                </div>
+                <div data-phone-step="2" hidden>
+                    <p class="mb-4 text-xs leading-relaxed text-slate-500">Enter the 6-digit verification code sent to your new phone number.</p>
+                    <label for="phoneOtp" class="text-[11px] font-bold text-slate-600">Phone verification code</label>
+                    <input id="phoneOtp" data-phone-otp inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required placeholder="· · · · · ·" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-3 text-center text-lg font-bold tracking-[.5em] outline-none focus:border-primary">
+                    <button type="button" data-phone-verify class="mt-4 w-full rounded-xl bg-primary px-4 py-3 text-xs font-bold text-white hover:bg-primary-dark">Verify &amp; update number</button>
+                    <button type="button" data-phone-back class="mt-3 w-full py-2 text-xs font-semibold text-slate-500 hover:text-primary"><i class="fa-solid fa-arrow-left mr-1"></i> Change phone number</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="bankModal" data-modal="bank" role="dialog" aria-modal="true" aria-labelledby="bankModalTitle" aria-hidden="true" hidden class="fixed inset-0 z-[120] items-center justify-center overflow-y-auto bg-[#061638]/60 p-4 backdrop-blur-sm">
+        <div class="my-auto w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl sm:p-6">
+            <div class="mb-5 flex items-start justify-between"><div><p class="text-[10px] font-bold uppercase tracking-wider text-primary">Disbursement account</p><h2 id="bankModalTitle" class="mt-1 text-xl font-extrabold text-navy">Update Bank Account</h2></div><button type="button" data-close-modal class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-slate-500" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button></div>
+            <form data-bank-form class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <input type="hidden" name="bankId" id="bankIdInput" value="">
+                <label class="text-[11px] font-bold text-slate-600 sm:col-span-2">Bank Name<input name="bankName" autocomplete="organization" placeholder="Enter bank name" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-medium outline-none focus:border-primary"></label>
+                <label class="text-[11px] font-bold text-slate-600">Account Number<input name="accountNumber" inputmode="numeric" autocomplete="off" placeholder="Enter account number" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-medium outline-none focus:border-primary"></label>
+                <label class="text-[11px] font-bold text-slate-600">Confirm Account Number<input name="confirmAccountNumber" inputmode="numeric" autocomplete="off" placeholder="Re-enter account number" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-medium outline-none focus:border-primary"></label>
+                <label class="text-[11px] font-bold text-slate-600 sm:col-span-2">IFSC Code<input name="ifscCode" autocapitalize="characters" placeholder="e.g. HDFC0001234" class="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-medium uppercase outline-none focus:border-primary"></label>
+                <label class="flex cursor-pointer items-start gap-2 text-[11px] font-medium leading-relaxed text-slate-600 sm:col-span-2"><input type="checkbox" name="setPrimary" checked class="mt-0.5 h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"><span>Set as primary disbursement account</span></label>
+                <button type="submit" class="mt-1 rounded-xl bg-primary px-4 py-3 text-xs font-bold text-white hover:bg-primary-dark sm:col-span-2">Save Bank Details</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>

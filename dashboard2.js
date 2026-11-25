@@ -88,13 +88,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         sidebarUserName.textContent = `${userFirstName} ${userLastName}`.trim();
     }
     if (sidebarUserRole) {
-        sidebarUserRole.textContent = currentUser.role === "admin" ? "Administrator" : "Verified Customer";
+        sidebarUserRole.textContent = currentUser.role === "admin" ? "Administrator" : "User";
     }
-    if (sidebarUserAvatar) {
-        sidebarUserAvatar.textContent = userInitials;
-    }
+    const profileImg = currentUser.profile_image
+        ? (currentUser.profile_image.startsWith("http") ? currentUser.profile_image : `http://localhost:3000/${currentUser.profile_image.replace(/^\/+/, '')}`)
+        : null;
+
+    const setAvatar = (el) => {
+        if (!el) return;
+        if (profileImg) {
+            el.style.backgroundImage = `url("${profileImg}")`;
+            el.style.backgroundSize = "cover";
+            el.style.backgroundPosition = "center";
+            el.textContent = "";
+        } else {
+            el.style.backgroundImage = "none";
+            el.textContent = userInitials;
+        }
+    };
+
+    setAvatar(sidebarUserAvatar);
+    setAvatar(topbarUserAvatar);
     if (topbarUserAvatar) {
-        topbarUserAvatar.textContent = userInitials;
+        topbarUserAvatar.style.cursor = "pointer";
+        topbarUserAvatar.onclick = () => window.location.href = "profile.html";
     }
 
     function updateGreeting() {

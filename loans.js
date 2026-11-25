@@ -173,9 +173,26 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const lname = currentUser.lname || "";
                 const initials = (fname.charAt(0) + (lname.charAt(0) || "")).toUpperCase() || "FX";
 
+                const profileImg = currentUser.profile_image
+                    ? (currentUser.profile_image.startsWith("http") ? currentUser.profile_image : `http://localhost:3000/${currentUser.profile_image.replace(/^\/+/, '')}`)
+                    : null;
+
+                const setAvatar = (el) => {
+                    if (!el) return;
+                    if (profileImg) {
+                        el.style.backgroundImage = `url("${profileImg}")`;
+                        el.style.backgroundSize = "cover";
+                        el.style.backgroundPosition = "center";
+                        el.textContent = "";
+                    } else {
+                        el.style.backgroundImage = "none";
+                        el.textContent = initials;
+                    }
+                };
+
                 if (sidebarUserName) sidebarUserName.textContent = `${fname} ${lname}`.trim();
-                if (sidebarUserAvatar) sidebarUserAvatar.textContent = initials;
-                if (topbarMobileAvatar) topbarMobileAvatar.textContent = initials;
+                setAvatar(sidebarUserAvatar);
+                setAvatar(topbarMobileAvatar);
                 if (sidebarUserRole) {
                     sidebarUserRole.textContent = currentUser.role ? currentUser.role.toUpperCase() : "CUSTOMER";
                 }

@@ -22,6 +22,7 @@
         const path = window.location.pathname.toLowerCase();
         if (path.includes("loans.html") || path.includes("loan.html")) return "loans";
         if (path.includes("applications.html") || path.includes("application.html")) return "applications";
+        if (path.includes("profile.html")) return "profile";
         if (path.includes("settings.html")) return "settings";
         return "dashboard";
     }
@@ -32,11 +33,19 @@
         const lname = user?.lname || "";
         const fullName = `${fname} ${lname}`.trim() || "User Profile";
         const initials = ((fname.charAt(0) || "F") + (lname.charAt(0) || "X")).toUpperCase();
-        const role = user?.role === "admin" ? "Administrator" : "Verified Customer";
+        const role = user?.role === "admin" ? "Administrator" : "User";
+        const profileImg = user?.profile_image
+            ? (user.profile_image.startsWith("http") ? user.profile_image : `http://localhost:3000/${user.profile_image.replace(/^\/+/, '')}`)
+            : null;
+        const avatarStyle = profileImg
+            ? `style="background-image: url('${profileImg}'); background-size: cover; background-position: center;"`
+            : "";
+        const avatarContent = profileImg ? "" : initials;
 
         const isDash = activeTab === "dashboard";
         const isLoans = activeTab === "loans";
         const isApps = activeTab === "applications";
+        const isProfile = activeTab === "profile";
         const isSettings = activeTab === "settings";
         const sidebarDesktopClass = isApps ? "lg:translate-x-0" : "sm:translate-x-0";
         const sidebarCloseClass = isApps ? "lg:hidden" : "sm:hidden";
@@ -96,6 +105,11 @@
                         </span>
                     </a>
 
+                    <a href="profile.html" class="${baseLinkClass} ${isProfile ? activeLinkClass : inactiveLinkClass}" data-page="profile">
+                        <i class="fa-solid fa-user text-base w-[20px] text-center ${isProfile ? 'text-primary-light' : ''}"></i>
+                        <span>My Profile</span>
+                    </a>
+
                     <a href="dashboard2.html#loanTypes" class="${baseLinkClass} ${isSettings ? activeLinkClass : inactiveLinkClass}" data-page="settings">
                         <i class="fa-solid fa-gear text-base w-[20px] text-center ${isSettings ? 'text-primary-light' : ''}"></i>
                         <span>Settings</span>
@@ -107,8 +121,8 @@
             <div class="sidebar-footer flex flex-col gap-4">
                 <!-- USER PROFILE -->
                 <div class="user-profile flex items-center gap-[11px] border-t border-white/10 pt-[17px]">
-                    <div id="sidebarUserAvatar" class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white uppercase">
-                        ${initials}
+                    <div id="sidebarUserAvatar" class="user-avatar grid h-[39px] w-[39px] shrink-0 place-items-center rounded-full border-2 border-white/10 bg-gradient-to-br from-[#4778ff] to-[#2449c9] text-[11px] font-bold text-white uppercase overflow-hidden" ${avatarStyle}>
+                        ${avatarContent}
                     </div>
                     <div class="user-info min-w-0 flex-1">
                         <h4 id="sidebarUserName" class="text-[11px] font-bold text-white truncate" title="${fullName}">
@@ -231,7 +245,7 @@
                     const lname = user.lname || "";
                     const fullName = `${fname} ${lname}`.trim() || "User Profile";
                     const initials = ((fname.charAt(0) || "F") + (lname.charAt(0) || "X")).toUpperCase();
-                    const role = user.role === "admin" ? "Administrator" : "Verified Customer";
+                    const role = user.role === "admin" ? "Administrator" : "User";
 
                     const nameEl = document.getElementById("sidebarUserName");
                     const avatarEl = document.getElementById("sidebarUserAvatar");
@@ -239,11 +253,28 @@
                     const topbarMobileAvatar = document.getElementById("topbarMobileAvatar");
                     const topbarUserAvatar = document.getElementById("topbarUserAvatar");
 
+                    const profileImg = user.profile_image
+                        ? (user.profile_image.startsWith("http") ? user.profile_image : `http://localhost:3000/${user.profile_image.replace(/^\/+/, '')}`)
+                        : null;
+
+                    const applyAvatar = (el) => {
+                        if (!el) return;
+                        if (profileImg) {
+                            el.style.backgroundImage = `url("${profileImg}")`;
+                            el.style.backgroundSize = "cover";
+                            el.style.backgroundPosition = "center";
+                            el.textContent = "";
+                        } else {
+                            el.style.backgroundImage = "none";
+                            el.textContent = initials;
+                        }
+                    };
+
                     if (nameEl) nameEl.textContent = fullName;
-                    if (avatarEl) avatarEl.textContent = initials;
                     if (roleEl) roleEl.textContent = role;
-                    if (topbarMobileAvatar) topbarMobileAvatar.textContent = initials;
-                    if (topbarUserAvatar) topbarUserAvatar.textContent = initials;
+                    applyAvatar(avatarEl);
+                    applyAvatar(topbarMobileAvatar);
+                    applyAvatar(topbarUserAvatar);
                 }
             }
 

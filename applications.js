@@ -105,9 +105,26 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const lname = currentUser.lname || "";
                 const initials = (fname.charAt(0) + (lname.charAt(0) || "")).toUpperCase() || "FX";
 
+                const profileImg = currentUser.profile_image
+                    ? (currentUser.profile_image.startsWith("http") ? currentUser.profile_image : `http://localhost:3000/${currentUser.profile_image.replace(/^\/+/, '')}`)
+                    : null;
+
+                const setAvatar = (el) => {
+                    if (!el) return;
+                    if (profileImg) {
+                        el.style.backgroundImage = `url("${profileImg}")`;
+                        el.style.backgroundSize = "cover";
+                        el.style.backgroundPosition = "center";
+                        el.textContent = "";
+                    } else {
+                        el.style.backgroundImage = "none";
+                        el.textContent = initials;
+                    }
+                };
+
                 if (sidebarUserName) sidebarUserName.textContent = `${fname} ${lname}`.trim();
-                if (sidebarUserAvatar) sidebarUserAvatar.textContent = initials;
-                if (topbarMobileAvatar) topbarMobileAvatar.textContent = initials;
+                setAvatar(sidebarUserAvatar);
+                setAvatar(topbarMobileAvatar);
                 if (sidebarUserRole) {
                     sidebarUserRole.textContent = currentUser.role ? currentUser.role.toUpperCase() : "CUSTOMER";
                 }
@@ -461,7 +478,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     <div class="mt-6 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                         <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
                             <i class="fa-solid fa-lock text-[10px] text-primary"></i>
-                            <span>256-bit encrypted bank verification with RBI authorized partners.</span>
+                            // <span>256-bit encrypted bank verification with RBI authorized partners.</span>
                         </div>
 
                         <div class="flex items-center gap-2">
